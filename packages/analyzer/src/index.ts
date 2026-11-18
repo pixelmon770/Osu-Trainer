@@ -4,3 +4,7 @@ export * from './streams.ts';
 export * from './jumps.ts';
 export * from './reading.ts';
 export * from './analyzeMap.ts';
+export * from './lzma.ts';
+export * from './replay.ts';
+export * from './stacking.ts';
+export * from './replayAnalysis.ts';

@@ -4,8 +4,13 @@ Program na komputer dla graczy osu!: analiza map i replayów, statystyki, roadma
 trenery kliknięć i aimu oraz połączenie z AI (Claude, ChatGPT i inne przez MCP).
 Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 
-**Stan:** etap 0 i pierwsza część etapu 1 – działa analizator map (streamy, bloki streamów,
-skoki na 1/2, czytanie) oraz okno programu z menu, dwoma językami (PL/EN) i ekranem „Analiza mapy”.
+**Stan:** działają dwa ekrany:
+- **Analiza mapy** – streamy, bloki streamów, skoki na 1/2, czytanie;
+- **Replaye i analizy** – każde kliknięcie z replaya .osr przypisane do nuty (okna oceny, notelock,
+  stosy nut, mody HR/EZ): UR, hit error osobno dla K1/K2, błąd według pozycji w streamie,
+  wejście w bursty, naprzemienność, aim, rodzaje missów, celność w czasie i automatyczne wnioski.
+
+Program ma dwa języki (PL/EN), a układ dopasowuje się do rozmiaru okna.
 
 ## Struktura
 
@@ -52,11 +57,24 @@ Przykład analizy całego folderu piosenki z osu! (PowerShell, domyślny termina
 npm run analyze -- "$env:LOCALAPPDATA\osu!\Songs\1241370 GYZE - HONESTY"
 ```
 
+## Replaye
+
+Replay zapisuje tylko sumę MD5 mapy, nie jej nazwę. Program szuka mapy tak:
+1. plik `.osu` przeciągnięty razem z replayem,
+2. mapy zapamiętane wcześniej (plik `map-index.json` w folderze danych programu),
+3. pliki `.osu` w tym samym folderze co replay,
+4. jeśli nic nie pasuje – prosi o wskazanie mapy (okno otwiera się w folderze `Songs`)
+   i zapamiętuje wszystkie poziomy trudności z tego folderu.
+
+Replaye znajdziesz w osu! przez F2 przy wyniku (eksport) albo w folderze `Replays`.
+
 ## Testy na prawdziwych mapach
 
 Mapy nie trafiają do repozytorium. Żeby porównać analizator z danymi z `docs/data/maps_analyzed.json`,
 wrzuć pliki `.osu` do folderu `fixtures-local/` w głównym katalogu (jest w `.gitignore`)
 albo ustaw zmienną `OSU_MAPS_DIR` na folder z mapami. Bez map ten test jest pomijany.
+Replaye `.osr` wrzuć do `fixtures-local/replays/` – test sprawdzi, czy wyliczone oceny
+zgadzają się z licznikami zapisanymi przez osu!.
 
 ## Języki
 

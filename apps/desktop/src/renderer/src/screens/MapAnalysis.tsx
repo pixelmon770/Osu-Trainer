@@ -1,17 +1,15 @@
-import { formatTime } from '@osu-trainer/analyzer';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { AnalyzeResult, MapAnalysis as Analysis } from '../../../shared/api.ts';
 import Stat from '../components/Stat.tsx';
+import { formatTime, makeFormatters } from '../format.ts';
+import { useFileDrop } from '../hooks/useFileDrop.ts';
 
 export default function MapAnalysis() {
   const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState(false);
-  const [dragging, setDragging] = useState(false);
   const [result, setResult] = useState<AnalyzeResult>(null);
-
-  const num = (value: number, digits = 0) =>
-    new Intl.NumberFormat(i18n.language, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+  const { num } = makeFormatters(i18n.language);
 
   async function run(job: () => Promise<AnalyzeResult>) {
     setBusy(true);
@@ -23,30 +21,10 @@ export default function MapAnalysis() {
     }
   }
 
-  // Przeciąganie pliku .osu w dowolne miejsce okna
-  useEffect(() => {
-    const over = (e: DragEvent) => {
-      e.preventDefault();
-      setDragging(true);
-    };
-    const leave = (e: DragEvent) => {
-      if (!e.relatedTarget) setDragging(false);
-    };
-    const drop = (e: DragEvent) => {
-      e.preventDefault();
-      setDragging(false);
-      const file = e.dataTransfer?.files[0];
-      if (file) void run(() => window.api.analyzeMapFile(window.api.pathForFile(file)));
-    };
-    window.addEventListener('dragover', over);
-    window.addEventListener('dragleave', leave);
-    window.addEventListener('drop', drop);
-    return () => {
-      window.removeEventListener('dragover', over);
-      window.removeEventListener('dragleave', leave);
-      window.removeEventListener('drop', drop);
-    };
-  }, []);
+  const dragging = useFileDrop((paths) => {
+    const file = paths.find((p) => p.toLowerCase().endsWith('.osu')) ?? paths[0]!;
+    void run(() => window.api.analyzeMapFile(file));
+  });
 
   return (
     <div className={`screen${dragging ? ' dragging' : ''}`}>
@@ -56,7 +34,12 @@ export default function MapAnalysis() {
       </header>
 
       <div className="row">
-        <button type="button" className="btn primary" disabled={busy} onClick={() => void run(window.api.pickAndAnalyzeMap)}>
+        <button
+          type="button"
+          className="btn primary"
+          disabled={busy}
+          onClick={() => void run(() => window.api.pickAndAnalyzeMap({ pickMap: t('map.pick') }))}
+        >
           {busy ? t('map.analyzing') : t('map.pick')}
         </button>
         <span className="muted small">{t('map.dropHint')}</span>

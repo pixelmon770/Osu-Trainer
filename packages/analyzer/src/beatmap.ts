@@ -13,6 +13,12 @@ export interface HitObject {
   endY: number;
   kind: HitObjectKind;
   newCombo: boolean;
+  /** czas końca w ms (slider: koniec ostatniego przejścia, spinner: koniec kręcenia, kółko: = time) */
+  endTime: number;
+  /** liczba przejść slidera (1 = bez powtórzeń) */
+  slides: number;
+  /** długość ścieżki slidera w osu!pikselach */
+  pixelLength: number;
 }
 
 export interface TimingPoint {
@@ -42,7 +48,11 @@ export interface Beatmap {
     sliderTickRate: number;
   };
   mode: number;
+  /** jak blisko w czasie nuty muszą być, żeby osu! ułożył je w stos (domyślnie 0.7) */
+  stackLeniency: number;
   timingPoints: TimingPoint[];
+  /** mnożniki prędkości sliderów (zielone punkty); 1 = bez zmiany */
+  sliderVelocities: { time: number; multiplier: number }[];
   hitObjects: HitObject[];
 }
 
@@ -55,6 +65,7 @@ export function parseBeatmap(text: string): Beatmap {
 
   const kv: Record<string, Record<string, string>> = {};
   const timingPoints: TimingPoint[] = [];
+  const allPoints: { time: number; beatLength: number; uninherited: boolean }[] = [];
   const hitObjects: HitObject[] = [];
   let section = '';
 
@@ -73,9 +84,11 @@ export function parseBeatmap(text: string): Beatmap {
       const time = Number(p[0]);
       const beatLength = Number(p[1]);
       const uninherited = p.length > 6 ? p[6] === '1' : beatLength > 0;
+      if (!Number.isFinite(time) || !Number.isFinite(beatLength)) continue;
       if (uninherited && beatLength > 0) {
         timingPoints.push({ time, beatLength, meter: Number(p[2] ?? 4) || 4 });
       }
+      allPoints.push({ time, beatLength, uninherited });
     } else if (section === 'HitObjects') {
       const obj = parseHitObject(line);
       if (obj) hitObjects.push(obj);
@@ -91,6 +104,21 @@ export function parseBeatmap(text: string): Beatmap {
 
   if (timingPoints.length === 0) throw new BeatmapParseError('Mapa nie ma punktów czasowych (TimingPoints).');
   if (hitObjects.length === 0) throw new BeatmapParseError('Mapa nie ma obiektów (HitObjects).');
+
+  // Zielony punkt obowiązuje do następnego punktu; czerwony przywraca prędkość 1.
+  // Przy tym samym czasie czerwony idzie pierwszy, więc zielony go nadpisuje.
+  allPoints.sort((a, b) => a.time - b.time || Number(b.uninherited) - Number(a.uninherited));
+  const sliderVelocities = allPoints.map((pt) => ({
+    time: pt.time,
+    multiplier: pt.uninherited || pt.beatLength >= 0 ? 1 : Math.min(10, Math.max(0.1, 100 / -pt.beatLength))
+  }));
+  const sliderMultiplier = num(d.SliderMultiplier, 1.4);
+  for (const o of hitObjects) {
+    if (o.kind !== 'slider') continue;
+    const sv = lastAtOrBefore(sliderVelocities, o.time)?.multiplier ?? 1;
+    const beat = lastAtOrBefore(timingPoints, o.time)?.beatLength ?? timingPoints[0]!.beatLength;
+    o.endTime = o.time + (o.pixelLength / (sliderMultiplier * 100 * sv)) * beat * o.slides;
+  }
 
   return {
     formatVersion,
@@ -108,13 +136,29 @@ export function parseBeatmap(text: string): Beatmap {
       od,
       // stare mapy nie mają AR – wtedy AR = OD
       ar: num(d.ApproachRate, od),
-      sliderMultiplier: num(d.SliderMultiplier, 1.4),
+      sliderMultiplier,
       sliderTickRate: num(d.SliderTickRate, 1)
     },
     mode: num(g.Mode, 0),
+    stackLeniency: num(g.StackLeniency, 0.7),
     timingPoints,
+    sliderVelocities,
     hitObjects
   };
+}
+
+function lastAtOrBefore<T extends { time: number }>(list: T[], time: number): T | undefined {
+  let lo = 0;
+  let hi = list.length - 1;
+  let found: T | undefined;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (list[mid]!.time <= time + 1) {
+      found = list[mid];
+      lo = mid + 1;
+    } else hi = mid - 1;
+  }
+  return found;
 }
 
 function num(v: string | undefined, fallback: number): number {
@@ -132,20 +176,27 @@ function parseHitObject(line: string): HitObject | null {
   if (![x, y, time, type].every(Number.isFinite)) return null;
   const newCombo = (type & 4) !== 0;
 
-  if (type & 8) return { time, x, y, endX: x, endY: y, kind: 'spinner', newCombo };
+  const base = { time, x, y, endX: x, endY: y, newCombo, endTime: time, slides: 1, pixelLength: 0 };
+
+  if (type & 8) {
+    const end = Number(p[5]);
+    return { ...base, kind: 'spinner', endTime: Number.isFinite(end) ? end : time };
+  }
 
   if (type & 2) {
     let endX = x;
     let endY = y;
-    const slides = Number(p[6] ?? 1);
+    const slides = Math.max(1, Number(p[6] ?? 1) || 1);
+    const pixelLength = Math.max(0, Number(p[7] ?? 0) || 0);
     const points = (p[5] ?? '').split('|').slice(1).map((s) => s.split(':').map(Number));
     const last = points[points.length - 1];
     if (last && last.length >= 2 && slides % 2 === 1) {
       endX = last[0]!;
       endY = last[1]!;
     }
-    return { time, x, y, endX, endY, kind: 'slider', newCombo };
+    // endTime liczymy po wczytaniu punktów czasowych (potrzebna prędkość slidera)
+    return { ...base, endX, endY, kind: 'slider', slides, pixelLength };
   }
 
-  return { time, x, y, endX: x, endY: y, kind: 'circle', newCombo };
+  return { ...base, kind: 'circle' };
 }

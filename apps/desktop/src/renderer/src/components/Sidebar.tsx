@@ -10,7 +10,7 @@ const SECTIONS = [
 
 export type ScreenId = (typeof SECTIONS)[number]['items'][number];
 
-const READY: ReadonlySet<ScreenId> = new Set(['dashboard', 'mapAnalysis']);
+const READY: ReadonlySet<ScreenId> = new Set(['dashboard', 'mapAnalysis', 'replays']);
 
 interface Props {
   current: ScreenId;

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
+import type { ScreenId } from '../components/Sidebar.tsx';
 
-export default function Dashboard({ onOpenAnalyzer }: { onOpenAnalyzer: () => void }) {
+export default function Dashboard({ onOpen }: { onOpen: (screen: ScreenId) => void }) {
   const { t } = useTranslation();
   return (
     <div className="screen">
@@ -8,9 +9,14 @@ export default function Dashboard({ onOpenAnalyzer }: { onOpenAnalyzer: () => vo
         <h1>{t('dashboard.title')}</h1>
         <p className="muted">{t('dashboard.subtitle')}</p>
       </header>
-      <button type="button" className="btn primary" onClick={onOpenAnalyzer}>
-        {t('dashboard.openAnalyzer')}
-      </button>
+      <div className="row">
+        <button type="button" className="btn primary" onClick={() => onOpen('replays')}>
+          {t('dashboard.openReplay')}
+        </button>
+        <button type="button" className="btn" onClick={() => onOpen('mapAnalysis')}>
+          {t('dashboard.openAnalyzer')}
+        </button>
+      </div>
     </div>
   );
 }
