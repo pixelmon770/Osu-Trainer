@@ -4,11 +4,14 @@ Program na komputer dla graczy osu!: analiza map i replayów, statystyki, roadma
 trenery kliknięć i aimu oraz połączenie z AI (Claude, ChatGPT i inne przez MCP).
 Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 
-**Stan:** działają dwa ekrany:
+**Stan:** działają trzy ekrany:
 - **Analiza mapy** – streamy, bloki streamów, skoki na 1/2, czytanie;
 - **Replaye i analizy** – każde kliknięcie z replaya .osr przypisane do nuty (okna oceny, notelock,
   stosy nut, mody HR/EZ): UR, hit error osobno dla K1/K2, błąd według pozycji w streamie,
-  wejście w bursty, naprzemienność, aim, rodzaje missów, celność w czasie i automatyczne wnioski.
+  wejście w bursty, naprzemienność, aim, rodzaje missów, celność w czasie i automatyczne wnioski;
+  nowe replaye z osu! analizują się same i trafiają do historii (lokalna baza SQLite);
+- **Ustawienia** – folder osu!, obserwowane foldery z replayami, import ostatnich replayów,
+  powiadomienia, autostart, język.
 
 Program ma dwa języki (PL/EN), a układ dopasowuje się do rozmiaru okna.
 
@@ -59,14 +62,27 @@ npm run analyze -- "$env:LOCALAPPDATA\osu!\Songs\1241370 GYZE - HONESTY"
 
 ## Replaye
 
-Replay zapisuje tylko sumę MD5 mapy, nie jej nazwę. Program szuka mapy tak:
-1. plik `.osu` przeciągnięty razem z replayem,
-2. mapy zapamiętane wcześniej (plik `map-index.json` w folderze danych programu),
-3. pliki `.osu` w tym samym folderze co replay,
-4. jeśli nic nie pasuje – prosi o wskazanie mapy (okno otwiera się w folderze `Songs`)
-   i zapamiętuje wszystkie poziomy trudności z tego folderu.
+Gdy program jest włączony, obserwuje foldery z replayami i każdy nowy plik `.osr` od razu analizuje:
+- `osu!/Data/r` – osu!stable zapisuje tu sam replay każdej **ukończonej** próby,
+- `osu!/Replays` – replaye wyeksportowane przez F2 (tak zapiszesz też faila),
+- dowolne dodatkowe foldery (Ustawienia → Replaye → Dodaj folder).
 
-Replaye znajdziesz w osu! przez F2 przy wyniku (eksport) albo w folderze `Replays`.
+Replay zapisuje tylko sumę MD5 mapy. Program szuka mapy tak: przeciągnięty razem plik `.osu`
+→ mapy zapamiętane wcześniej → `osu!.db` → folder replaya → najnowsze foldery w `Songs`
+(osu! dopisuje do `osu!.db` mapy pobrane w trakcie sesji dopiero po zamknięciu gry).
+Gdy nic nie pasuje, przy ręcznym otwieraniu program prosi o wskazanie mapy.
+
+### Gdzie program trzyma dane
+
+Folder danych programu: `%APPDATA%\osu-trainer` (w Eksploratorze wpisz to w pasek adresu):
+
+| Plik | Co zawiera |
+|---|---|
+| `settings.json` | ustawienia |
+| `osu-trainer.sqlite` | historia analiz replayów |
+| `map-index.json` | zapamiętane ścieżki map (MD5 → plik .osu) |
+
+Replaye i mapy nie są nigdzie wysyłane.
 
 ## Testy na prawdziwych mapach
 

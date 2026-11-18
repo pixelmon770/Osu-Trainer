@@ -79,7 +79,7 @@
   },
   "replay": {
     "title": "Replaye i analizy",
-    "subtitle": "Każde kliknięcie z replaya przypisane do nuty: timing osobno dla klawiszy, streamy, aim i missy.",
+    "subtitle": "Nowe gry z osu! pojawiają się tu same. Każde kliknięcie jest przypisane do nuty: timing osobno dla klawiszy, streamy, aim i missy.",
     "pick": "Wybierz replay (.osr)",
     "pickMap": "Wybierz mapę (.osu), na której grany był ten replay",
     "dropHint": "…albo przeciągnij plik .osr (można razem z plikiem .osu) w dowolne miejsce okna",
@@ -89,7 +89,9 @@
       "map-not-selected": "Replay potrzebuje swojej mapy. Wybierz plik .osu tego samego poziomu trudności – program go zapamięta.",
       "map-mismatch": "Ta mapa nie pasuje do replaya (inny poziom trudności albo starsza wersja mapy). Wybierz dokładnie ten poziom, który grałeś.",
       "other-mode": "Ten replay jest z innego trybu. Obsługiwany jest tylko osu!standard.",
-      "generic": "Nie udało się odczytać replaya: {{message}}"
+      "generic": "Nie udało się odczytać replaya: {{message}}",
+      "map-not-found": "Nie znaleziono mapy tego replaya w osu!.db ani w Songs. Wybierz replay jeszcze raz ręcznie, żeby wskazać mapę.",
+      "not-found": "Tego replaya nie ma już w historii."
     },
     "accuracy": "Celność {{value}}%",
     "combo": "Combo {{value}}x",
@@ -165,6 +167,73 @@
       "overshoot": "Na skokach średnio przestrzeliwujesz o {{value}}% promienia kółka.",
       "undershoot": "Na skokach średnio nie dociągasz o {{value}}% promienia kółka.",
       "noIssues": "W tym replayu nic wyraźnie się nie wyróżnia."
+    },
+    "openInOsu": "Obejrzyj w osu!",
+    "delete": "Usuń z historii",
+    "history": {
+      "title": "Historia",
+      "empty": "Nie ma jeszcze replayów. Nowe gry dodają się same, gdy program jest włączony – możesz też zaimportować ostatnie.",
+      "import": "Importuj ostatnie 30 dni",
+      "importing": "Szukam replayów…",
+      "importProgress": "Analizuję {{done}} z {{total}}…",
+      "importDone": "Zaimportowano {{imported}}, pominięto {{skipped}}.",
+      "partial": "przerwany"
+    }
+  },
+  "toast": {
+    "newReplay": "Nowy replay przeanalizowany",
+    "open": "Otwórz",
+    "close": "Zamknij",
+    "replayFailed": "Replay nie został przeanalizowany",
+    "mapNotFound": "Nie znaleziono mapy dla {{file}}. Otwórz go na ekranie Replaye, żeby wskazać mapę."
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "subtitle": "Gdzie jest osu!, które foldery obserwować w poszukiwaniu nowych replayów i jak uruchamia się program.",
+    "pickFolder": "Wybierz folder",
+    "open": "Otwórz",
+    "change": "Zmień",
+    "remove": "Usuń",
+    "osu": {
+      "title": "Folder osu!",
+      "folder": "Folder osu!stable",
+      "notFound": "nie znaleziono – wskaż go ręcznie",
+      "songs": "Mapy: {{path}}",
+      "noSongs": "Nie znaleziono folderu Songs",
+      "noDb": "Nie znaleziono osu!.db – mapy będą szukane w folderze Songs",
+      "db": "osu!.db: {{maps}} map (gracz: {{player}})",
+      "dbError": "Nie udało się odczytać osu!.db ({{error}}) – mapy będą szukane w folderze Songs",
+      "hint": "osu! aktualizuje osu!.db przy zamykaniu gry. Mapy pobrane w trakcie sesji program znajduje, przeglądając najnowsze foldery w Songs."
+    },
+    "folderKind": {
+      "data-r": "Ukończone próby (Data/r)",
+      "replays": "Wyeksportowane replaye (F2)",
+      "extra": "Dodatkowy folder"
+    },
+    "replays": {
+      "title": "Replaye",
+      "watch": "Obserwuj",
+      "missing": "brak folderu",
+      "addFolder": "Dodaj folder z replayami",
+      "auto": "Analizuj nowe replaye automatycznie",
+      "autoHint": "Każdy nowy plik .osr w folderach powyżej jest analizowany i zapisywany w historii, gdy program jest włączony.",
+      "notify": "Powiadomienia",
+      "notifyHint": "Powiadomienie systemowe o nowym replayu, gdy program jest w tle.",
+      "import": "Importuj ostatnie replaye",
+      "importHint_one": "Analizuje replaye z ostatnich 30 dni, których nie ma jeszcze w historii. W historii: {{count}} replay.",
+      "importHint_few": "Analizuje replaye z ostatnich 30 dni, których nie ma jeszcze w historii. W historii: {{count}} replaye.",
+      "importHint_many": "Analizuje replaye z ostatnich 30 dni, których nie ma jeszcze w historii. W historii: {{count}} replayów.",
+      "importHint_other": "Analizuje replaye z ostatnich 30 dni, których nie ma jeszcze w historii. W historii: {{count}} replaya.",
+      "importButton": "Importuj",
+      "importProgress": "Analizuję {{done}} z {{total}}…",
+      "importDone": "Gotowe: zaimportowano {{imported}}, pominięto {{skipped}}, błędy: {{failed}}."
+    },
+    "app": {
+      "title": "Program",
+      "autostart": "Uruchamiaj z Windows",
+      "autostartHint": "Program startuje w tle po zalogowaniu, więc żaden replay nie umknie.",
+      "autostartDev": "Działa w wersji zainstalowanej (nie w npm run dev).",
+      "version": "Wersja {{version}}"
     }
   }
 }

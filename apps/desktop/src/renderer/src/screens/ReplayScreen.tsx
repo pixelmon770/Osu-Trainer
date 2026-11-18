@@ -1,27 +1,73 @@
 import type { ReplayAnalysis } from '@osu-trainer/analyzer';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { MapInfo, ReplayResult } from '../../../shared/api.ts';
+import type { MapInfo, ReplayResult, ReplaySummary } from '../../../shared/api.ts';
 import { HitErrorChart, StreamPositionChart, TimelineChart } from '../components/charts.tsx';
 import Stat from '../components/Stat.tsx';
 import { formatTime, makeFormatters, type Formatters } from '../format.ts';
 import { useFileDrop } from '../hooks/useFileDrop.ts';
 import { buildInsights } from '../insights.ts';
 
-const KNOWN_ERRORS = ['not-osr-file', 'map-not-selected', 'map-mismatch', 'other-mode'];
+const KNOWN_ERRORS = ['not-osr-file', 'map-not-selected', 'map-mismatch', 'map-not-found', 'other-mode', 'not-found'];
 
-export default function ReplayScreen() {
+interface Props {
+  /** replay do otwarcia (np. z powiadomienia) */
+  openId: string | null;
+  onOpened: () => void;
+  /** ostatnio dodany replay – odświeża listę */
+  latest: ReplaySummary | null;
+}
+
+export default function ReplayScreen({ openId, onOpened, latest }: Props) {
   const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState(false);
+  const [list, setList] = useState<ReplaySummary[] | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const [result, setResult] = useState<ReplayResult>(null);
   const f = makeFormatters(i18n.language);
   const labels = { pickReplay: t('replay.pick'), pickMapForReplay: t('replay.pickMap') };
+
+  const refresh = useCallback(async () => {
+    const items = await window.api.listReplays(300);
+    setList(items);
+    return items;
+  }, []);
+
+  const open = useCallback(async (id: string) => {
+    setSelected(id);
+    setResult(await window.api.getReplay(id));
+  }, []);
+
+  // pierwsze wejście: lista + najnowszy replay (chyba że powiadomienie wskazało konkretny – niżej)
+  const [initialOpenId] = useState(openId);
+  useEffect(() => {
+    void refresh().then((items) => {
+      if (!initialOpenId && items[0]) void open(items[0].id);
+    });
+  }, [refresh, open, initialOpenId]);
+
+  // nowy replay w tle: odśwież listę (nie przełączamy widoku, żeby nie przerywać czytania)
+  useEffect(() => {
+    if (latest) void refresh();
+  }, [latest, refresh]);
+
+  useEffect(() => {
+    if (openId) {
+      void open(openId);
+      onOpened();
+    }
+  }, [openId, open, onOpened]);
 
   async function run(job: () => Promise<ReplayResult>) {
     setBusy(true);
     try {
       const r = await job();
-      if (r) setResult(r);
+      if (!r) return;
+      setResult(r);
+      if (r.ok) {
+        setSelected(r.id);
+        await refresh();
+      }
     } finally {
       setBusy(false);
     }
@@ -32,6 +78,19 @@ export default function ReplayScreen() {
     const osu = paths.find((p) => p.toLowerCase().endsWith('.osu')) ?? null;
     void run(() => window.api.analyzeReplayFile(osr ?? paths[0]!, osu, labels));
   });
+
+  async function remove(id: string) {
+    await window.api.deleteReplay(id);
+    const items = await refresh();
+    if (selected === id) {
+      const next = items[0]?.id;
+      if (next) void open(next);
+      else {
+        setSelected(null);
+        setResult(null);
+      }
+    }
+  }
 
   return (
     <div className={`screen${dragging ? ' dragging' : ''}`}>
@@ -47,17 +106,106 @@ export default function ReplayScreen() {
         <span className="muted small">{t('replay.dropHint')}</span>
       </div>
 
-      {result && !result.ok && (
-        <div className="card error">
-          {KNOWN_ERRORS.includes(result.error) ? t(`replay.error.${result.error}`) : t('replay.error.generic', { message: result.error })}
+      <div className="replay-layout">
+        <HistoryList items={list} selected={selected} onSelect={(id) => void open(id)} f={f} />
+        <div className="replay-main">
+          {result && !result.ok && (
+            <div className="card error">
+              {KNOWN_ERRORS.includes(result.error) ? t(`replay.error.${result.error}`) : t('replay.error.generic', { message: result.error })}
+            </div>
+          )}
+          {result?.ok && (
+            <Report
+              key={result.id}
+              a={result.analysis}
+              map={result.map}
+              f={f}
+              onOpenInOsu={() => void window.api.openPath(result.replayFile)}
+              onDelete={() => void remove(result.id)}
+            />
+          )}
         </div>
-      )}
-      {result?.ok && <Report a={result.analysis} map={result.map} f={f} />}
+      </div>
     </div>
   );
 }
 
-function Report({ a, map, f }: { a: ReplayAnalysis; map: MapInfo; f: Formatters }) {
+function HistoryList({
+  items,
+  selected,
+  onSelect,
+  f
+}: {
+  items: ReplaySummary[] | null;
+  selected: string | null;
+  onSelect: (id: string) => void;
+  f: Formatters;
+}) {
+  const { t } = useTranslation();
+  const [importing, setImporting] = useState<string | null>(null);
+
+  async function importRecent() {
+    setImporting(t('replay.history.importing'));
+    const off = window.api.onImportProgress((p) => setImporting(t('replay.history.importProgress', { done: p.done, total: p.total })));
+    const p = await window.api.importReplays(30, 100);
+    off();
+    setImporting(t('replay.history.importDone', { imported: p.imported, skipped: p.skipped + p.failed }));
+  }
+
+  return (
+    <aside className="card history">
+      <div className="history-head">
+        <h3>{t('replay.history.title')}</h3>
+        {items && <span className="muted small">{items.length}</span>}
+      </div>
+      {items && items.length === 0 && (
+        <div className="history-empty">
+          <p className="muted small">{t('replay.history.empty')}</p>
+          <button type="button" className="btn small" onClick={() => void importRecent()}>
+            {t('replay.history.import')}
+          </button>
+        </div>
+      )}
+      {importing && <p className="muted small">{importing}</p>}
+      <ul className="history-list">
+        {items?.map((s) => (
+          <li key={s.id}>
+            <button type="button" className={`history-item${s.id === selected ? ' active' : ''}`} onClick={() => onSelect(s.id)}>
+              <span className="history-title">
+                {s.title} <span className="muted">[{s.version}]</span>
+              </span>
+              <span className="history-meta">
+                <span>{f.date(s.playedAt)}</span>
+                {s.mods.length > 0 && <span className="tag">{s.mods.join('')}</span>}
+                {s.partial && <span className="tag dim">{t('replay.history.partial')}</span>}
+              </span>
+              <span className="history-stats">
+                <b>{f.num(s.accuracy, 2)}%</b>
+                <span>UR {f.num(s.ur)}</span>
+                <span>K2−K1 {f.signed(s.k2Mean - s.k1Mean)}</span>
+                <span>✕ {s.countMiss}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
+function Report({
+  a,
+  map,
+  f,
+  onOpenInOsu,
+  onDelete
+}: {
+  a: ReplayAnalysis;
+  map: MapInfo;
+  f: Formatters;
+  onOpenInOsu: () => void;
+  onDelete: () => void;
+}) {
   const { t } = useTranslation();
   const insights = buildInsights(a, map.endMs, t, f);
   const msStat = (mean: number) => `${f.signed(mean)} ms`;
@@ -65,7 +213,7 @@ function Report({ a, map, f }: { a: ReplayAnalysis; map: MapInfo; f: Formatters 
   const totalMisses = a.misses.noClick + a.misses.aim + a.misses.early + a.misses.notelock;
 
   return (
-    <div className="report">
+    <div className="report replay-report">
       <div className="card map-title">
         <div>
           <div className="map-name">
@@ -150,9 +298,15 @@ function Report({ a, map, f }: { a: ReplayAnalysis; map: MapInfo; f: Formatters 
         <p className="muted small">{t('replay.chart.timelineHint')}</p>
         <TimelineChart segments={a.timeline} fatigueAt={a.fatigueAt} f={f} />
       </div>
-      <p className="muted small footnote">
-        {t('replay.footnote', { replayEnd: formatTime(a.lastFrameMs) })}
-      </p>
+      <div className="row footnote">
+        <button type="button" className="btn small" onClick={onOpenInOsu}>
+          {t('replay.openInOsu')}
+        </button>
+        <button type="button" className="btn small ghost" onClick={onDelete}>
+          {t('replay.delete')}
+        </button>
+        <span className="muted small">{t('replay.footnote', { replayEnd: formatTime(a.lastFrameMs) })}</span>
+      </div>
     </div>
   );
 }

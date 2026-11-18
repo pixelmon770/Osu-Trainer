@@ -77,7 +77,7 @@
   },
   "replay": {
     "title": "Replays & analysis",
-    "subtitle": "Every click from your replay matched to its note: timing per key, streams, aim and misses.",
+    "subtitle": "New plays from osu! appear here automatically. Every click is matched to its note: timing per key, streams, aim and misses.",
     "pick": "Choose replay (.osr)",
     "pickMap": "Choose the map (.osu) this replay was played on",
     "dropHint": "…or drop a .osr file (optionally together with its .osu) anywhere in this window",
@@ -87,7 +87,9 @@
       "map-not-selected": "The replay needs its map. Choose the .osu file of the same difficulty – the app will remember it.",
       "map-mismatch": "This map does not match the replay (different difficulty or an older version of the map). Choose the exact difficulty you played.",
       "other-mode": "This replay is from another mode. Only osu!standard is supported.",
-      "generic": "Could not read this replay: {{message}}"
+      "generic": "Could not read this replay: {{message}}",
+      "map-not-found": "The map for this replay was not found in osu!.db or in Songs. Choose the replay again by hand to point at the map.",
+      "not-found": "This replay is no longer in the history."
     },
     "accuracy": "Accuracy {{value}}%",
     "combo": "Combo {{value}}x",
@@ -157,6 +159,71 @@
       "overshoot": "On jumps you overshoot by {{value}}% of the circle radius on average.",
       "undershoot": "On jumps you stop short by {{value}}% of the circle radius on average.",
       "noIssues": "Nothing clearly stands out in this replay."
+    },
+    "openInOsu": "Watch in osu!",
+    "delete": "Remove from history",
+    "history": {
+      "title": "History",
+      "empty": "No replays yet. New plays are added automatically while the app is running – or import your recent ones.",
+      "import": "Import last 30 days",
+      "importing": "Looking for replays…",
+      "importProgress": "Analyzing {{done}} of {{total}}…",
+      "importDone": "Imported {{imported}}, skipped {{skipped}}.",
+      "partial": "quit/fail"
+    }
+  },
+  "toast": {
+    "newReplay": "New replay analyzed",
+    "open": "Open",
+    "close": "Close",
+    "replayFailed": "Replay not analyzed",
+    "mapNotFound": "Map not found for {{file}}. Open it on the Replays screen to choose the map."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Where osu! is, which folders to watch for new replays and how the app starts.",
+    "pickFolder": "Choose folder",
+    "open": "Open",
+    "change": "Change",
+    "remove": "Remove",
+    "osu": {
+      "title": "osu! folder",
+      "folder": "osu!stable folder",
+      "notFound": "not found – choose it by hand",
+      "songs": "Maps: {{path}}",
+      "noSongs": "Songs folder not found",
+      "noDb": "osu!.db not found – maps will be searched in the Songs folder",
+      "db": "osu!.db: {{maps}} maps (player: {{player}})",
+      "dbError": "Could not read osu!.db ({{error}}) – maps will be searched in the Songs folder",
+      "hint": "osu! updates osu!.db when the game closes. Maps downloaded in the current session are found by scanning the newest folders in Songs."
+    },
+    "folderKind": {
+      "data-r": "Completed plays (Data/r)",
+      "replays": "Exported replays (F2)",
+      "extra": "Extra folder"
+    },
+    "replays": {
+      "title": "Replays",
+      "watch": "Watch",
+      "missing": "missing",
+      "addFolder": "Add replay folder",
+      "auto": "Analyze new replays automatically",
+      "autoHint": "Every new .osr in the folders above is analyzed and saved in the history while the app is open.",
+      "notify": "Notifications",
+      "notifyHint": "A system notification when a new replay is analyzed while the app is in the background.",
+      "import": "Import recent replays",
+      "importHint_one": "Analyzes replays from the last 30 days that are not in the history yet. History: {{count}} replay.",
+      "importHint_other": "Analyzes replays from the last 30 days that are not in the history yet. History: {{count}} replays.",
+      "importButton": "Import",
+      "importProgress": "Analyzing {{done}} of {{total}}…",
+      "importDone": "Done: {{imported}} imported, {{skipped}} skipped, {{failed}} failed."
+    },
+    "app": {
+      "title": "App",
+      "autostart": "Start with Windows",
+      "autostartHint": "The app starts in the background after logging in, so no replay is missed.",
+      "autostartDev": "Available in the installed version (not in npm run dev).",
+      "version": "Version {{version}}"
     }
   }
 }

@@ -8,3 +8,4 @@ export * from './lzma.ts';
 export * from './replay.ts';
 export * from './stacking.ts';
 export * from './replayAnalysis.ts';
+export * from './osuDb.ts';

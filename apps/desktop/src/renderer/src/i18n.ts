@@ -27,8 +27,14 @@ function initialLanguage(): LanguageCode {
   return LANGUAGES.find((l) => l.code === system)?.code ?? 'en';
 }
 
+/** Proces główny też musi znać język (powiadomienia systemowe). */
+function syncToMain(code: string): void {
+  void window.api?.updateSettings({ language: code }).catch(() => undefined);
+}
+
 export function setLanguage(code: LanguageCode): void {
   void i18n.changeLanguage(code);
+  syncToMain(code);
   try {
     localStorage.setItem(STORAGE_KEY, code);
   } catch {
@@ -47,5 +53,6 @@ i18n.on('languageChanged', (lng) => {
   document.documentElement.lang = lng;
 });
 document.documentElement.lang = i18n.language;
+syncToMain(i18n.language);
 
 export default i18n;
