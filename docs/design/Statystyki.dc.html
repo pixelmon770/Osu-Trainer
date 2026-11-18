@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>osu! Trener – statystyki</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0f1012}
+a{color:#c9b8ff}a:hover{color:#e2d8ff}
+.card{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 36px -14px rgba(201,184,255,0.35);border-color:#3b3650 !important}
+.tile{transition:transform .25s ease, box-shadow .25s ease}
+.tile:hover{transform:translateY(-4px);box-shadow:0 16px 38px -14px var(--glow)}
+.navlink{transition:background-color .2s ease, color .2s ease}
+.navlink:hover{background-color:#202126;color:#ffffff}
+button{transition:filter .2s ease, transform .2s ease}
+button:hover{filter:brightness(1.12)}
+.bar{transition:filter .2s ease}
+.bar:hover{filter:brightness(1.25)}
+@media (prefers-reduced-motion: reduce){.card,.tile,button{transition:none}.card:hover,.tile:hover{transform:none}}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #f1f2f4; background: radial-gradient(1000px 560px at 70% -8%, rgba(201,184,255,0.08), transparent 65%), #0f1012; min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<nav aria-label="Menu główne" style="flex: 1 1 240px; max-width: 280px; box-sizing: border-box; background: #16171a; border-right: 1px solid #26282d; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<div style="width: 32px; height: 32px; border-radius: 10px; background: #c9b8ff; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16171a" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+</div>
+<div style="display: flex; flex-direction: column">
+<span style="font-weight: 700; font-size: 15px">osu! Trener</span>
+<span style="font-size: 12px; color: #9ea2ab">parthmage</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a class="navlink" href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Pulpit</a>
+<a class="navlink" href="Statystyki.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #26282d; color: #f1f2f4; text-decoration: none; font-size: 14px; font-weight: 600">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"></line><line x1="12" y1="20" x2="12" y2="5"></line><line x1="18" y1="20" x2="18" y2="9"></line></svg>Statystyki</a>
+<a class="navlink" href="Roadmapa.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="6" r="2"></circle><circle cx="19" cy="6" r="2"></circle><circle cx="12" cy="18" r="2"></circle><path d="M7 6h10M6 8l5 8M18 8l-5 8"></path></svg>Roadmapa umiejętności</a>
+<a class="navlink" href="Replay.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="7 4 19 12 7 20 7 4"></polygon></svg>Replaye i analizy</a>
+<a class="navlink" href="Analizator.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="9" y1="9" x2="9" y2="13"></line><line x1="15" y1="9" x2="15" y2="13"></line></svg>Analizator klatek</a>
+<a class="navlink" href="Trener.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"></rect><circle cx="8" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="17" y1="10" x2="17" y2="14"></line></svg>Trener kliknięć</a>
+<a class="navlink" href="Rytm.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21l3-18 3 18"></path><line x1="7" y1="15" x2="17" y2="15"></line><line x1="12" y1="9" x2="17" y2="5"></line></svg>Rytm i metronom</a>
+<a class="navlink" href="Polaczenie.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"></path><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg>Połączenie z AI</a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 24px 32px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 28px; font-weight: 700">Statystyki</h1>
+<span style="font-size: 14px; color: #c9ccd2">Profil i top 100 z osu! API (stan na 18.11.2026) oraz pomiary z Twoich replayów.</span>
+</div>
+
+<section aria-label="Profil" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px">
+<div class="tile" style="--glow: rgba(143,179,255,0.5); background: #dfe6f3; color: #1a1b1e; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px">Ranking globalny</span><span style="font-size: 28px; font-weight: 600">#77 870</span><span style="font-size: 12px">PL #3 356 · najlepszy #9 558 (2.08.2020)</span>
+</div>
+<div class="tile" style="--glow: rgba(126,224,161,0.45); background: #dde9d8; color: #1a1b1e; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px">Performance</span><span style="font-size: 28px; font-weight: 600">5 711 pp</span><span style="font-size: 12px">top 1: 353 pp · top 100: 198 pp</span>
+</div>
+<div class="tile" style="--glow: rgba(240,214,110,0.45); background: #f7f0c6; color: #1a1b1e; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px">Accuracy</span><span style="font-size: 28px; font-weight: 600">97,95%</span><span style="font-size: 12px">średnia z top 100: 97,27%</span>
+</div>
+<div class="tile" style="--glow: rgba(201,184,255,0.55); background: #e6defa; color: #1a1b1e; border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px">Zagrania</span><span style="font-size: 28px; font-weight: 600">59 367</span><span style="font-size: 12px">728 h gry · max combo 1 962</span>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+
+<section class="card" aria-labelledby="rk-h" style="flex: 1 1 520px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="rk-h" style="margin: 0; font-size: 18px; font-weight: 600">Ranking przez 90 dni</h2>
+<span style="font-size: 13px; color: #9ea2ab">Z #96 948 na #77 870 · dwa skoki: 10.09 i 15–17.11</span>
+</div>
+<svg viewBox="0 0 720 210" width="100%" role="img" aria-label="Ranking globalny od 21.08 do 18.11.2026: około 97 tysięcy do 10 września, skok do około 88,6 tysiąca, powolny spadek do 91,1 tysiąca, potem skok do 77 870." style="display: block">
+<line x1="50" y1="34.5" x2="700" y2="34.5" stroke="#2c2e33"></line>
+<line x1="50" y1="92.7" x2="700" y2="92.7" stroke="#2c2e33"></line>
+<line x1="50" y1="150.9" x2="700" y2="150.9" stroke="#2c2e33"></line>
+<text x="0" y="38" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">#78 tys.</text>
+<text x="0" y="96" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">#86 tys.</text>
+<text x="0" y="154" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">#94 tys.</text>
+<polyline points="50.0,172.3 57.3,172.9 64.6,173.4 71.9,173.8 79.2,172.8 86.5,171.5 93.8,171.9 101.1,172.5 108.4,173.0 115.7,173.5 123.0,174.3 130.3,174.6 137.6,170.2 144.9,170.7 152.2,171.3 159.6,172.0 166.9,172.6 174.2,173.0 181.5,172.2 188.8,166.7 196.1,162.0 203.4,126.4 210.7,111.7 218.0,112.3 225.3,112.9 232.6,111.9 239.9,109.4 247.2,110.0 254.5,110.6 261.8,111.1 269.1,111.8 276.4,112.4 283.7,112.9 291.0,113.4 298.3,113.8 305.6,114.3 312.9,114.9 320.2,115.4 327.5,115.8 334.8,116.3 342.1,116.6 349.4,117.1 356.7,117.5 364.0,118.0 371.3,118.5 378.7,118.9 386.0,119.3 393.3,119.7 400.6,119.9 407.9,120.2 415.2,120.6 422.5,120.9 429.8,121.3 437.1,121.6 444.4,122.1 451.7,122.5 459.0,122.7 466.3,123.3 473.6,123.7 480.9,124.0 488.2,124.3 495.5,124.7 502.8,124.9 510.1,125.3 517.4,125.7 524.7,126.1 532.0,126.4 539.3,126.7 546.6,127.1 553.9,127.5 561.2,127.9 568.5,128.4 575.8,128.7 583.1,126.9 590.4,127.2 597.8,127.6 605.1,127.9 612.4,128.2 619.7,128.6 627.0,128.9 634.3,129.3 641.6,129.5 648.9,128.8 656.2,129.1 663.5,129.5 670.8,129.8 678.1,94.9 685.4,52.6 692.7,33.6 700.0,33.6" fill="none" stroke="#c9b8ff" stroke-width="2.5" stroke-linejoin="round" style="filter: drop-shadow(0 0 6px rgba(201,184,255,0.6))"></polyline>
+<circle cx="700" cy="33.6" r="5" fill="#c9b8ff"></circle>
+<text x="44" y="200" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">21.08</text>
+<text x="255" y="200" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">20.09</text>
+<text x="474" y="200" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">20.10</text>
+<text x="672" y="200" fill="#9ea2ab" font-size="11" font-family="Inter, sans-serif">18.11</text>
+</svg>
+</section>
+
+<section class="card" aria-labelledby="hits-h" style="flex: 1 1 320px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="hits-h" style="margin: 0; font-size: 18px; font-weight: 600">Wszystkie trafienia</h2>
+<span style="font-size: 13px; color: #9ea2ab">9 562 780 obiektów w historii konta</span>
+</div>
+<div style="display: flex; height: 18px; border-radius: 9px; overflow: hidden" aria-hidden="true">
+<div style="width: 83.38%; background: #8fd8ff"></div>
+<div style="width: 12.57%; background: #7ee0a1"></div>
+<div style="width: 1.29%; background: #f0d66e"></div>
+<div style="width: 2.76%; background: #ff8a8a"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; font-size: 13px">
+<span><strong style="color: #8fd8ff">300</strong> · 83,38%</span>
+<span><strong style="color: #7ee0a1">100</strong> · 12,57%</span>
+<span><strong style="color: #f0d66e">50</strong> · 1,29%</span>
+<span><strong style="color: #ff8a8a">miss</strong> · 2,76%</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid #26282d">
+<span style="font-size: 13px; color: #9ea2ab">Rangi w top 100</span>
+<span style="font-size: 15px"><strong>47</strong> S · <strong>52</strong> A · <strong>1</strong> B · FC: <strong>49</strong></span>
+</div>
+</section>
+
+</div>
+
+<section class="card" aria-labelledby="t100-h" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="t100-h" style="margin: 0; font-size: 18px; font-weight: 600">Twoje top 100: gdzie zdobywasz pp</h2>
+<span style="font-size: 13px; color: #9ea2ab">Średnio 6,02★ · 190 BPM · 2:05 · OD 9,1 · AR 9,3 · bez HD, 4 z DT</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px">
+<sc-for list="{{hists}}" as="h" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 600">{{h.title}}</span>
+<div style="display: flex; align-items: flex-end; gap: 6px; height: 140px; border-bottom: 1px solid #2c2e33">
+<sc-for list="{{h.bars}}" as="b" hint-placeholder-count="7">
+<div style="flex: 1 1 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%">
+<span style="font-size: 11px; color: #d4d6db">{{b.n}}</span>
+<div class="bar" style="{{b.style}}"></div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 6px">
+<sc-for list="{{h.bars}}" as="b" hint-placeholder-count="7">
+<span style="flex: 1 1 0; font-size: 10px; color: #9ea2ab; text-align: center">{{b.label}}</span>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+
+<section class="card" aria-labelledby="sc-h" style="flex: 1 1 460px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="sc-h" style="margin: 0; font-size: 18px; font-weight: 600">Acc a trudność mapy</h2>
+<span style="font-size: 13px; color: #9ea2ab">Każda kropka to wynik z top 100 · większa = więcej pp</span>
+</div>
+<div style="display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 8px">
+<div style="display: flex; flex-direction: column; justify-content: space-between; font-size: 11px; color: #9ea2ab; height: 240px"><span>100%</span><span>94%</span><span>88%</span></div>
+<div style="position: relative; height: 240px; border-left: 1px solid #2c2e33; border-bottom: 1px solid #2c2e33; background: linear-gradient(#26282d 1px, transparent 1px) 0 0 / 100% 50%">
+<sc-for list="{{dots}}" as="d" hint-placeholder-count="30">
+<div style="{{d.style}}"></div>
+</sc-for>
+</div>
+<span></span>
+<div style="display: flex; justify-content: space-between; font-size: 11px; color: #9ea2ab"><span>3,5★</span><span>5,25★</span><span>7,0★</span></div>
+</div>
+</section>
+
+<section class="card" aria-labelledby="cmp-h" style="flex: 1 1 360px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="cmp-h" style="margin: 0; font-size: 18px; font-weight: 600">Porównania z top 100</h2>
+<sc-for list="{{cmps}}" as="c" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; background: #222327; border-radius: 14px">
+<span style="font-size: 13px; color: #9ea2ab">{{c.title}}</span>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px">
+<div style="display: flex; flex-direction: column"><span style="font-size: 20px; font-weight: 600">{{c.a}}</span><span style="font-size: 12px; color: #9ea2ab">{{c.aLabel}}</span></div>
+<div style="display: flex; flex-direction: column"><span style="font-size: 20px; font-weight: 600">{{c.b}}</span><span style="font-size: 12px; color: #9ea2ab">{{c.bLabel}}</span></div>
+</div>
+</div>
+</sc-for>
+<span style="font-size: 13px; color: #c9ccd2; line-height: 1.5">Długość mapy nie obniża Ci acc, więc ogólna kondycja jest dobra. Słabsze są streamy i tempo od 200 BPM.</span>
+</section>
+
+</div>
+
+<section class="card" aria-labelledby="rp-h" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="rp-h" style="margin: 0; font-size: 18px; font-weight: 600">Pomiary z replayów</h2>
+<span style="font-size: 13px; color: #9ea2ab">To, czego nie ma w osu! API. Liczone z każdego zapisanego replaya i udostępniane AI.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px">
+<sc-for list="{{metrics}}" as="m" hint-placeholder-count="12">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; background: #222327; border-radius: 14px; border: 1px solid #2c2e33">
+<span style="{{m.tagStyle}}">{{m.group}}</span>
+<span style="font-size: 14px; font-weight: 600">{{m.name}}</span>
+<span style="{{m.valStyle}}">{{m.value}}</span>
+<span style="font-size: 12px; color: #9ea2ab; line-height: 1.45">{{m.note}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mkHist = (title, labels, counts, col) => {
+      const max = Math.max.apply(null, counts);
+      return { title: title, bars: counts.map((n, i) => ({ n: n, label: labels[i], style: 'width: 100%; border-radius: 6px 6px 2px 2px; background: ' + col + '; height: ' + Math.max(2, n / max * 110).toFixed(0) + 'px; box-shadow: 0 0 12px -2px ' + col })) };
+    };
+    const hists = [
+      mkHist('Gwiazdki', ['<5,5', '5,5', '5,75', '6,0', '6,25', '6,5', '6,75+'], [5, 12, 26, 30, 14, 10, 3], '#c9b8ff'),
+      mkHist('BPM (z DT)', ['<150', '150', '175', '185', '195', '205', '215+'], [6, 4, 17, 27, 25, 14, 7], '#8fb3ff'),
+      mkHist('Długość', ['<1:00', '1:00', '1:30', '2:00', '3:00', '4:00+'], [14, 24, 26, 14, 8, 14], '#f5b27a')
+    ];
+    const pts = [[6.6,99.43,353],[6.61,99.55,349],[6.97,98.34,303],[6.4,98.41,285],[6.63,97.48,284],[6.39,98.39,284],[6.18,99.06,281],[6.34,97.66,276],[6.9,97.83,270],[6.32,96.82,270],[6.92,96.29,269],[6.44,98.23,267],[6.17,97.43,257],[5.95,98.89,256],[6.09,99.58,253],[6.26,95.21,250],[6.03,98.32,250],[6.24,96.59,248],[6.25,96.48,247],[5.63,99.45,246],[5.82,98.93,245],[5.98,97.39,244],[5.97,97.74,244],[6.01,97.57,243],[5.96,98.47,241],[5.62,99.72,241],[5.7,99.42,241],[6.05,98.19,240],[6,98.61,239],[5.87,98.53,239],[5.94,98.43,239],[5.94,98.21,239],[6.41,95.96,238],[6.1,96.44,236],[6.6,95.66,236],[5.79,98.95,236],[6.22,96.24,234],[6.53,96.16,234],[6.13,97.67,234],[6.12,96.2,234],[6.49,96.79,231],[6.2,96.95,230],[6.08,97.74,230],[5.6,99.18,230],[6.56,96.07,229],[6.1,98.42,227],[6.51,96.34,227],[6.01,97.15,227],[5.65,98.97,227],[6.12,98.54,226],[6.18,97.56,225],[6.03,97.97,224],[5.78,97.2,224],[6.29,96.48,224],[6.56,96.47,223],[6.25,97.78,222],[5.53,98.93,221],[6.13,97.84,220],[6.09,97.78,219],[5.6,99.11,219],[5.99,98.6,219],[6.53,96.91,217],[6.01,95.19,216],[5.78,98.16,216],[5.56,99.2,216],[5.85,96.51,216],[5.95,96.35,215],[6.62,92.29,214],[6.1,98.08,214],[5.58,99.02,214],[5.48,98.53,212],[6,96.87,211],[5.87,96.89,209],[5.81,98.37,209],[5.84,96.39,208],[4.13,96.71,208],[6.09,97.42,208],[5.92,97.44,207],[4.43,88.98,206],[5.91,95.8,206],[4.4,90.84,206],[6.26,94.88,205],[6.44,97.12,204],[5.95,95.22,204],[6.4,95.72,204],[6.06,96.45,203],[5.96,97.51,203],[6.37,95.44,202],[3.8,99.35,201],[5.77,96.37,201],[5.54,99.26,201],[5.66,97.95,201],[6.17,94.97,200],[5.58,98.89,200],[6.14,96.2,200],[5.84,97.12,200],[6.13,96.71,200],[5.85,98.4,199],[5.91,96.31,198],[6.44,91.59,198]];
+    const dots = pts.map((p) => {
+      const sz = (6 + (p[2] - 198) / 155 * 8).toFixed(1);
+      return { style: 'position: absolute; left: ' + ((p[0] - 3.5) / 3.5 * 100).toFixed(1) + '%; top: ' + ((100 - p[1]) / 12 * 100).toFixed(1) + '%; width: ' + sz + 'px; height: ' + sz + 'px; border-radius: 50%; transform: translate(-50%, -50%); background: rgba(201,184,255,0.75); box-shadow: 0 0 8px rgba(201,184,255,0.6)' };
+    });
+    const cmps = [
+      { title: 'Tempo mapy', a: '97,50%', aLabel: 'poniżej 200 BPM · 58 wyników', b: '96,96%', bLabel: 'od 200 BPM · 42 wyniki' },
+      { title: 'Długość mapy', a: '97,18%', aLabel: 'poniżej 2:00 · 64 wyniki', b: '97,40%', bLabel: 'od 3:00 · 22 wyniki' },
+      { title: 'Missy w top 100', a: '49', aLabel: 'bez missa (FC)', b: '22 / 13 / 16', bLabel: '1 / 2 / 3+ missy' }
+    ];
+    const known = 'font-size: 22px; font-weight: 600; color: #f1f2f4';
+    const waiting = 'font-size: 15px; font-weight: 500; color: #9ea2ab';
+    const tag = (c) => 'font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ' + c;
+    const M = (group, c, name, value, note, has) => ({ group: group, tagStyle: tag(c), name: name, value: value, note: note, valStyle: has ? known : waiting });
+    const metrics = [
+      M('Timing', '#8fd8ff', 'Hit error: pojedyncze nuty', '−3 do +5 ms', 'W środku, więc offset −14 ms jest dobry.', true),
+      M('Timing', '#8fd8ff', 'Hit error: bursty', '+27 ms', 'Wejście w burst za późno.', true),
+      M('Timing', '#8fd8ff', 'Hit error: skoki wg BPM', '+9,7 / +16 / +26,5 ms', '200–220 / 220–250 / 250+ BPM.', true),
+      M('Timing', '#8fd8ff', 'UR w trakcie mapy', '~194 → 225–238', 'Rośnie pod koniec map.', true),
+      M('Palce', '#f5b27a', 'K2 względem K1', '+10 / +18,3 ms', 'NM 175 BPM / streamy na DT.', true),
+      M('Palce', '#f5b27a', 'Rozrzut odstępów w streamach', '16 / 30 ms', 'NM / DT.', true),
+      M('Palce', '#f5b27a', 'Najdłuższy równy stream', '~17 s', 'Cel planu: 36 s przy 188 BPM.', true),
+      M('Palce', '#f5b27a', 'Złamania alternate', 'czeka na replaye', 'Podwójne K1 lub K2 w streamie, na 1000 nut.', false),
+      M('Aim', '#c9b8ff', 'Dolot do środka kółka', '−0,38 → −0,07 r', 'Średnio, w promieniach. Duża poprawa w październiku.', true),
+      M('Aim', '#c9b8ff', 'Overshoot i niedolot na skokach', 'czeka na replaye', 'Jak często i o ile mijasz kółko, wg odległości skoku.', false),
+      M('Aim', '#c9b8ff', 'Błąd celowania wg kąta skoku', 'czeka na replaye', 'Skoki do przodu, w bok i zawrotki osobno.', false),
+      M('Missy', '#ff8a8a', 'Rodzaje missów', 'czeka na replaye', 'Aim, timing, podwójne kliknięcie, slider break, notelock.', false),
+      M('Czytanie', '#7ee0a1', 'Missy przy nakładających się nutach', 'czeka na replaye', 'Ważne dla AR 10 i map jak down [G O D].', false),
+      M('Sesja', '#7ee0a1', 'Spadek formy w sesji', 'po 7. próbie', 'Bluenation 17.11: 91,46% → 80,38%.', true),
+      M('Sesja', '#7ee0a1', 'Pora dnia i forma', 'czeka na replaye', 'Acc i UR wg godziny grania.', false)
+    ];
+    return { hists, dots, cmps, metrics };
+  }
+}
+</script>
+</body>
+</html>

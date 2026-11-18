@@ -1,0 +1,322 @@
+{
+ "user": {
+  "username": "parthmage",
+  "osu_id": 10059055,
+  "country": "PL",
+  "playstyle": [
+   "keyboard",
+   "tablet"
+  ],
+  "join_date": "2017-04-16",
+  "setup": {
+   "now": "Wooting UwU (Lekker L45, rapid trigger), Wacom flashowany do 400 Hz",
+   "before": "własna klawiatura z Cherry MX Speed Silver (45 cN, 1,2 mm), tablet XP-Pen"
+  },
+  "note": "restrykcja konta w przeszłości, zdjęta po latach; przerwa widoczna w historii"
+ },
+ "profile_2026_11_18": {
+  "global_rank": 77870,
+  "country_rank": 3356,
+  "best_rank": 9558,
+  "best_rank_date": "2020-08-02",
+  "pp": 5711.19,
+  "accuracy": 97.95,
+  "play_count": 59367,
+  "play_time_h": 728,
+  "ranked_score": 9528677583,
+  "max_combo": 1962,
+  "hits": {
+   "c300": 7973173,
+   "c100": 1202263,
+   "c50": 122948,
+   "miss": 264396
+  },
+  "grades": {
+   "SS": 1,
+   "SSH": 0,
+   "S": 235,
+   "SH": 2,
+   "A": 546
+  },
+  "offset_ms": -14
+ },
+ "rank_history_90d": {
+  "from_date": "2026-08-21",
+  "to_date": "2026-11-18",
+  "values": [
+   96948,
+   97029,
+   97089,
+   97154,
+   97008,
+   96834,
+   96892,
+   96967,
+   97040,
+   97113,
+   97210,
+   97260,
+   96648,
+   96719,
+   96808,
+   96900,
+   96979,
+   97040,
+   96933,
+   96167,
+   95520,
+   90625,
+   88612,
+   88698,
+   88773,
+   88634,
+   88296,
+   88371,
+   88460,
+   88528,
+   88629,
+   88706,
+   88769,
+   88838,
+   88902,
+   88973,
+   89052,
+   89117,
+   89169,
+   89236,
+   89285,
+   89347,
+   89404,
+   89474,
+   89540,
+   89597,
+   89654,
+   89709,
+   89739,
+   89778,
+   89839,
+   89879,
+   89929,
+   89966,
+   90035,
+   90089,
+   90121,
+   90197,
+   90253,
+   90302,
+   90345,
+   90391,
+   90423,
+   90477,
+   90527,
+   90583,
+   90636,
+   90677,
+   90729,
+   90786,
+   90834,
+   90902,
+   90942,
+   90696,
+   90734,
+   90790,
+   90834,
+   90877,
+   90938,
+   90980,
+   91023,
+   91053,
+   90955,
+   91004,
+   91052,
+   91100,
+   86298,
+   80479,
+   77870,
+   77870
+  ]
+ },
+ "top100": {
+  "avg_stars": 6.02,
+  "avg_acc": 97.27,
+  "avg_bpm": 190,
+  "avg_length_s": 125,
+  "avg_od": 9.1,
+  "avg_ar": 9.3,
+  "fc": 49,
+  "ranks": {
+   "S": 47,
+   "A": 52,
+   "B": 1
+  },
+  "dt": 4,
+  "hd": 0,
+  "pp_top1": 353,
+  "pp_top100": 198,
+  "stars_hist": {
+   "edges": [
+    3.5,
+    5.5,
+    5.75,
+    6.0,
+    6.25,
+    6.5,
+    6.75,
+    7.0
+   ],
+   "counts": [
+    5,
+    12,
+    26,
+    30,
+    14,
+    10,
+    3
+   ]
+  },
+  "bpm_hist": {
+   "edges": [
+    0,
+    150,
+    175,
+    185,
+    195,
+    205,
+    215,
+    240
+   ],
+   "counts": [
+    6,
+    4,
+    17,
+    27,
+    25,
+    14,
+    7
+   ]
+  },
+  "length_hist": {
+   "edges_s": [
+    0,
+    60,
+    90,
+    120,
+    180,
+    240,
+    400
+   ],
+   "counts": [
+    14,
+    24,
+    26,
+    14,
+    8,
+    14
+   ]
+  },
+  "misses_hist": {
+   "zero": 49,
+   "one": 22,
+   "two": 13,
+   "three": 12,
+   "four_five": 4
+  },
+  "acc_by_bpm": {
+   "below_200": {
+    "acc": 97.5,
+    "n": 58
+   },
+   "from_200": {
+    "acc": 96.96,
+    "n": 42
+   }
+  },
+  "acc_by_length": {
+   "below_120s": {
+    "acc": 97.18,
+    "n": 64
+   },
+   "from_180s": {
+    "acc": 97.4,
+    "n": 22
+   }
+  }
+ },
+ "replay_findings_2026_10": {
+  "hit_error_single_notes_ms": [
+   -3,
+   5
+  ],
+  "hit_error_bursts_ms": 27,
+  "hit_error_jumps_by_bpm_ms": {
+   "200-220": 9.7,
+   "220-250": 16,
+   "250+": 26.5
+  },
+  "k2_minus_k1_ms": {
+   "nm_175bpm": 10,
+   "dt_streams": 18.3
+  },
+  "tap_interval_spread_ms": {
+   "nm": 16,
+   "dt": 30
+  },
+  "cursor_center_offset_r": {
+   "before_18_10": -0.38,
+   "after": -0.07
+  },
+  "ur_in_map": {
+   "start": 194,
+   "end": [
+    225,
+    238
+   ]
+  },
+  "dragonstar": {
+   "map": "Dawn of the Dragonstar [Maki's Expert]",
+   "bpm": 175,
+   "fail_at": "1:08",
+   "ur_start": 150,
+   "ur_end": 280,
+   "avg_gap_ms": 84,
+   "ideal_gap_ms": 85.7,
+   "life_47pct_at": "0:55",
+   "stream21_clicks": 10
+  }
+ },
+ "session_2026_11_17": {
+  "bluenation_180bpm_acc_in_order": [
+   88.34,
+   73.65,
+   91.46,
+   90.64,
+   91.46,
+   86.04,
+   91.46,
+   82.68,
+   80.38
+  ],
+  "last_battle_174bpm_acc": [
+   81.82,
+   77.08,
+   75.76
+  ],
+  "stream_practice_100_share": "10–29%",
+  "jump_maps_100_share": "~1%"
+ },
+ "stamina": {
+  "longest_even_block_now_s": 17,
+  "longest_even_block_peak_s": 36,
+  "peak_map": "Sidetracked Day [Infinity Inside], 424 pp, 97,8%"
+ },
+ "warmup_routine": [
+  "Power of the Dragonflame",
+  "Lionheart",
+  "BLUE ARMY"
+ ],
+ "goals": [
+  "Ata - Euphoria [Ultimate Power]",
+  "Yomi yori [Kyouaku]",
+  "DragonForce - Astral Empire [Break of Dawn]"
+ ]
+}

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>osu! Trener – analiza replaya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0f1012}
+a{color:#c9b8ff}a:hover{color:#e2d8ff}
+.card{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 36px -14px rgba(201,184,255,0.35);border-color:#3b3650 !important}
+.tile{transition:transform .25s ease, box-shadow .25s ease}
+.tile:hover{transform:translateY(-4px);box-shadow:0 16px 38px -14px var(--glow)}
+.navlink{transition:background-color .2s ease, color .2s ease}
+.navlink:hover{background-color:#202126;color:#ffffff}
+button{transition:filter .2s ease, transform .2s ease}
+button:hover{filter:brightness(1.12)}
+@media (prefers-reduced-motion: reduce){.card,.tile,button{transition:none}.card:hover,.tile:hover{transform:none}}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #f1f2f4; background: radial-gradient(1000px 560px at 70% -8%, rgba(201,184,255,0.08), transparent 65%), #0f1012; min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<nav aria-label="Menu główne" style="flex: 1 1 240px; max-width: 280px; box-sizing: border-box; background: #16171a; border-right: 1px solid #26282d; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<div style="width: 32px; height: 32px; border-radius: 10px; background: #c9b8ff; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16171a" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+</div>
+<div style="display: flex; flex-direction: column">
+<span style="font-weight: 700; font-size: 15px">osu! Trener</span>
+<span style="font-size: 12px; color: #9ea2ab">parthmage</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a class="navlink" href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Pulpit</a>
+<a class="navlink" href="Statystyki.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"></line><line x1="12" y1="20" x2="12" y2="5"></line><line x1="18" y1="20" x2="18" y2="9"></line></svg>Statystyki</a>
+<a class="navlink" href="Roadmapa.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="6" r="2"></circle><circle cx="19" cy="6" r="2"></circle><circle cx="12" cy="18" r="2"></circle><path d="M7 6h10M6 8l5 8M18 8l-5 8"></path></svg>Roadmapa umiejętności</a>
+<a class="navlink" href="Replay.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #26282d; color: #f1f2f4; text-decoration: none; font-size: 14px; font-weight: 600">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="7 4 19 12 7 20 7 4"></polygon></svg>Replaye i analizy</a>
+<a class="navlink" href="Analizator.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="9" y1="9" x2="9" y2="13"></line><line x1="15" y1="9" x2="15" y2="13"></line></svg>Analizator klatek</a>
+<a class="navlink" href="Trener.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"></rect><circle cx="8" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="17" y1="10" x2="17" y2="14"></line></svg>Trener kliknięć</a>
+<a class="navlink" href="Rytm.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21l3-18 3 18"></path><line x1="7" y1="15" x2="17" y2="15"></line><line x1="12" y1="9" x2="17" y2="5"></line></svg>Rytm i metronom</a>
+<a class="navlink" href="Polaczenie.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"></path><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg>Połączenie z AI</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9ea2ab; padding: 0 12px 4px">Zapisane replaye</span>
+<a href="#" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #1f2024; border: 1px solid #c9b8ff; text-decoration: none; color: #f1f2f4">
+<span style="font-size: 13px; font-weight: 600">Dawn of the Dragonstar</span>
+<span style="font-size: 12px; color: #9ea2ab">[Maki's Expert] · fail 1:08</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: #d4d6db">
+<span style="font-size: 13px; font-weight: 600">Bluenation 180 BPM</span>
+<span style="font-size: 12px; color: #9ea2ab">Stream Practice · 9 prób</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: #d4d6db">
+<span style="font-size: 13px; font-weight: 600">bbydoll [love me]</span>
+<span style="font-size: 12px; color: #9ea2ab">8 prób · najlepsza 98,34%</span></a>
+</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 24px 32px 48px; display: flex; flex-direction: column; gap: 24px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: flex-end">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #9ea2ab">Replay zapisany automatycznie · analiza z października</span>
+<h1 style="margin: 0; font-size: 28px; font-weight: 700">Dawn of the Dragonstar [Maki's Expert]</h1>
+<span style="font-size: 14px; color: #c9ccd2">3:30 · 175 BPM · trzy czwarte obiektów to streamy · fail w 1:08</span>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #1b1c20; border: 1px solid #2a2c31; color: #f1f2f4; font: inherit; font-size: 14px; cursor: pointer">Otwórz w osu!</button>
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #e6defa; border: 0; color: #1a1b1e; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Udostępnij AI</button>
+</div>
+</div>
+
+<section aria-label="Najważniejsze liczby" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+<div class="tile" style="--glow: rgba(143,179,255,0.5); background: #dfe6f3; color: #1a1b1e; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px">UR na starcie → w ostatnich 20 s</span>
+<span style="font-size: 30px; font-weight: 600">~150 → ~280</span>
+</div>
+<div class="tile" style="--glow: rgba(201,184,255,0.55); background: #e6defa; color: #1a1b1e; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px">K2 względem K1</span>
+<span style="font-size: 30px; font-weight: 600">+10 ms</span>
+</div>
+<div class="tile" style="--glow: rgba(126,224,161,0.45); background: #dde9d8; color: #1a1b1e; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px">Średni odstęp tapnięć do 1:00</span>
+<span style="font-size: 30px; font-weight: 600">84 ms</span>
+<span style="font-size: 12px">idealnie 85,7 ms, czyli równo</span>
+</div>
+<div class="tile" style="--glow: rgba(240,214,110,0.45); background: #f7f0c6; color: #1a1b1e; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px">Stream 21 nut w 1:05</span>
+<span style="font-size: 30px; font-weight: 600">10 kliknięć</span>
+<span style="font-size: 12px">zgubiony rytm, nie powolne zmęczenie</span>
+</div>
+</section>
+
+<section class="card" aria-labelledby="tl-h" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+<h2 id="tl-h" style="margin: 0; font-size: 20px; font-weight: 600">Przebieg próby</h2>
+<div style="display: grid; grid-template-columns: 55fr 10fr 3fr; gap: 4px; height: 18px">
+<div style="background: #7ee0a1; border-radius: 6px 0 0 6px"></div>
+<div style="background: #f5b27a"></div>
+<div style="background: #ff8a8a; border-radius: 0 6px 6px 0"></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #7ee0a1">0:00–0:55</span>
+<span style="font-size: 13px; color: #c9ccd2; line-height: 1.45">Streamy po 15–19 nut tappowane równo, w tempie.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #f5b27a">0:55–1:05</span>
+<span style="font-size: 13px; color: #c9ccd2; line-height: 1.45">Życie spada do 47%, UR zaczyna rosnąć.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: #ff8a8a">1:05–1:08</span>
+<span style="font-size: 13px; color: #c9ccd2; line-height: 1.45">Stream 21 nut: 10 kliknięć, potem fail.</span>
+</div>
+</div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+
+<section class="card" aria-labelledby="jmp-h" style="flex: 1 1 420px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="jmp-h" style="margin: 0; font-size: 20px; font-weight: 600">Spóźnienie na skokach wg tempa</h2>
+<span style="font-size: 13px; color: #9ea2ab">Sesja 23.10, prawie 2800 skoków · średni hit error</span>
+</div>
+<div style="display: grid; grid-template-columns: 110px minmax(0, 1fr) 60px; gap: 12px; align-items: center">
+<span style="font-size: 13px; color: #d4d6db">200–220 BPM</span>
+<div style="height: 14px; border-radius: 7px; background: #26282d; overflow: hidden"><div style="height: 14px; width: 36.6%; background: #8fb3ff; border-radius: 7px"></div></div>
+<span style="font-size: 13px; font-weight: 600; text-align: right">+9,7 ms</span>
+<span style="font-size: 13px; color: #d4d6db">220–250 BPM</span>
+<div style="height: 14px; border-radius: 7px; background: #26282d; overflow: hidden"><div style="height: 14px; width: 60.4%; background: #c9b8ff; border-radius: 7px"></div></div>
+<span style="font-size: 13px; font-weight: 600; text-align: right">+16 ms</span>
+<span style="font-size: 13px; color: #d4d6db">250+ BPM</span>
+<div style="height: 14px; border-radius: 7px; background: #26282d; overflow: hidden"><div style="height: 14px; width: 100%; background: #f5b27a; border-radius: 7px"></div></div>
+<span style="font-size: 13px; font-weight: 600; text-align: right">+26,5 ms</span>
+</div>
+<p style="margin: 0; font-size: 13px; color: #9ea2ab; line-height: 1.45">Kyouaku i Astral Empire grają skoki przy 221–224 BPM, czyli w środkowym przedziale.</p>
+</section>
+
+<section class="card" aria-labelledby="fin-h" style="flex: 1 1 420px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="fin-h" style="margin: 0; font-size: 20px; font-weight: 600">K1 kontra K2</h2>
+<span style="font-size: 13px; color: #9ea2ab">Różnica rośnie z tempem</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="background: #222327; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #9ea2ab">Dragonstar, 175 BPM</span>
+<span style="font-size: 24px; font-weight: 600">+10 ms</span>
+<span style="font-size: 12px; color: #9ea2ab">K2 później niż K1</span>
+</div>
+<div style="background: #222327; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #9ea2ab">Streamy na DT, 260–340 BPM</span>
+<span style="font-size: 24px; font-weight: 600">+18,3 ms</span>
+<span style="font-size: 12px; color: #9ea2ab">K2 później niż K1</span>
+</div>
+<div style="background: #222327; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #9ea2ab">Rozrzut odstępów, NM</span>
+<span style="font-size: 24px; font-weight: 600">16 ms</span>
+</div>
+<div style="background: #222327; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px; color: #9ea2ab">Rozrzut odstępów, DT</span>
+<span style="font-size: 24px; font-weight: 600">30 ms</span>
+</div>
+</div>
+</section>
+
+</div>
+
+<section class="card" aria-labelledby="rec-h" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="rec-h" style="margin: 0; font-size: 20px; font-weight: 600">Dodane do to-do</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: #d4d6db; line-height: 1.5">
+<li>Streamy 150–160 BPM tylko na wyrównanie K2.</li>
+<li>Bursty z drabinką tempa: pierwsza nuta w rytm.</li>
+<li>Dragonstar na 0,85x, fragment 0:55–1:10.</li>
+</ul>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

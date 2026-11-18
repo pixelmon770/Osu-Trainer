@@ -1,0 +1,46 @@
+{
+ "krotkie_bursty": [
+  "Night of Knights [The World]",
+  "Oshama Scramble! [Jean-Mi's MASTER]",
+  "Oshama Scramble! [Re:MASTER]"
+ ],
+ "srednie_streamy_z_przerwami": [
+  "Ange du Blanc Pur [Extra]",
+  "Red Goose [Superable]",
+  "Embraced by the Flame [Extra]",
+  "rog-unlimitation [AngelHoney]",
+  "BLUE ARMY [EXTRA]",
+  "Lionheart [Expert]",
+  "Power of the Dragonflame [Roupus' Extra]"
+ ],
+ "dluzsze_streamy_stamina": [
+  "Genryuu Kaiko [Nostalgia]",
+  "Ange du Blanc Pur [Saint]",
+  "Raise My Sword [A THOUSAND FLAMES]",
+  "Sidetracked Day [Infinity Inside]",
+  "Blue Zenith [-Tynamo's Extra]",
+  "HONESTY [DISHONEST]"
+ ],
+ "maraton": [
+  "Through the Fire and Flames [Myth]",
+  "Raise My Sword (7 min)",
+  "Yomi yori [Reverberation] (8 min)"
+ ],
+ "rozstawione_streamy": [
+  "Foreground Eclipse Songs Compilation (spacing 0,72)",
+  "HONESTY (0,67)",
+  "Kurushimi (0,70)",
+  "down [G O D] (0,99)"
+ ],
+ "szczytowa_predkosc": [
+  "The Violation [pishi's Extra] (bursty 270 BPM, od 0,8x)"
+ ],
+ "ladder_stamina_by_longest_block": [
+  "Dragonflame/Lionheart 17 s",
+  "Raise My Sword Sotarks 26 s",
+  "Sidetracked Day 36 s",
+  "Blue Zenith Tynamo 38 s",
+  "Euphoria UP 39 s",
+  "HONESTY 73 s"
+ ]
+}

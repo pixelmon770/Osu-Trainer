@@ -1,0 +1,24 @@
+# zależności i buildy
+node_modules/
+out/
+dist/
+release/
+*.tsbuildinfo
+
+# sekrety i lokalne ustawienia
+.env
+.env.*
+!.env.example
+*.local
+
+# prawdziwe mapy i replaye do testów zostają tylko u Ciebie
+fixtures-local/
+*.osz
+*.osr
+
+# systemowe i edytory
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

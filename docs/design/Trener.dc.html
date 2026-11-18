@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>osu! Trener – trener kliknięć</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0f1012}
+a{color:#c9b8ff}a:hover{color:#e2d8ff}
+.card{transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 36px -14px rgba(201,184,255,0.35);border-color:#3b3650 !important}
+.tile{transition:transform .25s ease, box-shadow .25s ease}
+.tile:hover{transform:translateY(-4px);box-shadow:0 16px 38px -14px var(--glow)}
+.navlink{transition:background-color .2s ease, color .2s ease}
+.navlink:hover{background-color:#202126;color:#ffffff}
+button{transition:filter .2s ease, transform .2s ease}
+button:hover{filter:brightness(1.12)}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.hitline{animation:pulse 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.card,.tile,button{transition:none}.card:hover,.tile:hover{transform:none}.hitline{animation:none}}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #f1f2f4; background: radial-gradient(1000px 560px at 70% -8%, rgba(201,184,255,0.08), transparent 65%), #0f1012; min-height: 100vh; display: flex; flex-wrap: wrap; align-items: stretch">
+
+<sc-if value="{{showNav}}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Menu główne" style="flex: 1 1 240px; max-width: 280px; box-sizing: border-box; background: #16171a; border-right: 1px solid #26282d; padding: 24px 16px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<div style="width: 32px; height: 32px; border-radius: 10px; background: #c9b8ff; display: flex; align-items: center; justify-content: center">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16171a" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg>
+</div>
+<div style="display: flex; flex-direction: column">
+<span style="font-weight: 700; font-size: 15px">osu! Trener</span>
+<span style="font-size: 12px; color: #9ea2ab">parthmage</span>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<a class="navlink" href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>Pulpit</a>
+<a class="navlink" href="Statystyki.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="12"></line><line x1="12" y1="20" x2="12" y2="5"></line><line x1="18" y1="20" x2="18" y2="9"></line></svg>Statystyki</a>
+<a class="navlink" href="Roadmapa.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="6" r="2"></circle><circle cx="19" cy="6" r="2"></circle><circle cx="12" cy="18" r="2"></circle><path d="M7 6h10M6 8l5 8M18 8l-5 8"></path></svg>Roadmapa umiejętności</a>
+<a class="navlink" href="Replay.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="7 4 19 12 7 20 7 4"></polygon></svg>Replaye i analizy</a>
+<a class="navlink" href="Analizator.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="9" y1="9" x2="9" y2="13"></line><line x1="15" y1="9" x2="15" y2="13"></line></svg>Analizator klatek</a>
+<a class="navlink" href="Trener.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #26282d; color: #f1f2f4; text-decoration: none; font-size: 14px; font-weight: 600">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"></rect><circle cx="8" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="17" y1="10" x2="17" y2="14"></line></svg>Trener kliknięć</a>
+<a class="navlink" href="Rytm.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21l3-18 3 18"></path><line x1="7" y1="15" x2="17" y2="15"></line><line x1="12" y1="9" x2="17" y2="5"></line></svg>Rytm i metronom</a>
+<a class="navlink" href="Polaczenie.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: #d4d6db; text-decoration: none; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"></path><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg>Połączenie z AI</a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #9ea2ab; padding: 0 12px 4px">Tryby</span>
+<sc-for list="{{modes}}" as="m" hint-placeholder-count="5">
+<button type="button" onClick="{{m.pick}}" aria-pressed="{{m.on}}" style="{{m.style}}">{{m.label}}</button>
+</sc-for>
+</div>
+</nav>
+</sc-if>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; padding: 24px 32px 48px; display: flex; flex-direction: column; gap: 20px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #9ea2ab">Z planu na dziś: technika 10–15 min · tryb {{modeName}}</span>
+<h1 style="margin: 0; font-size: 26px; font-weight: 700">Stream Practice Set – Bluenation 180 BPM</h1>
+</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button type="button" onClick="{{toggleFocus}}" aria-pressed="{{focusOn}}" style="height: 44px; padding: 0 16px; border-radius: 12px; background: #1b1c20; border: 1px solid #2a2c31; color: #f1f2f4; font: inherit; font-size: 14px; cursor: pointer">{{focusLabel}}</button>
+<button type="button" style="height: 44px; padding: 0 22px; border-radius: 12px; background: #c9b8ff; border: 0; color: #16171a; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 8px 28px -8px rgba(201,184,255,0.7)">Start pętli</button>
+</div>
+</div>
+
+<section class="card" aria-label="Fragment i tempo" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 18px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: #c9ccd2">
+<span><strong style="color: #f1f2f4">0,85x</strong> · 153 BPM</span>
+<span>OD <strong style="color: #f1f2f4">8</strong></span>
+<span>Fragment <strong style="color: #f1f2f4">0:42–1:10</strong></span>
+<span>Pętla <strong style="color: #f1f2f4">3 z 10</strong></span>
+</div>
+<div style="position: relative; height: 18px; border-radius: 9px; background: #26282d; overflow: hidden" aria-hidden="true">
+<div style="position: absolute; left: 8%; width: 6%; top: 0; bottom: 0; background: #f5b27a; opacity: 0.55"></div>
+<div style="position: absolute; left: 21%; width: 11%; top: 0; bottom: 0; background: #f5b27a; opacity: 0.55"></div>
+<div style="position: absolute; left: 41%; width: 9%; top: 0; bottom: 0; background: #f5b27a; opacity: 0.55"></div>
+<div style="position: absolute; left: 63%; width: 14%; top: 0; bottom: 0; background: #f5b27a; opacity: 0.55"></div>
+<div style="position: absolute; left: 19%; width: 15%; top: 0; bottom: 0; border: 2px solid #c9b8ff; border-radius: 9px; box-sizing: border-box; box-shadow: 0 0 14px rgba(201,184,255,0.6)"></div>
+<div style="position: absolute; left: 26%; width: 2px; top: 0; bottom: 0; background: #ffffff"></div>
+</div>
+<span style="font-size: 12px; color: #9ea2ab">Pomarańczowe: streamy w mapie · fioletowa ramka: ćwiczony fragment</span>
+</section>
+
+<section aria-label="Pole gry" style="position: relative; height: 260px; border-radius: 20px; background: radial-gradient(420px 200px at 11% 50%, rgba(201,184,255,0.10), transparent 70%), #141518; border: 1px solid #2a2c31; overflow: hidden; box-shadow: 0 20px 60px -30px rgba(201,184,255,0.35)">
+<sc-for list="{{lanes}}" as="l" hint-placeholder-count="1">
+<div style="{{l.style}}"></div>
+</sc-for>
+<sc-if value="{{showGrid}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{grid}}" as="g" hint-placeholder-count="6">
+<div style="{{g.style}}"></div>
+</sc-for>
+</sc-if>
+<sc-if value="{{showWindows}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{windows}}" as="w" hint-placeholder-count="3">
+<div style="{{w.style}}"></div>
+</sc-for>
+</sc-if>
+<div class="hitline" style="position: absolute; left: 10.91%; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: #ffffff; box-shadow: 0 0 18px rgba(255,255,255,0.7)"></div>
+<sc-if value="{{showBursts}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{brackets}}" as="b" hint-placeholder-count="2">
+<div style="{{b.barStyle}}"></div>
+<div style="{{b.labelStyle}}">{{b.count}}</div>
+</sc-for>
+</sc-if>
+<sc-for list="{{notes}}" as="n" hint-placeholder-count="20">
+<div style="{{n.style}}"></div>
+</sc-for>
+<div style="position: absolute; left: 10.91%; top: 16px; transform: translateX(-50%); font-size: 22px; font-weight: 700; color: #8fd8ff; text-shadow: 0 0 14px rgba(143,216,255,0.8)">300</div>
+<div style="position: absolute; left: 16px; bottom: 12px; font-size: 13px; color: #9ea2ab">combo <strong style="color: #f1f2f4; font-size: 18px">143×</strong></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+
+<section class="card" aria-labelledby="he-h" style="flex: 1 1 420px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
+<h2 id="he-h" style="margin: 0; font-size: 17px; font-weight: 600">Hit error na żywo</h2>
+<span style="font-size: 12px; color: #9ea2ab">−60 ms · wcześnie · · · późno · +60 ms</span>
+</div>
+<sc-for list="{{errRows}}" as="r" hint-placeholder-count="2">
+<div style="display: grid; grid-template-columns: 34px minmax(0, 1fr) 72px; gap: 12px; align-items: center">
+<span style="{{r.labelStyle}}">{{r.key}}</span>
+<div style="position: relative; height: 26px; border-radius: 8px; background: #222327">
+<div style="position: absolute; left: 50%; top: 4px; bottom: 4px; width: 1px; background: #5d6068"></div>
+<div style="position: absolute; left: 36.7%; width: 26.6%; top: 0; bottom: 0; background: rgba(143,216,255,0.08)"></div>
+<sc-for list="{{r.ticks}}" as="t" hint-placeholder-count="10">
+<div style="{{t.style}}"></div>
+</sc-for>
+<div style="{{r.meanStyle}}"></div>
+</div>
+<span style="font-size: 13px; font-weight: 600; text-align: right">{{r.mean}}</span>
+</div>
+</sc-for>
+<span style="font-size: 13px; color: #f5b27a">K2 spóźnia się o ~10 ms względem K1</span>
+</section>
+
+<section class="card" aria-labelledby="eq-h" style="flex: 1 1 300px; background: #1b1c20; border: 1px solid #2a2c31; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+<h2 id="eq-h" style="margin: 0; font-size: 17px; font-weight: 600">Równość tapnięć</h2>
+<div style="display: flex; align-items: baseline; gap: 10px">
+<span style="font-size: 28px; font-weight: 600">±9 ms</span>
+<span style="font-size: 13px; color: #7ee0a1">równo, luz trzyma</span>
+</div>
+<div style="position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #7ee0a1 0%, #f0d66e 55%, #f5b27a 100%)" aria-hidden="true">
+<div style="position: absolute; left: 22%; top: -5px; width: 4px; height: 22px; border-radius: 2px; background: #ffffff; box-shadow: 0 0 10px rgba(255,255,255,0.8)"></div>
+</div>
+<span style="font-size: 12px; color: #9ea2ab; line-height: 1.45">Rozrzut odstępów między kliknięciami z ostatnich 32 nut. Gdy wejdzie w pomarańczowe, zwolnij albo zrób przerwę.</span>
+</section>
+
+<section aria-label="Wynik pętli" style="flex: 1 1 260px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div class="tile" style="--glow: rgba(143,179,255,0.5); background: #dfe6f3; color: #1a1b1e; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px">Acc</span><span style="font-size: 22px; font-weight: 600">97,8%</span>
+</div>
+<div class="tile" style="--glow: rgba(201,184,255,0.55); background: #e6defa; color: #1a1b1e; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px">UR</span><span style="font-size: 22px; font-weight: 600">132</span>
+</div>
+<div class="tile" style="--glow: rgba(126,224,161,0.45); background: #dde9d8; color: #1a1b1e; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px">300 / 100 / miss</span><span style="font-size: 22px; font-weight: 600">139 / 4 / 0</span>
+</div>
+<div class="tile" style="--glow: rgba(240,214,110,0.45); background: #f7f0c6; color: #1a1b1e; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 12px">Złamania alternate</span><span style="font-size: 22px; font-weight: 600">1</span>
+</div>
+</section>
+
+</div>
+
+<sc-if value="{{showOptions}}" hint-placeholder-val="{{ true }}">
+<section class="card" aria-labelledby="opt-h" style="background: #1b1c20; border: 1px solid #2a2c31; border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+<h2 id="opt-h" style="margin: 0; font-size: 17px; font-weight: 600">Czytelność</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center">
+<div role="group" aria-label="Liczba torów" style="display: flex; background: #222327; border-radius: 12px; padding: 4px; gap: 4px">
+<button type="button" onClick="{{oneLane}}" aria-pressed="{{oneOn}}" style="{{oneStyle}}">Jeden tor</button>
+<button type="button" onClick="{{twoLanes}}" aria-pressed="{{twoOn}}" style="{{twoStyle}}">Dwa tory</button>
+</div>
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 10px">
+<button type="button" role="switch" aria-checked="{{o.on}}" aria-label="{{o.label}}" onClick="{{o.toggle}}" style="{{o.trackStyle}}"><span style="{{o.knobStyle}}"></span></button>
+<span style="font-size: 14px">{{o.label}}</span>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lanes: 1, colors: true, grid: true, windows: true, bursts: true, focus: false, mode: 0 };
+  }
+  sw(id, label) {
+    const on = !!this.state[id];
+    return {
+      label: label,
+      on: on ? 'true' : 'false',
+      trackStyle: 'flex: 0 0 52px; width: 52px; height: 30px; border-radius: 15px; border: 0; padding: 3px; cursor: pointer; display: flex; align-items: center; justify-content: ' + (on ? 'flex-end' : 'flex-start') + '; background: ' + (on ? '#c9b8ff' : '#3a3c42'),
+      knobStyle: 'width: 24px; height: 24px; border-radius: 50%; background: ' + (on ? '#16171a' : '#d4d6db'),
+      toggle: () => this.setState({ [id]: !on })
+    };
+  }
+  renderVals() {
+    const s = this.state;
+    const W = 1100, HX = 120, U = 44;
+    const pct = (x) => (x / W * 100).toFixed(2) + '%';
+    const K1 = '#8fb3ff', K2 = '#f5b27a';
+    const laneY = (f) => s.lanes === 1 ? 50 : (f === 1 ? 32 : 68);
+    const seq = [[0, 1], [2, 1], [4, 9], [14, 1], [16, 1], [18, 5]];
+    const notes = [], brackets = [];
+    let idx = 0;
+    seq.forEach((it) => {
+      const u0 = it[0], cnt = it[1];
+      for (let k = 0; k < cnt; k++) {
+        const u = u0 + k, f = idx % 2 === 0 ? 1 : 2, y = laneY(f);
+        const col = s.colors ? (f === 1 ? K1 : K2) : '#e9eaee';
+        const glow = s.colors ? (f === 1 ? 'rgba(143,179,255,0.55)' : 'rgba(245,178,122,0.55)') : 'rgba(255,255,255,0.3)';
+        const start = cnt > 1 && k === 0 && s.bursts;
+        const passed = u === 0;
+        notes.push({ style: 'position: absolute; left: ' + pct(HX + u * U) + '; top: ' + y + '%; width: 34px; height: 34px; border-radius: 50%; transform: translate(-50%, -50%); background: ' + col + '; opacity: ' + (passed ? 0.3 : 1) + '; box-shadow: ' + (start ? '0 0 0 3px #141518, 0 0 0 6px #ffffff, 0 0 18px ' + glow : '0 0 14px ' + glow) });
+        idx++;
+      }
+      if (cnt > 1) {
+        const yTop = s.lanes === 1 ? 50 : 32, yBot = s.lanes === 1 ? 50 : 68;
+        brackets.push({
+          count: cnt,
+          barStyle: 'position: absolute; left: ' + pct(HX + u0 * U) + '; width: ' + pct((cnt - 1) * U) + '; top: calc(' + yBot + '% + 28px); height: 3px; border-radius: 2px; background: #c9b8ff; opacity: 0.8; box-shadow: 0 0 8px rgba(201,184,255,0.7)',
+          labelStyle: 'position: absolute; left: ' + pct(HX + u0 * U) + '; top: calc(' + yTop + '% - 50px); transform: translateX(-50%); font-size: 13px; font-weight: 700; color: #16171a; background: #ffffff; border-radius: 999px; padding: 2px 9px'
+        });
+      }
+    });
+    const grid = [];
+    for (let u = 4; u <= 22; u += 4) {
+      const measure = u % 16 === 0;
+      grid.push({ style: 'position: absolute; left: ' + pct(HX + u * U) + '; top: 0; bottom: 0; width: ' + (measure ? 2 : 1) + 'px; background: ' + (measure ? '#3d3f46' : '#26282d') });
+    }
+    const windows = [[54, 'rgba(240,214,110,0.07)'], [34, 'rgba(126,224,161,0.09)'], [14, 'rgba(143,216,255,0.16)']].map((w) => ({ style: 'position: absolute; left: ' + pct(HX - w[0]) + '; width: ' + pct(w[0] * 2) + '; top: 0; bottom: 0; background: ' + w[1] }));
+    const lanes = s.lanes === 1
+      ? [{ style: 'position: absolute; left: 0; right: 0; top: calc(50% - 30px); height: 60px; background: #1b1c20' }]
+      : [{ style: 'position: absolute; left: 0; right: 0; top: calc(32% - 28px); height: 56px; background: #1b1c20' }, { style: 'position: absolute; left: 0; right: 0; top: calc(68% - 28px); height: 56px; background: #1b1c20' }];
+    const ePos = (v) => ((v + 60) / 120 * 100).toFixed(1) + '%';
+    const mkRow = (key, col, vals) => {
+      const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+      return {
+        key: key,
+        labelStyle: 'font-size: 14px; font-weight: 700; color: ' + col,
+        ticks: vals.map((v, i) => ({ style: 'position: absolute; left: ' + ePos(v) + '; top: 5px; bottom: 5px; width: 3px; margin-left: -1.5px; border-radius: 2px; background: ' + col + '; opacity: ' + (0.35 + i * 0.065).toFixed(2) })),
+        meanStyle: 'position: absolute; left: ' + ePos(mean) + '; top: -3px; bottom: -3px; width: 4px; margin-left: -2px; border-radius: 2px; background: #ffffff; box-shadow: 0 0 10px ' + col,
+        mean: (mean >= 0 ? '+' : '') + mean.toFixed(0) + ' ms'
+      };
+    };
+    const modeList = ['Streamy z mapy', '1/4 do muzyki', 'Bursty z drabinką tempa', 'Samo K2', 'Własna gęstość'];
+    const modes = modeList.map((m, i) => ({
+      label: m,
+      on: s.mode === i ? 'true' : 'false',
+      style: 'text-align: left; min-height: 40px; padding: 8px 12px; border-radius: 10px; border: 1px solid ' + (s.mode === i ? '#c9b8ff' : 'transparent') + '; background: ' + (s.mode === i ? '#1f2024' : 'transparent') + '; color: ' + (s.mode === i ? '#f1f2f4' : '#d4d6db') + '; font: inherit; font-size: 14px; cursor: pointer',
+      pick: () => this.setState({ mode: i })
+    }));
+    const seg = (on) => 'height: 36px; padding: 0 14px; border-radius: 9px; border: 0; font: inherit; font-size: 14px; cursor: pointer; ' + (on ? 'background: #c9b8ff; color: #16171a; font-weight: 600' : 'background: transparent; color: #d4d6db');
+    return {
+      showNav: !s.focus,
+      showOptions: !s.focus,
+      focusOn: s.focus ? 'true' : 'false',
+      focusLabel: s.focus ? 'Wyjdź z trybu skupienia' : 'Tryb skupienia',
+      toggleFocus: () => this.setState({ focus: !s.focus }),
+      modes,
+      modeName: modeList[s.mode].toLowerCase(),
+      notes, brackets, grid, windows, lanes,
+      showGrid: s.grid, showWindows: s.windows, showBursts: s.bursts,
+      errRows: [mkRow('K1', K1, [-8, 2, 5, -3, 7, 1, 4, 9, -1, 3]), mkRow('K2', K2, [10, 18, 6, 15, 22, 12, 9, 16, 11, 14])],
+      oneLane: () => this.setState({ lanes: 1 }),
+      twoLanes: () => this.setState({ lanes: 2 }),
+      oneOn: s.lanes === 1 ? 'true' : 'false',
+      twoOn: s.lanes === 2 ? 'true' : 'false',
+      oneStyle: seg(s.lanes === 1),
+      twoStyle: seg(s.lanes === 2),
+      opts: [this.sw('colors', 'Kolory palców'), this.sw('grid', 'Siatka rytmu'), this.sw('windows', 'Okna oceny'), this.sw('bursts', 'Początek burstu i licznik')]
+    };
+  }
+}
+</script>
+</body>
+</html>

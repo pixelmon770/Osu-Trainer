@@ -1,0 +1,19 @@
+{
+  "name": "osu-trainer",
+  "private": true,
+  "description": "osu! Trener – analiza replayów, statystyki, roadmapa umiejętności i narzędzia treningowe dla graczy osu!",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @osu-trainer/desktop",
+    "build": "npm run build -w @osu-trainer/desktop",
+    "test": "npm test -w @osu-trainer/analyzer",
+    "analyze": "npm run analyze -w @osu-trainer/analyzer --",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

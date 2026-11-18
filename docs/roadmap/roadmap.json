@@ -1,0 +1,866 @@
+{
+ "source": {
+  "title": "osu! phd chart",
+  "author": "DigitalHypno",
+  "links": [
+   "https://osu.ppy.sh/users/4384207",
+   "https://youtu.be/uc99yWeP1h4"
+  ],
+  "note": "przebudowane: zob. SPEC.md sekcja 4"
+ },
+ "columns": [
+  "Podstawy",
+  "Filary",
+  "Kontrola",
+  "Umiejętności",
+  "Zaawansowane",
+  "Złożone",
+  "Złożone"
+ ],
+ "group_colors": {
+  "base": "#e3e6ee",
+  "read": "#b8c7f5",
+  "rhythm": "#d2c6f7",
+  "tap": "#f5bcbc",
+  "aim": "#f2e49f",
+  "combo": "#a9e3cc",
+  "body": "#f6d1a6",
+  "head": "#c6ebb4"
+ },
+ "status_values": {
+  "mocne": "mocne",
+  "ok": "w porządku",
+  "slabe": "do poprawy",
+  "brak": "brak danych"
+ },
+ "field_notes": {
+  "what": "Co to jest",
+  "why": "Dlaczego ważne",
+  "measure": "Jak mierzy aplikacja",
+  "train": "Jak ćwiczyć",
+  "maps": "Mapy i przykłady",
+  "you": "Poziom gracza parthmage (18.11.2026)"
+ },
+ "nodes": [
+  {
+   "id": "podst",
+   "label": "Podstawy gry",
+   "original_term": "fundamental elements + low star maps",
+   "is_new": false,
+   "group": "base",
+   "column": 0,
+   "row": 4,
+   "player_status": "mocne",
+   "what": "Kółka, slidery, spinnery i łatwe mapy. Tu uczysz się trafiać w rytm i rozumieć, co dzieje się na ekranie.",
+   "why": "Z tego wyrastają wszystkie filary: reading, rytm, tapping i aim.",
+   "measure": "Wyniki na mapach do około 4★.",
+   "train": "Graj różne łatwe mapy różnych mapperów zamiast ciągle tej samej.",
+   "maps": "Mapy 2–4★ w różnych stylach.",
+   "you": "Opanowane."
+  },
+  {
+   "id": "tech",
+   "label": "Technika i setup",
+   "original_term": "technique efficiency",
+   "is_new": false,
+   "group": "body",
+   "column": 0,
+   "row": 8,
+   "player_status": "brak",
+   "what": "Jak trzymasz rękę, jak ustawiony jest tablet lub mysz i klawiatura (punkt zadziałania, rapid trigger) oraz czy grasz na luzie.",
+   "why": "Dobra technika zużywa mniej siły, więc rośnie szybkość i stamina. Zmiana sprzętu potrafi zmienić UR bardziej niż tydzień treningu.",
+   "measure": "Porównanie UR i różnicy K2–K1 przed zmianą ustawień i po niej (test A/B).",
+   "train": "Zmieniaj jedną rzecz naraz i testuj. Gdy wybierzesz ustawienia, trzymaj je kilka tygodni.",
+   "maps": "Stream Practice na obniżonym tempie jako test.",
+   "you": "Do sprawdzenia: test A/B ustawień Wootinga."
+  },
+  {
+   "id": "endur",
+   "label": "Kondycja",
+   "original_term": "endurance",
+   "is_new": false,
+   "group": "body",
+   "column": 0,
+   "row": 9,
+   "player_status": "ok",
+   "what": "Ogólna wytrzymałość ręki i ciała na długie granie.",
+   "why": "Zasila staminę tappingu i aimu oraz wytrzymałość na długich mapach.",
+   "measure": "Spadek acc i UR w trakcie sesji i w trakcie długich map.",
+   "train": "Krótsze, regularne sesje zamiast maratonów. Przerwy co kilka map.",
+   "maps": "—",
+   "you": "W porządku: na mapach od 3 minut masz 97,40% acc, czyli tyle co na krótkich."
+  },
+  {
+   "id": "focus",
+   "label": "Skupienie",
+   "original_term": "focus",
+   "is_new": false,
+   "group": "head",
+   "column": 0,
+   "row": 10,
+   "player_status": "brak",
+   "what": "Utrzymanie uwagi przez całą mapę bez odpływania myślami.",
+   "why": "Od skupienia zależą nerwy, wychodzenie z mindblocka i precyzja.",
+   "measure": "Missy we fragmentach, które zwykle grasz czysto.",
+   "train": "Cel na każdą próbę, krótsze sesje, przerwa po serii failów.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "read",
+   "label": "Reading",
+   "original_term": "reading",
+   "is_new": false,
+   "group": "read",
+   "column": 1,
+   "row": 1,
+   "player_status": "ok",
+   "what": "Rozumienie tego, co pokazuje ekran: gdzie i kiedy trzeba kliknąć.",
+   "why": "Bez czytania nawet dobry aim i tapping nie mają czego trafić.",
+   "measure": "Missy na fragmentach, których wcześniej nie grałeś.",
+   "train": "Dużo różnych map, nie tylko ulubionych.",
+   "maps": "Mapy różnych mapperów i stylów.",
+   "you": "W porządku."
+  },
+  {
+   "id": "rytm",
+   "label": "Wyczucie rytmu",
+   "original_term": "rhythm sense",
+   "is_new": false,
+   "group": "rhythm",
+   "column": 1,
+   "row": 3,
+   "player_status": "mocne",
+   "what": "Słyszenie i czucie, kiedy wypada nuta: na uderzenie, na 1/2, 1/4 albo 1/3.",
+   "why": "Daje accuracy, szybsze czytanie i radzenie sobie z nietypowym rytmem.",
+   "measure": "Hit error na pojedynczych nutach.",
+   "train": "Metronom, ćwiczenia perkusyjne, granie do muzyki zamiast do kółek.",
+   "maps": "Mapy z wyraźną perkusją.",
+   "you": "Mocne: na pojedynczych nutach trafiasz w środek (−3 do +5 ms)."
+  },
+  {
+   "id": "tap",
+   "label": "Tapping",
+   "original_term": "tapping",
+   "is_new": false,
+   "group": "tap",
+   "column": 1,
+   "row": 5,
+   "player_status": "ok",
+   "what": "Klikanie palcami: jak szybko, jak równo i jak długo.",
+   "why": "Podstawa streamów, burstów i accuracy.",
+   "measure": "UR, różnica K2–K1, rozrzut odstępów między kliknięciami.",
+   "train": "Trener kliknięć i ćwiczenia z metronomem.",
+   "maps": "—",
+   "you": "W porządku, ale gałąź streamów jest Twoim słabym punktem."
+  },
+  {
+   "id": "aim",
+   "label": "Aim",
+   "original_term": "aim",
+   "is_new": false,
+   "group": "aim",
+   "column": 1,
+   "row": 7,
+   "player_status": "mocne",
+   "what": "Ruch kursora do kółek.",
+   "why": "Z niego wychodzą snap i flow aim, precyzja, slider aim i szybkość aimu.",
+   "measure": "Odległość kliknięcia od środka kółka, overshoot i niedolot.",
+   "train": "Mapy skokowe, potem stopniowo szybsze.",
+   "maps": "—",
+   "you": "Mocne na mapach do ~210 BPM."
+  },
+  {
+   "id": "speed",
+   "label": "Szybkość",
+   "original_term": "speed",
+   "is_new": false,
+   "group": "body",
+   "column": 1,
+   "row": 8,
+   "player_status": "ok",
+   "what": "Ogólne tempo, w jakim ręce i głowa nadążają za mapą.",
+   "why": "Dzieli się na szybkość tappingu, aimu i czytania.",
+   "measure": "Najwyższe BPM, przy którym wynik się nie sypie.",
+   "train": "Rate Change w lazerze: podnoś tempo o 0,05x, gdy gra jest równa.",
+   "maps": "Ta sama mapa na 0,85x → 0,9x → 1,0x.",
+   "you": "W porządku."
+  },
+  {
+   "id": "mind",
+   "label": "Mindblock",
+   "original_term": "preventing and fixing mindblock",
+   "is_new": false,
+   "group": "head",
+   "column": 1,
+   "row": 9,
+   "player_status": "slabe",
+   "what": "Chwila, kiedy mózg nagle „gubi” wzór albo rytm, który zwykle znasz. Na przykład przestajesz wiedzieć, który palec teraz klika.",
+   "why": "Jeden mindblock potrafi zepsuć dobrze idącą mapę.",
+   "measure": "Nagłe serie missów w środku dobrze granej mapy.",
+   "train": "Zwolnij mapę, zagraj trudny fragment kilka razy, potem wróć do normalnego tempa.",
+   "maps": "—",
+   "you": "Do poprawy: na Dawn of the Dragonstar stream 21 nut dostał tylko 10 kliknięć po minucie równej gry."
+  },
+  {
+   "id": "nerwy",
+   "label": "Nerwy",
+   "original_term": "nerve control",
+   "is_new": false,
+   "group": "head",
+   "column": 1,
+   "row": 10,
+   "player_status": "brak",
+   "what": "Spokojna ręka przy długim combo albo ważnym wyniku.",
+   "why": "Spięta ręka gra wolniej i mniej równo.",
+   "measure": "Missy w końcówce prób na FC w porównaniu z resztą mapy.",
+   "train": "Dużo prób „na wynik”, spokojny oddech, rozluźnianie ręki w przerwach mapy.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "rspeed",
+   "label": "Szybkość czytania",
+   "original_term": "reading speed",
+   "is_new": false,
+   "group": "read",
+   "column": 2,
+   "row": 0,
+   "player_status": "brak",
+   "what": "Jak szybko rozumiesz gęste fragmenty mapy.",
+   "why": "Przy 220 BPM kolejne nuty w streamie wypadają co ~68 ms, więc nie ma czasu na zastanawianie się.",
+   "measure": "Wynik przy rosnącym Rate Change na tej samej mapie.",
+   "train": "Znane mapy na coraz wyższym tempie.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "wzory",
+   "label": "Rozpoznawanie wzorów",
+   "original_term": "pattern processing",
+   "is_new": false,
+   "group": "read",
+   "column": 2,
+   "row": 2,
+   "player_status": "ok",
+   "what": "Rozpoznawanie układów nut (trójkąty, skoki tam i z powrotem, streamy, bursty) i od razu wiedza, jak je zagrać.",
+   "why": "Na tym stoją sightreading, czytanie przy wysokim AR, accuracy, slider aim i consistency.",
+   "measure": "Różnica wyniku między pierwszym a kolejnymi podejściami do mapy.",
+   "train": "Różnorodne mapy od różnych mapperów.",
+   "maps": "—",
+   "you": "W porządku."
+  },
+  {
+   "id": "tspeed",
+   "label": "Szybkość tappingu",
+   "original_term": "tapping speed",
+   "is_new": false,
+   "group": "tap",
+   "column": 2,
+   "row": 4,
+   "player_status": "ok",
+   "what": "Najszybsze równe klikanie. 200 BPM w 1/4 to 13,3 kliknięcia na sekundę.",
+   "why": "Bez szybkości nie zagrasz burstów i streamów w wysokim tempie.",
+   "measure": "Najwyższe BPM, przy którym burst jest równy.",
+   "train": "Bursty z drabinką tempa w trenerze i metronomie.",
+   "maps": "Night of Knights, Oshama Scramble!, The Violation na 0,8x.",
+   "you": "W porządku: krótkie bursty 190–200 BPM, kiedyś 220."
+  },
+  {
+   "id": "palce",
+   "label": "Kontrola palców",
+   "original_term": "finger control",
+   "is_new": false,
+   "group": "tap",
+   "column": 2,
+   "row": 5,
+   "player_status": "slabe",
+   "what": "Panowanie nad każdym palcem osobno: siła, moment kliknięcia, odbicie.",
+   "why": "Daje accuracy, równy alternate i consistency.",
+   "measure": "Spóźnienie K2 względem K1.",
+   "train": "Double stroke, „Samo P”, wolne streamy 150–160 BPM.",
+   "maps": "Stream Practice na 0,85x.",
+   "you": "Do poprawy: K2 spóźnia się o 10–18 ms."
+  },
+  {
+   "id": "kursor",
+   "label": "Kontrola kursora",
+   "original_term": "cursor control",
+   "is_new": false,
+   "group": "aim",
+   "column": 2,
+   "row": 7,
+   "player_status": "mocne",
+   "what": "Prowadzenie kursora dokładnie tam, gdzie chcesz, i zatrzymanie go w kółku.",
+   "why": "Z tego wychodzą snap i flow aim, precyzja i slider aim.",
+   "measure": "Średni dolot do środka kółka (w promieniach kółka).",
+   "train": "Mapy skokowe w wygodnym tempie, nacisk na trafianie w środek.",
+   "maps": "—",
+   "you": "Mocne: dolot −0,07 r (w październiku było −0,38 r)."
+  },
+  {
+   "id": "aspeed",
+   "label": "Szybkość aimu",
+   "original_term": "aim speed",
+   "is_new": false,
+   "group": "aim",
+   "column": 2,
+   "row": 8,
+   "player_status": "slabe",
+   "what": "Skoki przy wysokim BPM, gdy na każdy ruch jest bardzo mało czasu.",
+   "why": "Kluczowe dla Kyouaku i Astral Empire (221–224 BPM).",
+   "measure": "Hit error na skokach w zależności od BPM.",
+   "train": "Mapy skokowe 210–230 BPM, klikanie do muzyki.",
+   "maps": "—",
+   "you": "Do poprawy: +16 ms przy 220–250 BPM, +26,5 ms powyżej 250."
+  },
+  {
+   "id": "sight",
+   "label": "Sightreading",
+   "original_term": "sightreading",
+   "is_new": false,
+   "group": "read",
+   "column": 3,
+   "row": 0,
+   "player_status": "brak",
+   "what": "Zagranie mapy dobrze za pierwszym razem, bez jej znajomości.",
+   "why": "Pokazuje, ile czytania masz „w głowie”, a ile z pamięci mapy.",
+   "measure": "Wynik pierwszego podejścia w porównaniu z najlepszym.",
+   "train": "Codziennie kilka nowych map w swoim zakresie gwiazdek.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "arread",
+   "label": "Reading przy AR",
+   "original_term": null,
+   "is_new": true,
+   "group": "read",
+   "column": 3,
+   "row": 1,
+   "player_status": "slabe",
+   "what": "AR (approach rate) to czas, przez jaki kółko jest widać przed trafieniem: AR 9 to 600 ms, AR 10 to 450 ms. Wysoki AR wymaga szybkiej reakcji, niski cierpliwości.",
+   "why": "Ta sama mapa przy innym AR to zupełnie inna trudność. Przy niskim BPM i AR 10 widzisz mniej uderzeń do przodu.",
+   "measure": "Wynik tej samej mapy przy różnym AR (Difficulty Adjust w lazerze).",
+   "train": "Podnoś AR stopniowo na łatwiejszych mapach.",
+   "maps": "Twoje top plays mają średnio AR 9,3.",
+   "you": "Do poprawy: AR 10+ sprawiał Ci trudność."
+  },
+  {
+   "id": "overl",
+   "label": "Nakładające się nuty",
+   "original_term": null,
+   "is_new": true,
+   "group": "read",
+   "column": 3,
+   "row": 2,
+   "player_status": "brak",
+   "what": "Fragmenty, gdzie nowe kółko pojawia się na starym albo ścieżka mapy przecina samą siebie.",
+   "why": "Coraz częstsze w nowych mapach. W down [G O D] nachodzi tak 22% nut, w Kurushimi 7%.",
+   "measure": "Missy na nutach, na które coś nachodzi.",
+   "train": "Mapy z dużą liczbą nakładających się wzorów, zwolnione przez Rate Change.",
+   "maps": "down (yax03): Pro! → H4CK3R → G O D.",
+   "you": "Brak danych."
+  },
+  {
+   "id": "acc",
+   "label": "Accuracy",
+   "original_term": "accuracy",
+   "is_new": false,
+   "group": "rhythm",
+   "column": 3,
+   "row": 3,
+   "player_status": "mocne",
+   "what": "Trafianie w środek okna czasowego, czyli 300 zamiast 100.",
+   "why": "Od accuracy zależy pp i wynik nawet przy FC.",
+   "measure": "Acc i UR na mapach.",
+   "train": "Mapy poniżej swojego maksimum, nastawione na czyste 300.",
+   "maps": "—",
+   "you": "Mocne: 97,95% na profilu, 97,27% średnio w top 100."
+  },
+  {
+   "id": "techr",
+   "label": "Rytm złożony (tech)",
+   "original_term": null,
+   "is_new": true,
+   "group": "rhythm",
+   "column": 3,
+   "row": 4,
+   "player_status": "brak",
+   "what": "Nietypowe rytmy: cutstreamy (urwane streamy), nieparzyste bursty, przejścia 1/4 ↔ 1/3, zmiany prędkości sliderów (SV).",
+   "why": "Mapy „tech” to dziś osobna, popularna kategoria. Rytm zmienia się tam co chwilę.",
+   "measure": "Hit error na nutach tuż po zmianie rytmu.",
+   "train": "Triola 1/3 i przesuwany akcent w metronomie.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "alt",
+   "label": "Równość i alternate",
+   "original_term": null,
+   "is_new": true,
+   "group": "tap",
+   "column": 3,
+   "row": 5,
+   "player_status": "slabe",
+   "what": "Alternate to klikanie na zmianę dwoma palcami (K1, K2, K1…). Równość oznacza, że oba palce trafiają tak samo.",
+   "why": "Bez tego streamy rozjeżdżają się na co drugiej nucie.",
+   "measure": "Rozrzut odstępów między kliknięciami i liczba złamań alternate (dwa razy ten sam palec).",
+   "train": "Single stroke na metronomie, trener kliknięć.",
+   "maps": "Stream Practice na 0,85x.",
+   "you": "Do poprawy: rozrzut 16 ms (NM) i 30 ms (DT)."
+  },
+  {
+   "id": "consist",
+   "label": "Consistency",
+   "original_term": "consistency",
+   "is_new": false,
+   "group": "head",
+   "column": 3,
+   "row": 6,
+   "player_status": "ok",
+   "what": "Powtarzalność: grasz podobnie dobrze za każdym razem.",
+   "why": "Pp dają wyniki z FC i wysokim acc, a te wymagają równej gry od początku do końca.",
+   "measure": "Rozrzut wyników między próbami tej samej mapy.",
+   "train": "Mapy w swoim zakresie, granie aż wynik będzie stały.",
+   "maps": "—",
+   "you": "W porządku: 49 z top 100 to FC."
+  },
+  {
+   "id": "snap",
+   "label": "Snap aim (skoki)",
+   "original_term": null,
+   "is_new": true,
+   "group": "aim",
+   "column": 3,
+   "row": 7,
+   "player_status": "ok",
+   "what": "Skoki z ostrą zmianą kierunku: kursor „strzela” do kółka i zatrzymuje się w nim.",
+   "why": "Większość map skokowych. Kurushimi ma ponad 700 dużych skoków na 1/2.",
+   "measure": "Overshoot i niedolot według długości i kąta skoku.",
+   "train": "Mapy skokowe, najpierw na trafianie w środek, potem szybciej.",
+   "maps": "—",
+   "you": "W porządku na mapach skokowych do ~210 BPM."
+  },
+  {
+   "id": "flow",
+   "label": "Flow aim",
+   "original_term": "flow aim",
+   "is_new": false,
+   "group": "aim",
+   "column": 3,
+   "row": 8,
+   "player_status": "brak",
+   "what": "Płynny ruch kursora po łukach, bez zatrzymywania się na każdym kółku. Mapa prowadzi rękę jak po torze.",
+   "why": "Potrzebny w rozstawionych streamach i szybkich, płynnych wzorach.",
+   "measure": "Błąd kursora na łukach i w streamach o dużym spacingu.",
+   "train": "Rozstawione streamy przy niskim BPM, mapy z płynnymi wzorami.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "prec",
+   "label": "Precyzja",
+   "original_term": "precision",
+   "is_new": false,
+   "group": "aim",
+   "column": 3,
+   "row": 9,
+   "player_status": "brak",
+   "what": "Trafianie małych kółek (wysoki CS, np. 5 i więcej).",
+   "why": "Małe kółka nie wybaczają nawet drobnego błędu ręki.",
+   "measure": "Odległość od środka kółka na mapach z wysokim CS.",
+   "train": "Mapy z małym CS albo HR na łatwiejszych mapach.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "slider",
+   "label": "Slider aim",
+   "original_term": "slider aim",
+   "is_new": false,
+   "group": "aim",
+   "column": 3,
+   "row": 10,
+   "player_status": "brak",
+   "what": "Prowadzenie sliderów, także krętych i szybkich, bez zrywania (slider break).",
+   "why": "Slider break zrywa combo jak miss.",
+   "measure": "Slider breaki i trafienia końcówek sliderów.",
+   "train": "Mapy z dużą liczbą sliderów i zmian prędkości.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "tstam",
+   "label": "Stamina tappingu",
+   "original_term": "tapping stamina",
+   "is_new": false,
+   "group": "tap",
+   "column": 4,
+   "row": 4,
+   "player_status": "slabe",
+   "what": "Jak długo utrzymasz równe tempo bez przerwy.",
+   "why": "Długie streamy wymagają nie tylko szybkości, ale i wytrzymałości palców.",
+   "measure": "Najdłuższy blok streamów zagrany bez wzrostu UR.",
+   "train": "Stopniowe wydłużanie bloków przy tempie poniżej maksimum.",
+   "maps": "Dragonflame → Genryuu Kaiko → Raise My Sword → Sidetracked Day → Blue Zenith.",
+   "you": "Do poprawy: dziś ~17 s, kiedyś 36 s."
+  },
+  {
+   "id": "burst",
+   "label": "Kontrola burstów",
+   "original_term": null,
+   "is_new": true,
+   "group": "tap",
+   "column": 4,
+   "row": 5,
+   "player_status": "slabe",
+   "what": "Burst to krótka seria nut 1/4, zwykle 3–9. Liczy się wejście w serię na czas i start z dowolnego palca.",
+   "why": "Spóźnione wejście rozjeżdża całą serię.",
+   "measure": "Hit error pierwszej nuty burstu, start od K1 i od K2 osobno.",
+   "train": "Burst 5 od L i od P w metronomie, bursty z drabinką tempa.",
+   "maps": "Red Goose, Oshama Scramble!, Night of Knights.",
+   "you": "Do poprawy: wejście średnio +27 ms za późno."
+  },
+  {
+   "id": "koord",
+   "label": "Koordynacja aim–tap",
+   "original_term": null,
+   "is_new": true,
+   "group": "combo",
+   "column": 4,
+   "row": 6,
+   "player_status": "slabe",
+   "what": "Kliknięcie w rytm dokładnie wtedy, gdy kursor dolatuje do kółka. Ręka z kursorem i palce muszą działać razem.",
+   "why": "Tej umiejętności brakowało w oryginale. To ona decyduje, czy dobry aim i dobry tapping dają razem dobre skoki i streamy.",
+   "measure": "Hit error na skokach w porównaniu z pojedynczymi nutami.",
+   "train": "Mapy skokowe 210–230 BPM z hit error meterem. Klikaj do muzyki, nie w momencie dolotu.",
+   "maps": "—",
+   "you": "Do poprawy: pojedyncze nuty w środku, ale skoki 220+ BPM spóźnione o 16–26 ms."
+  },
+  {
+   "id": "astam",
+   "label": "Stamina aimu",
+   "original_term": "aim stamina",
+   "is_new": false,
+   "group": "aim",
+   "column": 4,
+   "row": 8,
+   "player_status": "brak",
+   "what": "Utrzymanie celności przez długie fragmenty skoków.",
+   "why": "W długich mapach skokowych ręka z kursorem też się męczy.",
+   "measure": "Błąd aimu w końcówce długich fragmentów skoków.",
+   "train": "Dłuższe mapy skokowe w wygodnym tempie.",
+   "maps": "—",
+   "you": "Brak danych."
+  },
+  {
+   "id": "marathon",
+   "label": "Długie mapy",
+   "original_term": null,
+   "is_new": true,
+   "group": "body",
+   "column": 4,
+   "row": 9,
+   "player_status": "ok",
+   "what": "Utrzymanie formy przez 5–8 minut mapy, zarówno rąk, jak i koncentracji.",
+   "why": "Kyouaku i Kurushimi trwają ponad 8 minut.",
+   "measure": "UR w ostatniej ćwiartce mapy w porównaniu z pierwszą.",
+   "train": "Raz w tygodniu jedna długa mapa w wygodnym zakresie.",
+   "maps": "Through the Fire and Flames, Raise My Sword (7 min), Yomi yori [Reverberation] (8 min).",
+   "you": "W porządku na mapach do ~5 minut."
+  },
+  {
+   "id": "stream",
+   "label": "Streaming",
+   "original_term": "streaming",
+   "is_new": false,
+   "group": "tap",
+   "column": 5,
+   "row": 5,
+   "player_status": "slabe",
+   "what": "Stream to ciąg nut 1/4 grany alternate. Gęstość streamów to liczba nut na sekundę (BPM × 4 / 60, np. 180 BPM to 12 nut/s) i to, jak mało przerw jest między streamami.",
+   "why": "Duża część map ma streamy, a długie bloki bez przerw to osobne wyzwanie.",
+   "measure": "Długość streamów i bloków granych bez wzrostu UR.",
+   "train": "Najpierw równość (alternate), potem kontrola burstów, potem stopniowo dłuższe bloki.",
+   "maps": "Dragonflame → Ange du Blanc Pur → Sidetracked Day → HONESTY.",
+   "you": "Do poprawy: na stream practice 10–29% setek."
+  },
+  {
+   "id": "spaced",
+   "label": "Rozstawione streamy",
+   "original_term": null,
+   "is_new": true,
+   "group": "combo",
+   "column": 6,
+   "row": 6,
+   "player_status": "slabe",
+   "what": "Streamy, w których kolejne nuty leżą daleko od siebie. Spacing to odstęp między nutami w stosunku do wielkości kółka: 0,5 = nuty nachodzą na siebie, 1 = ledwo się stykają.",
+   "why": "Łączą trzy umiejętności naraz: streaming, flow aim i koordynację. Dlatego są tak trudne i ręka szybko się w nich spina.",
+   "measure": "Spacing streamów na mapie i UR na nich.",
+   "train": "Najpierw zwolnione przez Rate Change, potem coraz szybciej.",
+   "maps": "Foreground Eclipse (0,72) → HONESTY (0,67) → Kurushimi (0,70) → down [G O D] (0,99).",
+   "you": "Do poprawy: najtrudniejsza część HONESTY i Foreground Eclipse."
+  }
+ ],
+ "edges": [
+  {
+   "source": "podst",
+   "target": "read"
+  },
+  {
+   "source": "podst",
+   "target": "rytm"
+  },
+  {
+   "source": "podst",
+   "target": "tap"
+  },
+  {
+   "source": "podst",
+   "target": "aim"
+  },
+  {
+   "source": "tech",
+   "target": "speed"
+  },
+  {
+   "source": "focus",
+   "target": "mind"
+  },
+  {
+   "source": "focus",
+   "target": "nerwy"
+  },
+  {
+   "source": "read",
+   "target": "rspeed"
+  },
+  {
+   "source": "read",
+   "target": "wzory"
+  },
+  {
+   "source": "rytm",
+   "target": "rspeed"
+  },
+  {
+   "source": "rytm",
+   "target": "acc"
+  },
+  {
+   "source": "rytm",
+   "target": "techr"
+  },
+  {
+   "source": "tap",
+   "target": "palce"
+  },
+  {
+   "source": "tap",
+   "target": "tspeed"
+  },
+  {
+   "source": "aim",
+   "target": "kursor"
+  },
+  {
+   "source": "aim",
+   "target": "aspeed"
+  },
+  {
+   "source": "speed",
+   "target": "tspeed"
+  },
+  {
+   "source": "speed",
+   "target": "aspeed"
+  },
+  {
+   "source": "speed",
+   "target": "rspeed"
+  },
+  {
+   "source": "wzory",
+   "target": "sight"
+  },
+  {
+   "source": "wzory",
+   "target": "arread"
+  },
+  {
+   "source": "wzory",
+   "target": "overl"
+  },
+  {
+   "source": "wzory",
+   "target": "acc"
+  },
+  {
+   "source": "wzory",
+   "target": "techr"
+  },
+  {
+   "source": "wzory",
+   "target": "consist"
+  },
+  {
+   "source": "wzory",
+   "target": "slider"
+  },
+  {
+   "source": "palce",
+   "target": "acc"
+  },
+  {
+   "source": "palce",
+   "target": "techr"
+  },
+  {
+   "source": "palce",
+   "target": "alt"
+  },
+  {
+   "source": "palce",
+   "target": "consist"
+  },
+  {
+   "source": "kursor",
+   "target": "consist"
+  },
+  {
+   "source": "kursor",
+   "target": "snap"
+  },
+  {
+   "source": "kursor",
+   "target": "flow"
+  },
+  {
+   "source": "kursor",
+   "target": "prec"
+  },
+  {
+   "source": "kursor",
+   "target": "slider"
+  },
+  {
+   "source": "nerwy",
+   "target": "consist"
+  },
+  {
+   "source": "focus",
+   "target": "prec"
+  },
+  {
+   "source": "alt",
+   "target": "burst"
+  },
+  {
+   "source": "acc",
+   "target": "koord"
+  },
+  {
+   "source": "snap",
+   "target": "koord"
+  },
+  {
+   "source": "tspeed",
+   "target": "tstam"
+  },
+  {
+   "source": "aspeed",
+   "target": "astam"
+  },
+  {
+   "source": "endur",
+   "target": "tstam"
+  },
+  {
+   "source": "endur",
+   "target": "astam"
+  },
+  {
+   "source": "endur",
+   "target": "marathon"
+  },
+  {
+   "source": "consist",
+   "target": "marathon"
+  },
+  {
+   "source": "burst",
+   "target": "stream"
+  },
+  {
+   "source": "tstam",
+   "target": "stream"
+  },
+  {
+   "source": "stream",
+   "target": "spaced"
+  },
+  {
+   "source": "flow",
+   "target": "spaced"
+  },
+  {
+   "source": "koord",
+   "target": "spaced"
+  }
+ ],
+ "glossary": [
+  {
+   "term": "BPM i 1/4",
+   "definition": "BPM to liczba uderzeń na minutę. 1/4 oznacza cztery nuty na uderzenie, więc 180 BPM w 1/4 to 12 nut na sekundę."
+  },
+  {
+   "term": "UR",
+   "definition": "Unstable Rate: jak bardzo rozrzucone są Twoje kliknięcia w czasie. Im niżej, tym równiej."
+  },
+  {
+   "term": "Hit error",
+   "definition": "O ile milisekund za wcześnie (−) albo za późno (+) kliknąłeś względem nuty."
+  },
+  {
+   "term": "OD",
+   "definition": "Overall Difficulty: jak wąskie są okna na 300, 100 i 50. Wyższe OD to mniej tolerancji."
+  },
+  {
+   "term": "AR",
+   "definition": "Approach Rate: jak długo kółko jest widoczne przed trafieniem. AR 10 to 450 ms."
+  },
+  {
+   "term": "CS",
+   "definition": "Circle Size: wielkość kółek. Wyższy CS to mniejsze kółka."
+  },
+  {
+   "term": "Spacing",
+   "definition": "Odstęp między kolejnymi nutami względem wielkości kółka."
+  },
+  {
+   "term": "Burst",
+   "definition": "Krótka seria nut 1/4, zwykle 3–9 nut."
+  },
+  {
+   "term": "Stream i deathstream",
+   "definition": "Długi ciąg nut 1/4. Deathstream to stream trwający kilkanaście sekund i dłużej."
+  },
+  {
+   "term": "Cutstream",
+   "definition": "Stream przerwany w środku krótką pauzą, co łatwo rozbija rytm."
+  },
+  {
+   "term": "Alternate",
+   "definition": "Klikanie na zmianę dwoma palcami. Singletap to klikanie jednym palcem."
+  },
+  {
+   "term": "SV",
+   "definition": "Slider Velocity: prędkość sliderów, która może się zmieniać w trakcie mapy."
+  },
+  {
+   "term": "Rate Change",
+   "definition": "Mod w lazerze, który zwalnia lub przyspiesza mapę, np. 0,85x. Główne narzędzie treningu."
+  }
+ ]
+}
