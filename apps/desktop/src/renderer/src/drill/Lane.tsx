@@ -2,6 +2,7 @@
 // Pod torem hit error w dwóch rzędach (K1 / K2) – ostatnie tapnięcia, starsze bledną.
 // Rysowane na canvas w requestAnimationFrame, bez przerysowywania Reacta przy każdym tapnięciu.
 
+import FpsCounter from '../components/FpsCounter.tsx';
 import { hitWindows, type DrillNote } from '@osu-trainer/analyzer';
 import { useEffect, useRef } from 'react';
 import type { DrillSession } from './engine.ts';
@@ -14,6 +15,8 @@ interface Props {
   od: number;
   /** ile ms przed linią widać nuty */
   previewMs?: number;
+  /** licznik FPS w rogu toru */
+  showFps?: boolean;
 }
 
 interface Judged {
@@ -21,7 +24,7 @@ interface Judged {
   missed: boolean;
 }
 
-export default function Lane({ session, notes, od, previewMs = 1100 }: Props) {
+export default function Lane({ session, notes, od, previewMs = 1100, showFps = false }: Props) {
   const laneRef = useRef<HTMLCanvasElement>(null);
   const meterRef = useRef<HTMLCanvasElement>(null);
 
@@ -171,6 +174,7 @@ export default function Lane({ session, notes, od, previewMs = 1100 }: Props) {
     <div className="lane-wrap">
       <canvas ref={laneRef} className="lane" />
       <canvas ref={meterRef} className="lane-meter" />
+      {showFps && <FpsCounter />}
     </div>
   );
 }

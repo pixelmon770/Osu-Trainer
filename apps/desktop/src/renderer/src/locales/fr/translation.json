@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "osu! Trainer",
-    "tagline": "S'entraîner mieux, pas plus longtemps"
+    "tagline": "S'entraîner mieux, pas plus longtemps",
+    "autoOn": "Analyse auto des replays activée",
+    "autoOff": "Analyse auto des replays désactivée"
   },
   "nav": {
     "sectionTrain": "Entraînement",
@@ -92,7 +94,18 @@
       }
     },
     "todayTodos": "Tâches du jour",
-    "noTodos": "Rien de prévu aujourd'hui."
+    "noTodos": "Rien de prévu aujourd'hui.",
+    "noticed": "Ce que l'application a remarqué",
+    "doneOf": "{{done}} sur {{total}} faites",
+    "seeAll": "Tout voir",
+    "colDate": "Date",
+    "exercise": "Exercice",
+    "cat": {
+      "timing": "Timing",
+      "streams": "Streams",
+      "stamina": "Fatigue",
+      "routine": "Routine"
+    }
   },
   "map": {
     "title": "Analyse de map",
@@ -358,6 +371,16 @@
       "volume": "Volume du métronome",
       "offset": "Latence audio (ms)",
       "offsetHint": "Réglée par la calibration sur l'écran Rythme ; ne la modifie que si tu sais pourquoi."
+    },
+    "fps": {
+      "mode": "Rafraîchissement de l'image dans les exercices",
+      "hint": "« Comme l'écran » dessine une image par rafraîchissement (comme VSync dans osu!). « Illimité » dessine aussi vite que le PC peut (comme Unlimited dans osu!) : quelques ms de latence visuelle en moins, plus de charge GPU, déchirement possible. Ton timing est mesuré de la même façon dans les deux modes.",
+      "vsync": "Comme l'écran (recommandé)",
+      "unlimited": "Illimité",
+      "restart": "Prend effet après le redémarrage de l'application.",
+      "restartNow": "Redémarrer maintenant",
+      "show": "Compteur de FPS",
+      "showHint": "Affiche les images par seconde et l'image la plus longue dans un coin des exercices."
     }
   },
   "stats": {
@@ -709,7 +732,12 @@
     "pattern": {
       "backforth": "Aller-retour",
       "polygon": "Polygones",
-      "random": "Sauts aléatoires"
+      "random": "Sauts aléatoires",
+      "triangles": "Triangles",
+      "star": "Étoiles",
+      "square": "Carrés",
+      "oibon": "D'un bord à l'autre (Oibon)",
+      "flow": "Flow (angles ouverts)"
     },
     "distance": "Distance (diamètres)",
     "sides": "Sommets",
@@ -731,7 +759,28 @@
     "byAngle": "Angles aigus / ouverts",
     "byAngleHint": "distance au centre sur les sauts aigus et ouverts",
     "scatter": "Où tu cliques",
-    "scatterHint": "Chaque clic par rapport au cercle, pivoté pour que le saut aille toujours vers la droite →. Un nuage à droite du centre = trop loin, à gauche = trop court. Rouge = miss."
+    "scatterHint": "Chaque clic par rapport au cercle, pivoté pour que le saut aille toujours vers la droite →. Un nuage à droite du centre = trop loin, à gauche = trop court. Rouge = miss.",
+    "sourceShape": "Formes",
+    "sourceMap": "D'une map",
+    "patternHint": {
+      "backforth": "Deux points, l'axe change tous les 8 sauts – aller-retour propre.",
+      "triangles": "Triangles (virages ~60°), tournés et déplacés sur le terrain – le motif de sauts le plus courant dans les maps classées.",
+      "star": "Étoile (pentagramme) : virages très serrés ~36°, chaque saut traverse la forme – snap aim.",
+      "square": "Carrés (virages à 90°), tournés de 45° à chaque tour.",
+      "polygon": "Polygone au choix – choisis le nombre de sommets.",
+      "oibon": "Sauts d'un bord à l'autre sur tout l'écran, la hauteur monte et descend.",
+      "flow": "Courbes douces et S avec des angles ouverts – flow aim. Idéal jusqu’à ~2 diamètres ; au-delà le terrain impose des virages plus serrés.",
+      "random": "Sauts aléatoires avec des angles aigus, ouverts ou mixtes."
+    },
+    "mapRate": "Vitesse",
+    "mapMinDistance": "Sauts à partir de",
+    "maxNotes": "Notes max",
+    "mapSearch": "Chercher une map ou un mappeur, p. ex. Sotarks…",
+    "mapHint": "Sauts tirés d'une vraie map : positions et rythme exactement comme le mappeur les a placés. Tape le nom d'un mappeur pour travailler ses motifs.",
+    "mapNone": "Aucune map avec des sauts dans la bibliothèque – indique tes dossiers osu! dans les Paramètres.",
+    "mapMissing": "Le fichier de la map n'existe plus (déplacé ou supprimé).",
+    "mapCut": "{{sections}} passages de sauts · {{notes}} notes · moy. {{dist}} diamètres",
+    "mapNoJumps": "Cette map n’a pas de sauts aussi longs – baisse « Sauts à partir de »."
   },
   "error": {
     "title": "Un problème est survenu sur cet écran",
@@ -842,6 +891,7 @@
     "count_many": "{{count}} maps dans la bibliothèque",
     "results_many": "{{count}} maps",
     "played_many": "jouée {{count}} fois, meilleure {{acc}} %",
-    "yourPlays_many": "Tes parties ({{count}})"
+    "yourPlays_many": "Tes parties ({{count}})",
+    "aimButton": "Travailler ses sauts"
   }
 }

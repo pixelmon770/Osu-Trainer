@@ -4,7 +4,7 @@ Program na komputer dla graczy osu!: analiza map i replayów, statystyki, roadma
 trenery kliknięć i aimu oraz połączenie z AI (Claude, ChatGPT i inne przez MCP).
 Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 
-**Stan:** działają wszystkie ekrany z SPEC (wersja 0.9):
+**Stan:** działają wszystkie ekrany z SPEC (wersja 0.10), wygląd jak w projekcie `docs/design/Main.dc.html`:
 
 | Ekran | Co robi |
 |---|---|
@@ -14,14 +14,14 @@ Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 | **Replaye i analizy** | każde kliknięcie przypisane do nuty (okna oceny, notelock, stosy, HR/EZ), wnioski, wykresy; historia z wyszukiwaniem, filtrami, widokiem map i postępem na mapie; nowe gry ze stable i lazera wpadają same |
 | **Analizator klatek** | replay na planszy klatka po klatce: kółka zbliżania, slidery, ślad kursora, klawisze, oceny; skok do missów, tempo 0,05–1× |
 | **Trener kliknięć** | tor z nutami i hit error K1/K2: drabinka burstów, stream na wytrzymałość, streamy z mapy |
-| **Skoki – trener aimu** | skoki jak w osu! (tam i z powrotem, wielokąty, losowe z wyborem kątów), mysz/tablet + klawisze; timing, odległość od środka, przestrzał/niedolot, wykres miejsc kliknięć |
+| **Skoki – trener aimu** | kształty jak w mapach (trójkąty, gwiazdy, kwadraty, Oibon przez cały ekran, płynne pod szerokim kątem, wielokąty, losowe) albo skoki wycięte z prawdziwej mapy z Biblioteki (np. wpisz „Sotarks”), z tempem 0,5–1,5×; mysz/tablet + klawisze; timing, odległość od środka, przestrzał/niedolot, wykres miejsc kliknięć |
 | **Rytm i metronom** | 10 ćwiczeń palców z SPEC, kalibracja opóźnienia dźwięku, historia |
 | **Analiza mapy** | streamy, bloki, skoki, czytanie |
 | **Biblioteka map** | Twoje mapy z osu!stable i lazera przeanalizowane w tle; filtry (gwiazdki, BPM, streamy, bloki, skoki, AR/OD/CS, nakładanie), „dobierz do celu” z Twojego poziomu, drabinka do mapy-celu |
 | **Sesje i postęp** | gry i ćwiczenia w sesjach, rozgrzewka, zmęczenie pod koniec sesji |
 | **Plan i to-do** / **Cele** | zadania powtarzane w dni tygodnia, cele liczone same z danych |
 | **Połączenie z AI** | eksport dla AI (Markdown), lokalny serwer MCP dla Claude Desktop (dodawany jednym przyciskiem) |
-| **Ustawienia** | foldery osu!stable i lazera, obserwowane foldery, import, powiadomienia, autostart, klawisze, dźwięk, język |
+| **Ustawienia** | foldery osu!stable i lazera, obserwowane foldery, import, powiadomienia, autostart, klawisze, dźwięk, odświeżanie obrazu (jak monitor / bez limitu) i licznik FPS, język |
 
 Brakuje jeszcze konta online (osu! OAuth, Firebase) i bazy map spoza Twojego komputera – Biblioteka map działa na mapach, które masz pobrane.
 Błąd na jednym ekranie nie wyłącza programu – pokazuje opis i przycisk powrotu.

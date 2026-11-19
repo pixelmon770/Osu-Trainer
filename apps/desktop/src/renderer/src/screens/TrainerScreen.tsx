@@ -266,7 +266,7 @@ export default function TrainerScreen({
 
       {drill.session && (
         <div className="card lane-card big">
-          <Lane session={drill.session} notes={drill.notes} od={settings?.drillOd ?? 8} />
+          <Lane session={drill.session} notes={drill.notes} od={settings?.drillOd ?? 8} showFps={settings?.showFps} />
           <p className="muted small">{t('drill.runningHint', { k1: keyLabel(settings?.keyK1 ?? ''), k2: keyLabel(settings?.keyK2 ?? '') })}</p>
         </div>
       )}

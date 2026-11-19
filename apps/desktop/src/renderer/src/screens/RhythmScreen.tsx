@@ -203,7 +203,7 @@ export default function RhythmScreen({ preset, onPresetUsed }: { preset?: Recomm
 
           {(drill.session || calib.session) && (
             <div className="card lane-card">
-              <Lane session={(drill.session ?? calib.session)!} notes={drill.session ? drill.notes : calib.notes} od={settings?.drillOd ?? 8} />
+              <Lane session={(drill.session ?? calib.session)!} notes={drill.session ? drill.notes : calib.notes} od={settings?.drillOd ?? 8} showFps={settings?.showFps} />
               <p className="muted small">{t('drill.runningHint', { k1: keyLabel(settings?.keyK1 ?? ''), k2: keyLabel(settings?.keyK2 ?? '') })}</p>
             </div>
           )}

@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "osu! Trainer",
-    "tagline": "Practice smarter, not longer"
+    "tagline": "Practice smarter, not longer",
+    "autoOn": "Replay auto-analysis on",
+    "autoOff": "Replay auto-analysis off"
   },
   "nav": {
     "sectionTrain": "Training",
@@ -89,7 +91,18 @@
       }
     },
     "todayTodos": "Today's tasks",
-    "noTodos": "Nothing planned for today."
+    "noTodos": "Nothing planned for today.",
+    "noticed": "What the app noticed",
+    "doneOf": "{{done}} of {{total}} done",
+    "seeAll": "See all",
+    "colDate": "Date",
+    "exercise": "Exercise",
+    "cat": {
+      "timing": "Timing",
+      "streams": "Streams",
+      "stamina": "Fatigue",
+      "routine": "Routine"
+    }
   },
   "map": {
     "title": "Map analysis",
@@ -347,6 +360,16 @@
       "volume": "Metronome volume",
       "offset": "Sound latency (ms)",
       "offsetHint": "Set by calibration on the Rhythm screen; change only if you know why."
+    },
+    "fps": {
+      "mode": "Screen refresh in drills",
+      "hint": "“Match monitor” draws once per screen refresh (like VSync in osu!). “Unlimited” draws as fast as the PC can (like Unlimited in osu!): a few ms less visual delay, more GPU load, possible tearing. Your hit timing is measured the same either way.",
+      "vsync": "Match monitor (recommended)",
+      "unlimited": "Unlimited",
+      "restart": "Takes effect after restarting the app.",
+      "restartNow": "Restart now",
+      "show": "FPS counter",
+      "showHint": "Shows frames per second and the longest frame in the corner of the drills."
     }
   },
   "stats": {
@@ -690,7 +713,12 @@
     "pattern": {
       "backforth": "Back and forth",
       "polygon": "Polygons",
-      "random": "Random jumps"
+      "random": "Random jumps",
+      "triangles": "Triangles",
+      "star": "Stars",
+      "square": "Squares",
+      "oibon": "Cross-screen (Oibon)",
+      "flow": "Flow (wide angles)"
     },
     "distance": "Distance (diameters)",
     "sides": "Corners",
@@ -712,7 +740,28 @@
     "byAngle": "Sharp / wide angles",
     "byAngleHint": "distance from center on sharp vs wide jumps",
     "scatter": "Where you click",
-    "scatterHint": "Every click relative to the circle, rotated so the jump always goes to the right →. A cloud right of the center = overshooting, left = stopping short. Red = miss."
+    "scatterHint": "Every click relative to the circle, rotated so the jump always goes to the right →. A cloud right of the center = overshooting, left = stopping short. Red = miss.",
+    "sourceShape": "Shapes",
+    "sourceMap": "From a map",
+    "patternHint": {
+      "backforth": "Two points, the axis changes every 8 jumps – clean back-and-forth aim.",
+      "triangles": "Triangles (~60° turns), rotated and moved around the playfield – the most common jump pattern in ranked maps.",
+      "star": "Star (pentagram): very sharp ~36° turns, every jump crosses the shape – snap aim.",
+      "square": "Squares (90° turns), rotated by 45° every lap.",
+      "polygon": "Any polygon – choose the number of corners.",
+      "oibon": "Edge-to-edge jumps across the whole screen, height drifts up and down.",
+      "flow": "Smooth curves and S-shapes with wide angles – flow aim. Works best up to ~2 diameters; beyond that the playfield forces tighter turns.",
+      "random": "Random jumps with sharp, wide or mixed angles."
+    },
+    "mapRate": "Speed",
+    "mapMinDistance": "Jumps from",
+    "maxNotes": "Max notes",
+    "mapSearch": "Search a map or mapper, e.g. Sotarks…",
+    "mapHint": "Jumps cut from a real map: positions and rhythm exactly as the mapper placed them. Type a mapper name to practise their patterns.",
+    "mapNone": "No maps with jumps in the library – set your osu! folders in Settings.",
+    "mapMissing": "The map file no longer exists (moved or deleted).",
+    "mapCut": "{{sections}} jump sections · {{notes}} notes · avg {{dist}} diameters",
+    "mapNoJumps": "No jumps this long in this map – lower “Jumps from”."
   },
   "error": {
     "title": "Something went wrong on this screen",
@@ -819,6 +868,7 @@
     "played_one": "played {{count}} time, best {{acc}}%",
     "played_other": "played {{count}} times, best {{acc}}%",
     "yourPlays_one": "Your play ({{count}})",
-    "yourPlays_other": "Your plays ({{count}})"
+    "yourPlays_other": "Your plays ({{count}})",
+    "aimButton": "Practise its jumps"
   }
 }

@@ -244,6 +244,31 @@ export default function SettingsScreen() {
             onChange={(e) => void update({ audioOffsetMs: Number(e.target.value) || 0 })}
           />
         </div>
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.fps.mode')}</div>
+            <div className="muted small">{t('settings.fps.hint')}</div>
+            {s.frameRate !== st.frameRateActive && (
+              <div className="warn-text small fps-restart">
+                {t('settings.fps.restart')}{' '}
+                <button type="button" className="btn small" onClick={() => void window.api.relaunch()}>
+                  {t('settings.fps.restartNow')}
+                </button>
+              </div>
+            )}
+          </div>
+          <select value={s.frameRate} onChange={(e) => void update({ frameRate: e.target.value as Settings['frameRate'] })}>
+            <option value="vsync">{t('settings.fps.vsync')}</option>
+            <option value="unlimited">{t('settings.fps.unlimited')}</option>
+          </select>
+        </div>
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.fps.show')}</div>
+            <div className="muted small">{t('settings.fps.showHint')}</div>
+          </div>
+          <Toggle checked={s.showFps} onChange={(v) => void update({ showFps: v })} label={t('settings.fps.show')} />
+        </div>
       </section>
 
       <section className="card settings-section">

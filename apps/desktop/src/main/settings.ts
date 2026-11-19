@@ -33,6 +33,8 @@ const defaults = (): Settings => ({
   audioOffsetMs: 0,
   volume: 0.7,
   drillOd: 8,
+  frameRate: 'vsync',
+  showFps: false,
   roadmap: {},
   goals: [],
   todos: []

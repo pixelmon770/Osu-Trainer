@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "osu! Trener",
-    "tagline": "Trenuj mądrzej, nie dłużej"
+    "tagline": "Trenuj mądrzej, nie dłużej",
+    "autoOn": "Auto-analiza replayów włączona",
+    "autoOff": "Auto-analiza replayów wyłączona"
   },
   "nav": {
     "sectionTrain": "Trening",
@@ -95,7 +97,18 @@
       }
     },
     "todayTodos": "Zadania na dziś",
-    "noTodos": "Na dziś nic nie zaplanowano."
+    "noTodos": "Na dziś nic nie zaplanowano.",
+    "noticed": "Co program zauważył",
+    "doneOf": "{{done}} z {{total}} zrobione",
+    "seeAll": "Zobacz wszystkie",
+    "colDate": "Data",
+    "exercise": "Ćwiczenie",
+    "cat": {
+      "timing": "Timing",
+      "streams": "Streamy",
+      "stamina": "Zmęczenie",
+      "routine": "Rutyna"
+    }
   },
   "map": {
     "title": "Analiza mapy",
@@ -369,6 +382,16 @@
       "volume": "Głośność metronomu",
       "offset": "Opóźnienie dźwięku (ms)",
       "offsetHint": "Ustawiane kalibracją na ekranie Rytm; zmieniaj ręcznie tylko, jeśli wiesz po co."
+    },
+    "fps": {
+      "mode": "Odświeżanie obrazu w ćwiczeniach",
+      "hint": "„Zgodnie z monitorem” rysuje klatkę przy każdym odświeżeniu ekranu (jak VSync w osu!). „Bez limitu” rysuje tak szybko, jak da radę komputer (jak Unlimited w osu!): kilka ms mniej opóźnienia obrazu, większe obciążenie karty, możliwe „rwanie” obrazu. Pomiar trafień działa tak samo w obu trybach.",
+      "vsync": "Zgodnie z monitorem (zalecane)",
+      "unlimited": "Bez limitu",
+      "restart": "Zmiana zadziała po ponownym uruchomieniu programu.",
+      "restartNow": "Uruchom ponownie",
+      "show": "Licznik FPS",
+      "showHint": "Pokazuje liczbę klatek na sekundę i najdłuższą klatkę w rogu ćwiczeń."
     }
   },
   "stats": {
@@ -728,7 +751,12 @@
     "pattern": {
       "backforth": "Tam i z powrotem",
       "polygon": "Wielokąty",
-      "random": "Losowe skoki"
+      "random": "Losowe skoki",
+      "triangles": "Trójkąty",
+      "star": "Gwiazdy",
+      "square": "Kwadraty",
+      "oibon": "Przez ekran (Oibon)",
+      "flow": "Płynne (szerokie kąty)"
     },
     "distance": "Odległość (średnice)",
     "sides": "Wierzchołki",
@@ -750,7 +778,28 @@
     "byAngle": "Ostre / szerokie kąty",
     "byAngleHint": "odległość od środka na skokach ostrych i szerokich",
     "scatter": "Gdzie klikasz",
-    "scatterHint": "Każde kliknięcie względem kółka, obrócone tak, że skok zawsze idzie w prawo →. Chmura na prawo od środka = przestrzał, na lewo = niedolot. Czerwone = miss."
+    "scatterHint": "Każde kliknięcie względem kółka, obrócone tak, że skok zawsze idzie w prawo →. Chmura na prawo od środka = przestrzał, na lewo = niedolot. Czerwone = miss.",
+    "sourceShape": "Kształty",
+    "sourceMap": "Z mapy",
+    "patternHint": {
+      "backforth": "Dwa punkty, oś zmienia się co 8 skoków – czysty aim tam i z powrotem.",
+      "triangles": "Trójkąty (zakręty ~60°), obracane i przesuwane po planszy – najczęstszy układ skoków w mapach rankingowych.",
+      "star": "Gwiazda (pentagram): bardzo ostre zakręty ~36°, każdy skok przecina kształt – snap aim.",
+      "square": "Kwadraty (zakręty 90°), co obrót obrócone o 45°.",
+      "polygon": "Dowolny wielokąt – wybierz liczbę wierzchołków.",
+      "oibon": "Skoki od krawędzi do krawędzi przez cały ekran, wysokość wędruje w górę i w dół.",
+      "flow": "Płynne łuki i „esy” pod szerokimi kątami – flow aim. Najlepiej do ~2 średnic; dalej plansza wymusza ciaśniejsze zakręty.",
+      "random": "Losowe skoki z ostrymi, szerokimi albo mieszanymi kątami."
+    },
+    "mapRate": "Tempo",
+    "mapMinDistance": "Skoki od",
+    "maxNotes": "Maks. nut",
+    "mapSearch": "Szukaj mapy albo mapera, np. Sotarks…",
+    "mapHint": "Skoki wycięte z prawdziwej mapy: pozycje i rytm dokładnie tak, jak ułożył je maper. Wpisz nazwę mapera, żeby ćwiczyć jego patterny.",
+    "mapNone": "Brak map ze skokami w bibliotece – wskaż foldery osu! w Ustawieniach.",
+    "mapMissing": "Plik mapy już nie istnieje (przeniesiony albo usunięty).",
+    "mapCut": "{{sections}} fragmentów ze skokami · {{notes}} nut · średnio {{dist}} średnicy",
+    "mapNoJumps": "Ta mapa nie ma tak długich skoków – zmniejsz „Skoki od”."
   },
   "error": {
     "title": "Na tym ekranie coś poszło nie tak",
@@ -865,6 +914,7 @@
     "yourPlays_one": "Twoja gra ({{count}})",
     "yourPlays_few": "Twoje gry ({{count}})",
     "yourPlays_many": "Twoje gry ({{count}})",
-    "yourPlays_other": "Twoje gry ({{count}})"
+    "yourPlays_other": "Twoje gry ({{count}})",
+    "aimButton": "Ćwicz jej skoki"
   }
 }

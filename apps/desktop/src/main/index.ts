@@ -43,6 +43,14 @@ import { ReplayWatcher } from './watcher.ts';
 // Jeden stały folder danych – taki sam w trybie dev i w wersji zainstalowanej.
 app.setPath('userData', join(app.getPath('appData'), 'osu-trainer'));
 
+// Odświeżanie obrazu: Chromium pozwala je zmienić tylko przed startem, więc czytamy ustawienie tutaj.
+// „Bez limitu” = jak „Unlimited” w osu!: rysowanie szybciej niż monitor, mniejsze opóźnienie obrazu.
+const FRAME_RATE = getSettings().frameRate === 'unlimited' ? 'unlimited' : 'vsync';
+if (FRAME_RATE === 'unlimited') {
+  app.commandLine.appendSwitch('disable-frame-rate-limit');
+  app.commandLine.appendSwitch('disable-gpu-vsync');
+}
+
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow(): void {
@@ -298,6 +306,7 @@ async function status(): Promise<SettingsStatus> {
     })(),
     folders: watchedFolders(settings),
     canAutostart: app.isPackaged,
+    frameRateActive: FRAME_RATE,
     historyCount: await history.countReplays()
   };
 }
@@ -321,6 +330,8 @@ ipcMain.handle(IPC.updateSettings, async (_e, patch: Partial<Settings>) => {
     'audioOffsetMs',
     'volume',
     'drillOd',
+    'frameRate',
+    'showFps',
     'roadmap',
     'goals',
     'todos'
@@ -368,6 +379,10 @@ ipcMain.handle(IPC.openPath, async (_e, path: unknown) => {
 });
 
 ipcMain.handle(IPC.version, () => app.getVersion());
+ipcMain.handle(IPC.relaunch, () => {
+  app.relaunch();
+  app.quit(); // before-quit zapisze bazę
+});
 
 // ---------- start ----------
 

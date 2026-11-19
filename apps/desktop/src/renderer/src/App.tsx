@@ -29,7 +29,7 @@ export default function App() {
   const [openMap, setOpenMap] = useState<OpenMap | null>(null);
   const [preset, setPreset] = useState<Recommendation | null>(null);
   const [frameId, setFrameId] = useState<string | null>(null);
-  const [libraryMap, setLibraryMap] = useState<{ md5: string; to: 'analysis' | 'trainer' } | null>(null);
+  const [libraryMap, setLibraryMap] = useState<{ md5: string; to: 'analysis' | 'trainer' | 'aim' } | null>(null);
   const openReplay = (id: string) => {
     setOpenReplayId(id);
     setScreen('replays');
@@ -125,6 +125,10 @@ export default function App() {
             setLibraryMap({ md5, to: 'trainer' });
             setScreen('tapTrainer');
           }}
+          onAim={(md5) => {
+            setLibraryMap({ md5, to: 'aim' });
+            setScreen('aimTrainer');
+          }}
           onOpenPlays={(m) => {
             setOpenMap(m);
             setScreen('replays');
@@ -177,7 +181,7 @@ export default function App() {
       content = <FrameAnalyzerScreen openId={frameId} onOpened={() => setFrameId(null)} />;
       break;
     case 'aimTrainer':
-      content = <AimScreen />;
+      content = <AimScreen mapMd5={libraryMap?.to === 'aim' ? libraryMap.md5 : null} onMapUsed={() => setLibraryMap(null)} />;
       break;
     case 'goals':
       content = <GoalsScreen />;

@@ -50,7 +50,8 @@ const api: TrainerApi = {
   onReplayFailed: (cb) => listen(IPC.replayFailed, cb),
   onImportProgress: (cb) => listen(IPC.importProgress, cb),
   pathForFile: (file) => webUtils.getPathForFile(file),
-  version: () => ipcRenderer.invoke(IPC.version)
+  version: () => ipcRenderer.invoke(IPC.version),
+  relaunch: () => ipcRenderer.invoke(IPC.relaunch)
 };
 
 contextBridge.exposeInMainWorld('api', api);

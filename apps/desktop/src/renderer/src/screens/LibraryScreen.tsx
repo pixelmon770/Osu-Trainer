@@ -106,10 +106,11 @@ function RangeField({ label, value, step, onChange }: { label: string; value: Ra
 interface Props {
   onAnalyze: (md5: string) => void;
   onTrain: (md5: string) => void;
+  onAim: (md5: string) => void;
   onOpenPlays: (m: OpenMap) => void;
 }
 
-export default function LibraryScreen({ onAnalyze, onTrain, onOpenPlays }: Props) {
+export default function LibraryScreen({ onAnalyze, onTrain, onAim, onOpenPlays }: Props) {
   const { t, i18n } = useTranslation();
   const f = makeFormatters(i18n.language);
   const [q, setQ] = useState<LibraryQuery>(loadQuery);
@@ -433,6 +434,9 @@ export default function LibraryScreen({ onAnalyze, onTrain, onOpenPlays }: Props
                                 <button type="button" className="btn small primary" onClick={() => onAnalyze(m.md5)}>{t('library.analyze')}</button>
                                 {(m.streamBpm ?? 0) > 0 && (
                                   <button type="button" className="btn small" onClick={() => onTrain(m.md5)}>{t('library.train')}</button>
+                                )}
+                                {m.jumpsPerMin >= 3 && (
+                                  <button type="button" className="btn small" onClick={() => onAim(m.md5)}>{t('library.aimButton')}</button>
                                 )}
                                 <button type="button" className="btn small" onClick={() => void showLadder(m.md5)}>{t('library.ladderButton')}</button>
                                 {m.attempts > 0 && (

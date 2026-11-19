@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "osu! Trainer",
-    "tagline": "Klüger üben, nicht länger"
+    "tagline": "Klüger üben, nicht länger",
+    "autoOn": "Replay-Auto-Analyse an",
+    "autoOff": "Replay-Auto-Analyse aus"
   },
   "nav": {
     "sectionTrain": "Training",
@@ -89,7 +91,18 @@
       }
     },
     "todayTodos": "Aufgaben für heute",
-    "noTodos": "Für heute ist nichts geplant."
+    "noTodos": "Für heute ist nichts geplant.",
+    "noticed": "Was der App auffällt",
+    "doneOf": "{{done}} von {{total}} erledigt",
+    "seeAll": "Alle anzeigen",
+    "colDate": "Datum",
+    "exercise": "Übung",
+    "cat": {
+      "timing": "Timing",
+      "streams": "Streams",
+      "stamina": "Müdigkeit",
+      "routine": "Routine"
+    }
   },
   "map": {
     "title": "Map-Analyse",
@@ -347,6 +360,16 @@
       "volume": "Metronom-Lautstärke",
       "offset": "Audio-Latenz (ms)",
       "offsetHint": "Wird per Kalibrierung auf dem Rhythmus-Bildschirm gesetzt; nur ändern, wenn du weißt warum."
+    },
+    "fps": {
+      "mode": "Bildwiederholung in Übungen",
+      "hint": "„Wie Monitor“ zeichnet einmal pro Bildwiederholung (wie VSync in osu!). „Unbegrenzt“ zeichnet so schnell der PC kann (wie Unlimited in osu!): ein paar ms weniger Bildverzögerung, mehr GPU-Last, mögliches Tearing. Dein Timing wird in beiden Modi gleich gemessen.",
+      "vsync": "Wie Monitor (empfohlen)",
+      "unlimited": "Unbegrenzt",
+      "restart": "Wirkt nach einem Neustart der App.",
+      "restartNow": "Jetzt neu starten",
+      "show": "FPS-Anzeige",
+      "showHint": "Zeigt Bilder pro Sekunde und den längsten Frame in der Ecke der Übungen."
     }
   },
   "stats": {
@@ -690,7 +713,12 @@
     "pattern": {
       "backforth": "Hin und her",
       "polygon": "Vielecke",
-      "random": "Zufällige Sprünge"
+      "random": "Zufällige Sprünge",
+      "triangles": "Dreiecke",
+      "star": "Sterne",
+      "square": "Quadrate",
+      "oibon": "Quer über den Bildschirm (Oibon)",
+      "flow": "Flow (weite Winkel)"
     },
     "distance": "Abstand (Durchmesser)",
     "sides": "Ecken",
@@ -712,7 +740,28 @@
     "byAngle": "Spitze / weite Winkel",
     "byAngleHint": "Abstand zur Mitte bei spitzen und weiten Sprüngen",
     "scatter": "Wohin du klickst",
-    "scatterHint": "Jeder Klick relativ zum Kreis, gedreht, sodass der Sprung immer nach rechts geht →. Eine Wolke rechts der Mitte = zu weit, links = zu kurz. Rot = Miss."
+    "scatterHint": "Jeder Klick relativ zum Kreis, gedreht, sodass der Sprung immer nach rechts geht →. Eine Wolke rechts der Mitte = zu weit, links = zu kurz. Rot = Miss.",
+    "sourceShape": "Formen",
+    "sourceMap": "Aus einer Map",
+    "patternHint": {
+      "backforth": "Zwei Punkte, die Achse wechselt alle 8 Sprünge – sauberes Hin und Her.",
+      "triangles": "Dreiecke (~60°-Kurven), gedreht und über das Spielfeld verschoben – das häufigste Sprungmuster in Ranked-Maps.",
+      "star": "Stern (Pentagramm): sehr spitze ~36°-Kurven, jeder Sprung kreuzt die Form – Snap-Aim.",
+      "square": "Quadrate (90°-Kurven), jede Runde um 45° gedreht.",
+      "polygon": "Beliebiges Vieleck – wähle die Anzahl der Ecken.",
+      "oibon": "Sprünge von Rand zu Rand über den ganzen Bildschirm, die Höhe wandert auf und ab.",
+      "flow": "Weiche Bögen und S-Kurven mit weiten Winkeln – Flow-Aim. Am besten bis ~2 Durchmesser; darüber erzwingt das Spielfeld engere Kurven.",
+      "random": "Zufällige Sprünge mit spitzen, weiten oder gemischten Winkeln."
+    },
+    "mapRate": "Tempo",
+    "mapMinDistance": "Sprünge ab",
+    "maxNotes": "Max. Noten",
+    "mapSearch": "Map oder Mapper suchen, z. B. Sotarks…",
+    "mapHint": "Sprünge aus einer echten Map: Positionen und Rhythmus genau so, wie der Mapper sie gesetzt hat. Gib einen Mapper-Namen ein, um seine Patterns zu üben.",
+    "mapNone": "Keine Maps mit Sprüngen in der Bibliothek – lege deine osu!-Ordner in den Einstellungen fest.",
+    "mapMissing": "Die Map-Datei existiert nicht mehr (verschoben oder gelöscht).",
+    "mapCut": "{{sections}} Sprungabschnitte · {{notes}} Noten · Ø {{dist}} Durchmesser",
+    "mapNoJumps": "Diese Map hat keine so langen Sprünge – senke „Sprünge ab“."
   },
   "error": {
     "title": "Auf diesem Bildschirm ist etwas schiefgelaufen",
@@ -819,6 +868,7 @@
     "played_one": "{{count}}-mal gespielt, beste {{acc}}%",
     "played_other": "{{count}}-mal gespielt, beste {{acc}}%",
     "yourPlays_one": "Dein Play ({{count}})",
-    "yourPlays_other": "Deine Plays ({{count}})"
+    "yourPlays_other": "Deine Plays ({{count}})",
+    "aimButton": "Ihre Sprünge üben"
   }
 }

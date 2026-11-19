@@ -272,6 +272,10 @@ export interface Settings {
   volume: number;
   /** OD ćwiczeń: okna 300/100/50 */
   drillOd: number;
+  /** odświeżanie obrazu: zgodnie z monitorem (VSync) albo bez limitu – działa po ponownym uruchomieniu */
+  frameRate: 'vsync' | 'unlimited';
+  /** licznik FPS w ćwiczeniach */
+  showFps: boolean;
   /** Roadmapa: status umiejętności ustawiony przez gracza (id węzła → mocne/ok/slabe/brak) */
   roadmap: Record<string, string>;
   /** Cele i zadania (ekran Plan i Cele) */
@@ -364,6 +368,8 @@ export interface SettingsStatus {
   /** autostart działa tylko w zainstalowanej wersji */
   canAutostart: boolean;
   historyCount: number;
+  /** tryb odświeżania, z którym program faktycznie wystartował */
+  frameRateActive: 'vsync' | 'unlimited';
 }
 
 export interface ImportProgress {
@@ -535,6 +541,8 @@ export interface TrainerApi {
 
   pathForFile(file: File): string;
   version(): Promise<string>;
+  /** Zamyka i uruchamia program ponownie (np. po zmianie odświeżania). */
+  relaunch(): Promise<void>;
 }
 
 export const IPC = {
@@ -574,6 +582,7 @@ export const IPC = {
   pickFolder: 'settings:pick-folder',
   openPath: 'app:open-path',
   version: 'app:version',
+  relaunch: 'app:relaunch',
   // zdarzenia: proces główny → interfejs
   replayAdded: 'event:replay-added',
   replayFailed: 'event:replay-failed',

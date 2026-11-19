@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "osu! Trainer",
-    "tagline": "Entrena mejor, no más tiempo"
+    "tagline": "Entrena mejor, no más tiempo",
+    "autoOn": "Análisis automático de replays activado",
+    "autoOff": "Análisis automático de replays desactivado"
   },
   "nav": {
     "sectionTrain": "Entrenamiento",
@@ -92,7 +94,18 @@
       }
     },
     "todayTodos": "Tareas de hoy",
-    "noTodos": "No hay nada planeado para hoy."
+    "noTodos": "No hay nada planeado para hoy.",
+    "noticed": "Lo que ha notado la aplicación",
+    "doneOf": "{{done}} de {{total}} hechas",
+    "seeAll": "Ver todo",
+    "colDate": "Fecha",
+    "exercise": "Ejercicio",
+    "cat": {
+      "timing": "Timing",
+      "streams": "Streams",
+      "stamina": "Cansancio",
+      "routine": "Rutina"
+    }
   },
   "map": {
     "title": "Análisis de mapas",
@@ -358,6 +371,16 @@
       "volume": "Volumen del metrónomo",
       "offset": "Latencia de audio (ms)",
       "offsetHint": "Se ajusta con la calibración de la pantalla Ritmo; cámbiala solo si sabes por qué."
+    },
+    "fps": {
+      "mode": "Refresco de imagen en los ejercicios",
+      "hint": "«Igual que el monitor» dibuja una vez por refresco de pantalla (como VSync en osu!). «Sin límite» dibuja tan rápido como pueda el PC (como Unlimited en osu!): unos ms menos de retraso visual, más carga de la GPU y posible tearing. Tu timing se mide igual en ambos modos.",
+      "vsync": "Igual que el monitor (recomendado)",
+      "unlimited": "Sin límite",
+      "restart": "Se aplica al reiniciar la aplicación.",
+      "restartNow": "Reiniciar ahora",
+      "show": "Contador de FPS",
+      "showHint": "Muestra los fotogramas por segundo y el fotograma más largo en una esquina de los ejercicios."
     }
   },
   "stats": {
@@ -709,7 +732,12 @@
     "pattern": {
       "backforth": "Ida y vuelta",
       "polygon": "Polígonos",
-      "random": "Saltos aleatorios"
+      "random": "Saltos aleatorios",
+      "triangles": "Triángulos",
+      "star": "Estrellas",
+      "square": "Cuadrados",
+      "oibon": "De lado a lado (Oibon)",
+      "flow": "Flow (ángulos abiertos)"
     },
     "distance": "Distancia (diámetros)",
     "sides": "Vértices",
@@ -731,7 +759,28 @@
     "byAngle": "Ángulos agudos / abiertos",
     "byAngleHint": "distancia al centro en saltos agudos y abiertos",
     "scatter": "Dónde haces clic",
-    "scatterHint": "Cada clic respecto al círculo, girado para que el salto vaya siempre a la derecha →. Una nube a la derecha del centro = te pasas, a la izquierda = te quedas corto. Rojo = miss."
+    "scatterHint": "Cada clic respecto al círculo, girado para que el salto vaya siempre a la derecha →. Una nube a la derecha del centro = te pasas, a la izquierda = te quedas corto. Rojo = miss.",
+    "sourceShape": "Formas",
+    "sourceMap": "De un mapa",
+    "patternHint": {
+      "backforth": "Dos puntos; el eje cambia cada 8 saltos: aim limpio de ida y vuelta.",
+      "triangles": "Triángulos (giros de ~60°), rotados y desplazados por el área de juego: el patrón de saltos más común en mapas rankeados.",
+      "star": "Estrella (pentagrama): giros muy cerrados de ~36°, cada salto cruza la figura: snap aim.",
+      "square": "Cuadrados (giros de 90°), rotados 45° en cada vuelta.",
+      "polygon": "Cualquier polígono: elige el número de vértices.",
+      "oibon": "Saltos de borde a borde por toda la pantalla; la altura sube y baja.",
+      "flow": "Curvas suaves y eses con ángulos abiertos: flow aim. Funciona mejor hasta ~2 diámetros; más allá el área obliga a giros más cerrados.",
+      "random": "Saltos aleatorios con ángulos agudos, abiertos o mixtos."
+    },
+    "mapRate": "Velocidad",
+    "mapMinDistance": "Saltos desde",
+    "maxNotes": "Máx. notas",
+    "mapSearch": "Busca un mapa o mapper, p. ej. Sotarks…",
+    "mapHint": "Saltos sacados de un mapa real: posiciones y ritmo exactamente como los colocó el mapper. Escribe el nombre de un mapper para practicar sus patrones.",
+    "mapNone": "No hay mapas con saltos en la biblioteca: indica tus carpetas de osu! en Ajustes.",
+    "mapMissing": "El archivo del mapa ya no existe (movido o borrado).",
+    "mapCut": "{{sections}} tramos de saltos · {{notes}} notas · media {{dist}} diámetros",
+    "mapNoJumps": "Este mapa no tiene saltos tan largos: baja «Saltos desde»."
   },
   "error": {
     "title": "Algo salió mal en esta pantalla",
@@ -842,6 +891,7 @@
     "count_many": "{{count}} mapas en la biblioteca",
     "results_many": "{{count}} mapas",
     "played_many": "jugado {{count}} veces, mejor {{acc}}%",
-    "yourPlays_many": "Tus partidas ({{count}})"
+    "yourPlays_many": "Tus partidas ({{count}})",
+    "aimButton": "Practicar sus saltos"
   }
 }

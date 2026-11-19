@@ -1,9 +1,19 @@
 // Trener aimu: generowanie skoków i ocena (timing + celowanie), bez dźwięku i interfejsu.
 
-import { circleRadius, hitWindows } from './difficulty.ts';
+import type { Beatmap } from './beatmap.ts';
+import { beatLengthAt, circleRadius, hitWindows } from './difficulty.ts';
+import { playableObjects } from './streams.ts';
 import { errorStats, type ErrorStats } from './replayAnalysis.ts';
 
-export type AimPattern = 'backforth' | 'polygon' | 'random';
+/**
+ * Rodzaje skoków. Nazwy jak w społeczności osu!:
+ * - triangles – trójkąty (skoki pod ~60°), obracane i przesuwane po planszy,
+ * - star – gwiazda (pentagram): ostre kąty ~36°, każdy skok przez środek kształtu,
+ * - square – kwadraty (kąty 90°), co obrót kwadrat obraca się o 45°,
+ * - oibon – skoki przez cały ekran, z lewej krawędzi na prawą i z powrotem,
+ * - flow – płynne skoki pod szerokim kątem (łuki i „esy”), jak w mapach na wide aim.
+ */
+export type AimPattern = 'backforth' | 'polygon' | 'random' | 'triangles' | 'star' | 'square' | 'oibon' | 'flow';
 export type AngleMode = 'sharp' | 'wide' | 'mixed';
 
 export interface AimNote {
@@ -90,6 +100,98 @@ export function generateAim(o: AimOptions): AimNote[] {
         combo: (i % n) + 1
       });
     }
+  } else if (o.pattern === 'triangles' || o.pattern === 'star' || o.pattern === 'square') {
+    // kształt o boku = odległość skoku; po każdym obiegu obrót i przesunięcie, kierunek na zmianę
+    const n = o.pattern === 'triangles' ? 3 : o.pattern === 'square' ? 4 : 5;
+    // gwiazda: wierzchołki pięciokąta odwiedzane co drugi (cięciwa 144°), reszta – po kolei
+    const order = o.pattern === 'star' ? [0, 2, 4, 1, 3] : [...Array(n).keys()];
+    const chordAngle = o.pattern === 'star' ? (4 * Math.PI) / 5 : (2 * Math.PI) / n;
+    const R = Math.min(d / (2 * Math.sin(chordAngle / 2)), 175);
+    let ox = cx;
+    let oy = cy;
+    let rot = rand() * Math.PI * 2;
+    for (let i = 0; i < o.notes; i++) {
+      const round = Math.floor(i / n);
+      if (i > 0 && i % n === 0) {
+        rot += o.pattern === 'square' ? Math.PI / 4 : (0.35 + rand() * 0.5) * (round % 2 ? 1 : -1);
+        // środek kształtu wędruje, ale cały kształt mieści się na planszy
+        ox = clampTo(ox + (rand() - 0.5) * R, minX + R, maxX - R);
+        oy = clampTo(oy + (rand() - 0.5) * R * 0.8, minY + R, maxY - R);
+        if (maxX - minX < 2 * R) ox = cx;
+        if (maxY - minY < 2 * R) oy = cy;
+      }
+      const dirSign = round % 2 ? -1 : 1;
+      const k = order[i % n]!;
+      const ang = rot + dirSign * k * ((2 * Math.PI) / n);
+      notes.push({
+        time: i * step,
+        x: clampTo(ox + Math.cos(ang) * R, minX, maxX),
+        y: clampTo(oy + Math.sin(ang) * R, minY, maxY),
+        combo: (i % n) + 1
+      });
+    }
+  } else if (o.pattern === 'oibon') {
+    // od krawędzi do krawędzi; wysokość wędruje w dół i w górę, żeby kąty się zmieniały
+    let y = minY + rand() * (maxY - minY);
+    let vy = (d * 0.25 + 20) * (rand() < 0.5 ? 1 : -1);
+    for (let i = 0; i < o.notes; i++) {
+      const left = i % 2 === 0;
+      if (i > 0) {
+        y += vy * (0.6 + rand() * 0.8);
+        if (y < minY || y > maxY) {
+          vy = -vy;
+          y = clampTo(y, minY, maxY);
+        }
+      }
+      notes.push({ time: i * step, x: left ? minX + r * 0.3 : maxX - r * 0.3, y, combo: (i % 8) + 1 });
+    }
+  } else if (o.pattern === 'flow') {
+    // płynny ruch: skręt 30–66° (kąt między skokami 114–150°), łuki w jedną stronę, co kilka nut „es”.
+    // Skręt wybierany tak, żeby zmieściła się ta nuta i następna przy tym samym skręcie –
+    // dzięki temu przy krawędzi ruch zakręca łukiem zamiast ostro zawracać.
+    const inside = (px: number, py: number) => px >= minX && px <= maxX && py >= minY && py <= maxY;
+    // 30–66° to płynny ruch; większe skręty tylko gdy plansza nie pozwala inaczej (duże odległości)
+    const MAGS = [0.55, 0.75, 0.95, 1.15, 1.35, 1.6, 1.9, 2.3, 2.7];
+    let x = clampTo(cx - d / 2, minX, maxX);
+    let y = cy;
+    let dir = rand() * Math.PI * 2;
+    let turnSign = rand() < 0.5 ? 1 : -1;
+    let nextFlip = 5 + Math.floor(rand() * 4);
+    for (let i = 0; i < o.notes; i++) {
+      if (i > 0) {
+        if (i === nextFlip) {
+          turnSign = -turnSign;
+          nextFlip = i + 5 + Math.floor(rand() * 4);
+        }
+        let best: { x: number; y: number; dir: number; score: number } | null = null;
+        for (const sign of [turnSign, -turnSign]) {
+          for (const mag of MAGS) {
+            const a1 = dir + sign * mag;
+            const x1 = x + Math.cos(a1) * d;
+            const y1 = y + Math.sin(a1) * d;
+            if (!inside(x1, y1)) continue;
+            const a2 = a1 + sign * mag;
+            const ok2 = inside(x1 + Math.cos(a2) * d, y1 + Math.sin(a2) * d);
+            // najpierw: następny skok się mieści; potem: bez zmiany strony; potem: łagodniejszy skręt
+            const score = (ok2 ? 0 : 100) + (sign === turnSign ? 0 : 3) + mag * 6;
+            if (!best || score < best.score) best = { x: x1, y: y1, dir: a1, score };
+          }
+        }
+        if (best) {
+          if (Math.sign(best.dir - dir) !== turnSign) turnSign = -turnSign;
+          x = best.x;
+          y = best.y;
+          dir = best.dir;
+        } else {
+          // nic się nie mieści (bardzo duża odległość) – skok w stronę środka
+          const a = Math.atan2(cy - y, cx - x);
+          x = clampTo(x + Math.cos(a) * d, minX, maxX);
+          y = clampTo(y + Math.sin(a) * d, minY, maxY);
+          dir = a;
+        }
+      }
+      notes.push({ time: i * step, x, y, combo: (i % 8) + 1 });
+    }
   } else {
     let x = cx;
     let y = cy;
@@ -124,6 +226,81 @@ export function generateAim(o: AimOptions): AimNote[] {
     }
   }
   return notes;
+}
+
+export interface MapJumpSection {
+  /** czas w oryginalnej mapie (ms) */
+  startMs: number;
+  endMs: number;
+  notes: number;
+  /** średnia długość skoku w średnicach */
+  distance: number;
+}
+
+export interface MapJumpOptions {
+  /** minimalny skok (w średnicach), żeby przejście liczyło się jako skok */
+  minDistance?: number;
+  /** tempo względem mapy: 0,75 = wolniej, 1,5 = jak DT */
+  rate?: number;
+  /** najkrótszy fragment skoków (nuty) */
+  minNotes?: number;
+  /** pauza między fragmentami w ćwiczeniu (ms) */
+  gapMs?: number;
+  /** limit nut w ćwiczeniu */
+  maxNotes?: number;
+}
+
+/**
+ * Skoki wycięte z prawdziwej mapy: fragmenty, w których kolejne obiekty dzieli najwyżej 1/2 uderzenia
+ * i duża odległość. Pozycje i rytm jak w mapie (z tempem rate), fragmenty sklejone krótkimi pauzami.
+ * Odległość liczona od końca poprzedniego obiektu (slider kończy się gdzie indziej niż zaczyna).
+ */
+export function aimFromBeatmap(beatmap: Beatmap, o: MapJumpOptions = {}): { notes: AimNote[]; sections: MapJumpSection[]; cs: number } {
+  const minDistance = o.minDistance ?? 1.5;
+  const rate = o.rate ?? 1;
+  const minNotes = o.minNotes ?? 4;
+  const gapMs = o.gapMs ?? 1200;
+  const maxNotes = o.maxNotes ?? 400;
+  const r = circleRadius(beatmap.difficulty.cs);
+  const objs = playableObjects(beatmap).filter((h) => h.kind !== 'spinner');
+  const runs: (typeof objs)[] = [];
+  let run: typeof objs = [];
+  const close = () => {
+    if (run.length >= minNotes) runs.push(run);
+    run = [];
+  };
+  for (let i = 1; i < objs.length; i++) {
+    const a = objs[i - 1]!;
+    const b = objs[i]!;
+    const beat = beatLengthAt(beatmap, b.time);
+    const gap = b.time - a.endTime;
+    const dist = Math.hypot(b.x - a.endX, b.y - a.endY) / (2 * r);
+    // 1/2 albo szybciej (ale nie stream 1/4 na małym spacingu) i duża odległość
+    if (gap > 0 && gap <= beat * 0.55 && dist >= minDistance) {
+      if (!run.length) run.push(a);
+      run.push(b);
+    } else {
+      close();
+    }
+  }
+  close();
+
+  const notes: AimNote[] = [];
+  const sections: MapJumpSection[] = [];
+  let t = 0;
+  for (const part of runs) {
+    if (notes.length >= maxNotes) break;
+    const take = part.slice(0, maxNotes - notes.length);
+    const t0 = take[0]!.time;
+    let sum = 0;
+    take.forEach((h, k) => {
+      notes.push({ time: t + (h.time - t0) / rate, x: h.x, y: h.y, combo: (k % 8) + 1 });
+      if (k > 0) sum += Math.hypot(h.x - take[k - 1]!.endX, h.y - take[k - 1]!.endY) / (2 * r);
+    });
+    sections.push({ startMs: t0, endMs: take[take.length - 1]!.time, notes: take.length, distance: sum / Math.max(take.length - 1, 1) });
+    t = notes[notes.length - 1]!.time + gapMs;
+  }
+  return { notes, sections, cs: beatmap.difficulty.cs };
 }
 
 export interface AimNoteResult extends AimNote {
