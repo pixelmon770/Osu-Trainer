@@ -90,6 +90,8 @@ export interface ReplayAnalysis {
     jumpCount: number;
   };
   timeline: Segment[];
+  /** długość jednego odcinka osi czasu (krótsza na krótkich mapach) */
+  segmentMs: number;
   /** czas, od którego celność spada w dwóch kolejnych odcinkach (reguła zmęczenia), albo null */
   fatigueAt: number | null;
   /** replay kończy się przed końcem mapy (np. wyjście w trakcie) */
@@ -106,7 +108,10 @@ interface Press {
 
 /** Okno, w którym kliknięcie w kółko przed czasem daje miss (jak w osu!). */
 const EARLY_MISS_MS = 400;
-const SEGMENT_MS = 20000;
+/** ~10 odcinków na mapę, od 5 do 20 sekund, zaokrąglone do 5 s */
+function segmentLength(durationMs: number): number {
+  return Math.min(20000, Math.max(5000, Math.round(durationMs / 10 / 5000) * 5000));
+}
 
 export function effectiveDifficulty(beatmap: Beatmap, mods: number) {
   let { cs, ar, od } = beatmap.difficulty;
@@ -290,16 +295,17 @@ export function analyzeReplay(beatmap: Beatmap, replay: Replay): ReplayAnalysis 
 
   // oś czasu
   const timeline: Segment[] = [];
+  const segmentMs = played.length ? segmentLength(played[played.length - 1]!.time - played[0]!.time) : 20000;
   if (played.length) {
     const start = played[0]!.time;
     const end = played[played.length - 1]!.time;
-    for (let t = start; t <= end; t += SEGMENT_MS) {
-      const seg = played.filter((n) => n.time >= t && n.time < t + SEGMENT_MS);
+    for (let t = start; t <= end; t += segmentMs) {
+      const seg = played.filter((n) => n.time >= t && n.time < t + segmentMs);
       if (seg.length === 0) continue;
       const c = (j: Judgement) => seg.filter((n) => n.judgement === j).length;
       timeline.push({
         startMs: t,
-        endMs: Math.min(t + SEGMENT_MS, end),
+        endMs: Math.min(t + segmentMs, end),
         notes: seg.length,
         misses: c(0),
         accuracy: accuracy(c(300), c(100), c(50), c(0)),
@@ -307,9 +313,10 @@ export function analyzeReplay(beatmap: Beatmap, replay: Replay): ReplayAnalysis 
       });
     }
   }
-  // reguła zmęczenia: celność spada dwa razy z rzędu (pomijamy krótkie odcinki < 20 nut)
+  // reguła zmęczenia: celność spada dwa razy z rzędu (pomijamy odcinki z małą liczbą nut)
   let fatigueAt: number | null = null;
-  const solid = timeline.filter((s) => s.notes >= 20);
+  const minNotes = Math.max(10, segmentMs / 1000);
+  const solid = timeline.filter((s) => s.notes >= minNotes);
   for (let i = 2; i < solid.length; i++) {
     if (solid[i]!.accuracy < solid[i - 1]!.accuracy - 1 && solid[i - 1]!.accuracy < solid[i - 2]!.accuracy - 1) {
       fatigueAt = solid[i - 1]!.startMs;
@@ -355,6 +362,7 @@ export function analyzeReplay(beatmap: Beatmap, replay: Replay): ReplayAnalysis 
       jumpCount: jumps.length
     },
     timeline,
+    segmentMs,
     fatigueAt,
     partial,
     lastFrameMs

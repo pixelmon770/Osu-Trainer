@@ -10,6 +10,9 @@ Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
   stosy nut, mody HR/EZ): UR, hit error osobno dla K1/K2, błąd według pozycji w streamie,
   wejście w bursty, naprzemienność, aim, rodzaje missów, celność w czasie i automatyczne wnioski;
   nowe replaye z osu! analizują się same i trafiają do historii (lokalna baza SQLite);
+  historię można przeszukiwać i filtrować (okres, mody, stable/lazer, bez przerwanych, sortowanie),
+  przełączyć na widok map, a dla wybranej mapy zobaczyć postęp próba po próbie
+  (celność, UR, K2−K1 z linią trendu i porównaniem pierwszych i ostatnich prób);
 - **Ustawienia** – folder osu!, obserwowane foldery z replayami, import ostatnich replayów,
   powiadomienia, autostart, język.
 
@@ -65,10 +68,15 @@ npm run analyze -- "$env:LOCALAPPDATA\osu!\Songs\1241370 GYZE - HONESTY"
 Gdy program jest włączony, obserwuje foldery z replayami i każdy nowy plik `.osr` od razu analizuje:
 - `osu!/Data/r` – osu!stable zapisuje tu sam replay każdej **ukończonej** próby,
 - `osu!/Replays` – replaye wyeksportowane przez F2 (tak zapiszesz też faila),
+- **osu!lazer** – magazyn plików `%APPDATA%\osu\files` (albo folder wybrany w grze, `storage.ini`);
+  lazer zapisuje pliki pod nazwami-skrótami bez rozszerzeń, więc program rozpoznaje replaye i mapy
+  po pierwszych bajtach; łapie też faile zapisane przez lazera,
 - dowolne dodatkowe foldery (Ustawienia → Replaye → Dodaj folder).
 
+W historii każdy replay ma oznaczone źródło (stable / lazer).
+
 Replay zapisuje tylko sumę MD5 mapy. Program szuka mapy tak: przeciągnięty razem plik `.osu`
-→ mapy zapamiętane wcześniej → `osu!.db` → folder replaya → najnowsze foldery w `Songs`
+→ mapy zapamiętane wcześniej → `osu!.db` → indeks map lazera → folder replaya → najnowsze foldery w `Songs`
 (osu! dopisuje do `osu!.db` mapy pobrane w trakcie sesji dopiero po zamknięciu gry).
 Gdy nic nie pasuje, przy ręcznym otwieraniu program prosi o wskazanie mapy.
 
@@ -81,6 +89,7 @@ Folder danych programu: `%APPDATA%\osu-trainer` (w Eksploratorze wpisz to w pase
 | `settings.json` | ustawienia |
 | `osu-trainer.sqlite` | historia analiz replayów |
 | `map-index.json` | zapamiętane ścieżki map (MD5 → plik .osu) |
+| `lazer-index.json` | indeks map z magazynu lazera (pierwsze zbudowanie może potrwać minutę) |
 
 Replaye i mapy nie są nigdzie wysyłane.
 

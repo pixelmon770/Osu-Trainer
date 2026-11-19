@@ -17,23 +17,47 @@ export default function App() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { t, i18n } = useTranslation();
 
-  const push = (toast: Omit<Toast, 'id'>) => setToasts((list) => [...list.slice(-3), { ...toast, id: Date.now() + Math.random() }]);
+  const push = (toast: Omit<Toast, 'id'>) =>
+    setToasts((list) => [...list.slice(-3), { ...toast, id: Date.now() + Math.random(), createdAt: Date.now() }]);
 
   useEffect(() => {
     const f = makeFormatters(i18n.language);
     const offAdded = window.api.onReplayAdded((s) => {
       setLatest(s);
-      push({
-        tone: 'info',
-        title: t('toast.newReplay'),
-        body: `${s.title} [${s.version}] · ${f.num(s.accuracy, 2)}% · UR ${f.num(s.ur)}`,
-        action: {
-          label: t('toast.open'),
-          run: () => {
-            setOpenReplayId(s.id);
-            setScreen('replays');
-          }
+      const openThis = () => {
+        setOpenReplayId(s.id);
+        setScreen('replays');
+      };
+      setToasts((list) => {
+        // kilka replayów w krótkim czasie = jedno powiadomienie z licznikiem
+        const recent = list.find((x) => x.group === 'replays' && Date.now() - (x.createdAt ?? 0) < 10_000);
+        if (recent) {
+          const count = (recent.count ?? 1) + 1;
+          return list.map((x) =>
+            x === recent
+              ? {
+                  ...x,
+                  count,
+                  title: t('toast.newReplays', { count }),
+                  body: t('toast.newest', { map: `${s.title} [${s.version}]` }),
+                  action: { label: t('toast.open'), run: openThis }
+                }
+              : x
+          );
         }
+        return [
+          ...list.slice(-3),
+          {
+            id: Date.now() + Math.random(),
+            createdAt: Date.now(),
+            group: 'replays',
+            count: 1,
+            tone: 'info',
+            title: t('toast.newReplay'),
+            body: `${s.title} [${s.version}] · ${f.num(s.accuracy, 2)}% · UR ${f.num(s.ur)}`,
+            action: { label: t('toast.open'), run: openThis }
+          }
+        ];
       });
     });
     const offFailed = window.api.onReplayFailed((info) => {

@@ -145,7 +145,7 @@
       "missesShort_few": "{{count}} missy",
       "missesShort_many": "{{count}} missów",
       "missesShort_other": "{{count}} missy",
-      "timeline": "Celność co 20 sekund",
+      "timeline": "Celność co {{seconds}} sekund",
       "timelineHint": "Najedź na punkt, żeby zobaczyć UR i missy. Zaznaczony punkt to miejsce, od którego celność spadała dwa odcinki z rzędu.",
       "segmentTip": "{{from}}–{{to}} · celność {{acc}}% · UR {{ur}} · missy {{misses}}"
     },
@@ -177,7 +177,59 @@
       "importing": "Szukam replayów…",
       "importProgress": "Analizuję {{done}} z {{total}}…",
       "importDone": "Zaimportowano {{imported}}, pominięto {{skipped}}.",
-      "partial": "przerwany"
+      "partial": "przerwany",
+      "importNothing": "Brak replayów z ostatnich 30 dni w: {{folders}}. Sprawdź foldery w Ustawieniach.",
+      "emptyFiltered": "Nic nie pasuje do tych filtrów."
+    },
+    "filter": {
+      "plays": "Gry",
+      "maps": "Mapy",
+      "search": "Szukaj: tytuł, artysta, poziom, mapper…",
+      "period": "Okres",
+      "allTime": "Cały czas",
+      "today": "Ostatnie 24 h",
+      "days_one": "Ostatni {{count}} dzień",
+      "days_few": "Ostatnie {{count}} dni",
+      "days_many": "Ostatnie {{count}} dni",
+      "days_other": "Ostatnie {{count}} dni",
+      "mods": "Mody",
+      "anyMods": "Dowolne mody",
+      "noMods": "Bez modów (NM)",
+      "source": "Klient",
+      "anyClient": "stable + lazer",
+      "manual": "otwarte ręcznie",
+      "sort": "Sortowanie",
+      "newest": "Od najnowszych",
+      "oldest": "Od najstarszych",
+      "bestAcc": "Najlepsza celność",
+      "bestUr": "Najniższy UR",
+      "hidePartial": "Ukryj przerwane i faile",
+      "clearMap": "Pokaż wszystkie mapy",
+      "reset": "Wyczyść filtry"
+    },
+    "maps": {
+      "attempts_one": "{{count}} próba",
+      "attempts_few": "{{count}} próby",
+      "attempts_many": "{{count}} prób",
+      "attempts_other": "{{count}} próby",
+      "best": "najlepsza {{acc}}%",
+      "bestUr": "najlepszy UR {{ur}}",
+      "last": "ostatnio: {{date}}"
+    },
+    "progress": {
+      "title": "Postęp na tej mapie",
+      "show": "Postęp na tej mapie",
+      "accuracy": "Celność",
+      "entry": "Wejście w stream",
+      "compare": "ostatnie {{n}} wobec pierwszych {{n}} prób:",
+      "better": "lepiej",
+      "worse": "gorzej",
+      "same": "bez zmian",
+      "higherBetter": "więcej = lepiej",
+      "lowerBetter": "mniej = lepiej",
+      "closerZero": "bliżej 0 = lepiej",
+      "needMore": "Zagraj tę mapę co najmniej dwa razy, żeby zobaczyć trend.",
+      "hint": "Każdy punkt to jedna próba (działają filtry obok, np. tylko NM albo tylko ukończone). Linia przerywana = trend. Kliknij punkt, żeby otworzyć tę próbę."
     }
   },
   "toast": {
@@ -185,7 +237,12 @@
     "open": "Otwórz",
     "close": "Zamknij",
     "replayFailed": "Replay nie został przeanalizowany",
-    "mapNotFound": "Nie znaleziono mapy dla {{file}}. Otwórz go na ekranie Replaye, żeby wskazać mapę."
+    "mapNotFound": "Nie znaleziono mapy dla {{file}}. Otwórz go na ekranie Replaye, żeby wskazać mapę.",
+    "newReplays_one": "Przeanalizowano {{count}} nowy replay",
+    "newReplays_few": "Przeanalizowano {{count}} nowe replaye",
+    "newReplays_many": "Przeanalizowano {{count}} nowych replayów",
+    "newReplays_other": "Przeanalizowano {{count}} nowego replaya",
+    "newest": "Najnowszy: {{map}}"
   },
   "settings": {
     "title": "Ustawienia",
@@ -208,7 +265,8 @@
     "folderKind": {
       "data-r": "Ukończone próby (Data/r)",
       "replays": "Wyeksportowane replaye (F2)",
-      "extra": "Dodatkowy folder"
+      "extra": "Dodatkowy folder",
+      "lazer": "osu!lazer (magazyn plików)"
     },
     "replays": {
       "title": "Replaye",
@@ -226,7 +284,11 @@
       "importHint_other": "Analizuje replaye z ostatnich 30 dni, których nie ma jeszcze w historii. W historii: {{count}} replaya.",
       "importButton": "Importuj",
       "importProgress": "Analizuję {{done}} z {{total}}…",
-      "importDone": "Gotowe: zaimportowano {{imported}}, pominięto {{skipped}}, błędy: {{failed}}."
+      "importDone": "Gotowe: zaimportowano {{imported}}, pominięto {{skipped}}, błędy: {{failed}}.",
+      "folderFound_one": "{{name}}: {{count}} replay z ostatnich 30 dni",
+      "folderFound_few": "{{name}}: {{count}} replaye z ostatnich 30 dni",
+      "folderFound_many": "{{name}}: {{count}} replayów z ostatnich 30 dni",
+      "folderFound_other": "{{name}}: {{count}} replaya z ostatnich 30 dni"
     },
     "app": {
       "title": "Program",
@@ -234,6 +296,13 @@
       "autostartHint": "Program startuje w tle po zalogowaniu, więc żaden replay nie umknie.",
       "autostartDev": "Działa w wersji zainstalowanej (nie w npm run dev).",
       "version": "Wersja {{version}}"
+    },
+    "lazer": {
+      "folder": "Folder danych osu!lazer",
+      "notFound": "nie znaleziono – wskaż go, jeśli grasz na lazerze",
+      "indexing": "Indeksuję mapy lazera… na razie {{maps}}",
+      "indexed": "Mapy lazera w indeksie: {{maps}}",
+      "hint": "Lazer trzyma mapy i replaye pod nazwami-skrótami (folder files). Program rozpoznaje je po zawartości i wyłapuje też faile zapisane przez lazera."
     }
   }
 }

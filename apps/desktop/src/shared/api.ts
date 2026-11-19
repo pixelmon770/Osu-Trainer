@@ -19,7 +19,7 @@ export interface MapInfo {
 }
 
 export type ReplayResult =
-  | { ok: true; id: string; replayFile: string; mapFile: string; map: MapInfo; analysis: ReplayAnalysis }
+  | { ok: true; id: string; replayFile: string; mapFile: string; beatmapMd5: string; map: MapInfo; analysis: ReplayAnalysis }
   | {
       ok: false;
       /** not-osr-file | map-not-selected | map-mismatch | map-not-found | other-mode | błąd odczytu */
@@ -32,6 +32,7 @@ export type ReplayResult =
 export interface ReplaySummary {
   id: string;
   file: string;
+  beatmapMd5: string;
   artist: string;
   title: string;
   version: string;
@@ -45,7 +46,43 @@ export interface ReplaySummary {
   k1Mean: number;
   k2Mean: number;
   streamUr: number;
+  /** średni błąd na pierwszej nucie streamów (wejście w burst) */
+  entryMean: number;
+  alternation: number;
+  tapSpread: number;
   partial: boolean;
+  /** z którego klienta pochodzi replay */
+  source: ReplaySource;
+}
+
+export type ReplaySource = 'stable' | 'lazer' | 'file';
+
+export interface ReplayFilter {
+  /** szuka w tytule, artyście, nazwie poziomu i mapperze */
+  search?: string;
+  /** tylko jedna mapa (poziom trudności) */
+  beatmapMd5?: string | null;
+  source?: 'all' | ReplaySource;
+  /** ostatnie N dni; null = wszystko */
+  sinceDays?: number | null;
+  /** dokładny zestaw modów, np. "HD,DT"; "NM" = bez modów; null = dowolne */
+  mods?: string | null;
+  /** ukryj próby przerwane (quit/fail) */
+  hidePartial?: boolean;
+  sort?: 'newest' | 'oldest' | 'accuracy' | 'ur';
+  limit?: number;
+}
+
+/** Mapa w historii z podsumowaniem prób. */
+export interface MapGroup {
+  beatmapMd5: string;
+  artist: string;
+  title: string;
+  version: string;
+  attempts: number;
+  lastPlayed: string;
+  bestAccuracy: number;
+  bestUr: number;
 }
 
 /** Teksty okien systemowych – w języku wybranym w programie. */
@@ -63,6 +100,10 @@ export interface Settings {
   watchDataR: boolean;
   /** obserwuj osu!/Replays (replaye wyeksportowane przez F2) */
   watchReplays: boolean;
+  /** folder danych osu!lazer (np. %APPDATA%\osu) */
+  lazerFolder: string | null;
+  /** obserwuj magazyn plików lazera (nowe replaye, także faile) */
+  watchLazer: boolean;
   /** dodatkowe foldery z replayami */
   extraFolders: string[];
   /** analizuj nowe replaye od razu po pojawieniu się */
@@ -76,7 +117,7 @@ export interface Settings {
 
 export interface WatchedFolder {
   path: string;
-  kind: 'data-r' | 'replays' | 'extra';
+  kind: 'data-r' | 'replays' | 'lazer' | 'extra';
   enabled: boolean;
   exists: boolean;
 }
@@ -86,6 +127,7 @@ export interface SettingsStatus {
   osuFolderFound: boolean;
   songsFolder: string | null;
   osuDb: { maps: number; player: string; error: string | null } | null;
+  lazer: { found: boolean; indexedMaps: number; indexing: boolean };
   folders: WatchedFolder[];
   /** autostart działa tylko w zainstalowanej wersji */
   canAutostart: boolean;
@@ -99,6 +141,8 @@ export interface ImportProgress {
   skipped: number;
   failed: number;
   finished: boolean;
+  /** przejrzane foldery i ile znaleziono w nich replayów z wybranego okresu */
+  folders: { path: string; kind: WatchedFolder['kind']; found: number }[];
 }
 
 export interface TrainerApi {
@@ -107,8 +151,12 @@ export interface TrainerApi {
   /** Otwiera okno wyboru replaya .osr; mapę znajduje sam albo pyta o nią. Wynik trafia do historii. */
   pickAndAnalyzeReplay(labels: DialogLabels): Promise<ReplayResult>;
   analyzeReplayFile(path: string, mapHint: string | null, labels: DialogLabels): Promise<ReplayResult>;
-  /** Historia analiz, od najnowszych. */
-  listReplays(limit: number): Promise<ReplaySummary[]>;
+  /** Historia analiz z filtrami. */
+  queryReplays(filter: ReplayFilter): Promise<{ items: ReplaySummary[]; total: number }>;
+  /** Mapy w historii (te same filtry, bez sortowania i wyboru mapy). */
+  listMaps(filter: ReplayFilter): Promise<MapGroup[]>;
+  /** Zestawy modów występujące w historii (do filtra). */
+  modCombos(): Promise<string[]>;
   getReplay(id: string): Promise<ReplayResult>;
   deleteReplay(id: string): Promise<void>;
   /** Analizuje replaye z obserwowanych folderów, których jeszcze nie ma w historii. */
@@ -133,7 +181,9 @@ export const IPC = {
   analyzeMapFile: 'map:analyze-file',
   pickAndAnalyzeReplay: 'replay:pick-and-analyze',
   analyzeReplayFile: 'replay:analyze-file',
-  listReplays: 'history:list',
+  queryReplays: 'history:query',
+  listMaps: 'history:maps',
+  modCombos: 'history:mods',
   getReplay: 'history:get',
   deleteReplay: 'history:delete',
   importReplays: 'history:import',

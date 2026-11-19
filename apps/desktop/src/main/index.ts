@@ -10,6 +10,7 @@ import {
   type AnalyzeResult,
   type DialogLabels,
   type ImportProgress,
+  type ReplayFilter,
   type ReplayResult,
   type Settings,
   type SettingsStatus
@@ -19,6 +20,7 @@ import { defaultSongsFolder, loadOsuDb } from './mapIndex.ts';
 import { analyzeReplayFile } from './replayService.ts';
 import { getSettings, songsFolder, updateSettings, watchedFolders } from './settings.ts';
 import { text } from './texts.ts';
+import { indexLazerStore, indexStoreFile, lazerIndexStatus, recentLazerReplays, sniffFile } from './lazer.ts';
 import { ReplayWatcher } from './watcher.ts';
 
 // Jeden stały folder danych – taki sam w trybie dev i w wersji zainstalowanej.
@@ -134,27 +136,36 @@ ipcMain.handle(IPC.analyzeReplayFile, async (event, file: unknown, mapHint: unkn
 
 // ---------- historia ----------
 
-ipcMain.handle(IPC.listReplays, (_e, limit: number) => history.listReplays(Number(limit) || 100));
+ipcMain.handle(IPC.queryReplays, (_e, filter: ReplayFilter) => history.queryReplays(filter ?? {}));
+ipcMain.handle(IPC.listMaps, (_e, filter: ReplayFilter) => history.listMaps(filter ?? {}));
+ipcMain.handle(IPC.modCombos, () => history.modCombos());
 ipcMain.handle(IPC.getReplay, (_e, id: string) => history.getReplay(String(id)));
 ipcMain.handle(IPC.deleteReplay, (_e, id: string) => history.deleteReplay(String(id)));
 
 let importRunning = false;
 ipcMain.handle(IPC.importReplays, async (_e, days: number, limit: number): Promise<ImportProgress> => {
-  const progress: ImportProgress = { done: 0, total: 0, imported: 0, skipped: 0, failed: 0, finished: false };
+  const progress: ImportProgress = { done: 0, total: 0, imported: 0, skipped: 0, failed: 0, finished: false, folders: [] };
   if (importRunning) return { ...progress, finished: true };
   importRunning = true;
   try {
     const since = Date.now() - Math.max(1, Number(days) || 30) * 86_400_000;
     const known = await history.knownFiles();
     const candidates: { file: string; mtime: number }[] = [];
+    const settings = getSettings();
     for (const folder of watchedFolders().filter((f) => f.enabled && f.exists)) {
-      for (const name of await readdir(folder.path).catch(() => [] as string[])) {
-        if (!name.toLowerCase().endsWith('.osr')) continue;
-        const file = join(folder.path, name);
-        if (known.has(file.toLowerCase())) continue;
-        const s = await stat(file).catch(() => null);
-        if (s && s.mtimeMs >= since) candidates.push({ file, mtime: s.mtimeMs });
+      let found: { file: string; mtime: number }[] = [];
+      if (folder.kind === 'lazer' && settings.lazerFolder) {
+        found = await recentLazerReplays(settings.lazerFolder, since);
+      } else {
+        for (const name of await readdir(folder.path).catch(() => [] as string[])) {
+          if (!name.toLowerCase().endsWith('.osr')) continue;
+          const file = join(folder.path, name);
+          const st = await stat(file).catch(() => null);
+          if (st && st.mtimeMs >= since) found.push({ file, mtime: st.mtimeMs });
+        }
       }
+      progress.folders.push({ path: folder.path, kind: folder.kind, found: found.length });
+      candidates.push(...found.filter((c) => !known.has(c.file.toLowerCase())));
     }
     candidates.sort((a, b) => b.mtime - a.mtime);
     const todo = candidates.slice(0, Math.max(1, Math.min(Number(limit) || 100, 1000)));
@@ -178,10 +189,18 @@ ipcMain.handle(IPC.importReplays, async (_e, days: number, limit: number): Promi
 
 // ---------- automatyczne replaye ----------
 
-const watcher = new ReplayWatcher(async (file) => {
+const watcher = new ReplayWatcher(async (file, lazer) => {
   const s = getSettings();
+  if (lazer) {
+    // magazyn lazera: nowa mapa trafia do indeksu, replay idzie do analizy, reszta (audio, tła) jest pomijana
+    const kind = await sniffFile(file);
+    if (kind === 'osu') return indexStoreFile(file, kind);
+    if (kind !== 'osr') return;
+  }
   if (!s.autoAnalyze) return;
-  const { result, summary } = await analyzeReplayFile(file, { skipIfKnown: true });
+  // tylko świeże gry: stare replaye zapisane ponownie (np. przez lazera) nie są nową grą
+  const { result, summary, old } = await analyzeReplayFile(file, { skipIfKnown: true, maxAgeHours: 12 });
+  if (old) return;
   if (summary) {
     send(IPC.replayAdded, summary);
     if (s.notifications && !mainWindow?.isFocused() && Notification.isSupported()) {
@@ -203,7 +222,7 @@ function restartWatcher(): void {
   watcher.start(
     watchedFolders()
       .filter((f) => f.enabled && f.exists)
-      .map((f) => f.path)
+      .map((f) => ({ path: f.path, lazer: f.kind === 'lazer' }))
   );
 }
 
@@ -217,6 +236,10 @@ async function status(): Promise<SettingsStatus> {
     osuFolderFound: !!settings.osuFolder,
     songsFolder: songsFolder(settings.osuFolder),
     osuDb: db ? { maps: db.maps, player: db.player, error: db.error } : null,
+    lazer: (() => {
+      const l = lazerIndexStatus();
+      return { found: !!settings.lazerFolder, indexedMaps: l.maps, indexing: l.running };
+    })(),
     folders: watchedFolders(settings),
     canAutostart: app.isPackaged,
     historyCount: await history.countReplays()
@@ -230,6 +253,8 @@ ipcMain.handle(IPC.updateSettings, async (_e, patch: Partial<Settings>) => {
     'osuFolder',
     'watchDataR',
     'watchReplays',
+    'lazerFolder',
+    'watchLazer',
     'extraFolders',
     'autoAnalyze',
     'notifications',
@@ -239,7 +264,8 @@ ipcMain.handle(IPC.updateSettings, async (_e, patch: Partial<Settings>) => {
   const clean = Object.fromEntries(Object.entries(patch ?? {}).filter(([k]) => allowed.includes(k as keyof Settings)));
   const s = await updateSettings(clean);
   if ('openAtLogin' in clean && app.isPackaged) app.setLoginItemSettings({ openAtLogin: s.openAtLogin });
-  if (['osuFolder', 'watchDataR', 'watchReplays', 'extraFolders'].some((k) => k in clean)) restartWatcher();
+  if (['osuFolder', 'watchDataR', 'watchReplays', 'lazerFolder', 'watchLazer', 'extraFolders'].some((k) => k in clean)) restartWatcher();
+  if ('lazerFolder' in clean && s.lazerFolder) void indexLazerStore(s.lazerFolder);
   return status();
 });
 
@@ -267,14 +293,22 @@ app.whenReady().then(() => {
   createWindow();
   restartWatcher();
   void loadOsuDb(); // wczytaj listę map od razu, żeby pierwszy replay nie czekał
+  const lazerFolder = getSettings().lazerFolder;
+  if (lazerFolder) void indexLazerStore(lazerFolder); // w tle: MD5 map z magazynu lazera
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
-app.on('before-quit', () => {
+let quitting = false;
+app.on('before-quit', (e) => {
   watcher.stop();
-  void history.flushNow();
+  // poczekaj na zapis historii, zanim program się zamknie
+  if (!quitting && history.hasPendingSave()) {
+    e.preventDefault();
+    quitting = true;
+    void history.flushNow().finally(() => app.quit());
+  }
 });
 
 app.on('window-all-closed', () => {

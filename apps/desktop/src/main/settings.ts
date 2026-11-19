@@ -6,6 +6,7 @@ import { writeFile } from 'node:fs/promises';
 import { isAbsolute, join } from 'node:path';
 import { app } from 'electron';
 import type { Settings, WatchedFolder } from '../shared/api.ts';
+import { detectLazerFolder, lazerFilesDir } from './lazer.ts';
 
 const file = () => join(app.getPath('userData'), 'settings.json');
 
@@ -20,6 +21,8 @@ const defaults = (): Settings => ({
   osuFolder: detectOsuFolder(),
   watchDataR: true,
   watchReplays: true,
+  lazerFolder: detectLazerFolder(),
+  watchLazer: true,
   extraFolders: [],
   autoAnalyze: true,
   notifications: true,
@@ -39,6 +42,7 @@ export function getSettings(): Settings {
   }
   current = { ...defaults(), ...saved };
   if (!current.osuFolder) current.osuFolder = detectOsuFolder();
+  if (!current.lazerFolder) current.lazerFolder = detectLazerFolder();
   return current;
 }
 
@@ -80,6 +84,10 @@ export function watchedFolders(s: Settings = getSettings()): WatchedFolder[] {
     const replays = join(s.osuFolder, 'Replays');
     list.push({ path: dataR, kind: 'data-r', enabled: s.watchDataR, exists: existsSync(dataR) });
     list.push({ path: replays, kind: 'replays', enabled: s.watchReplays, exists: existsSync(replays) });
+  }
+  if (s.lazerFolder) {
+    const files = lazerFilesDir(s.lazerFolder);
+    list.push({ path: files, kind: 'lazer', enabled: s.watchLazer, exists: existsSync(files) });
   }
   for (const p of s.extraFolders) list.push({ path: p, kind: 'extra', enabled: true, exists: existsSync(p) });
   return list;

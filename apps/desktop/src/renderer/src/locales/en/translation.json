@@ -137,7 +137,7 @@
       "positionTip": "notes {{range}} · {{notes}} notes · UR {{ur}} · misses {{misses}}",
       "missesShort_one": "{{count}} miss",
       "missesShort_other": "{{count}} misses",
-      "timeline": "Accuracy every 20 seconds",
+      "timeline": "Accuracy every {{seconds}} seconds",
       "timelineHint": "Hover a point for UR and misses. A marked point is where accuracy started dropping two sections in a row.",
       "segmentTip": "{{from}}–{{to}} · accuracy {{acc}}% · UR {{ur}} · misses {{misses}}"
     },
@@ -169,7 +169,55 @@
       "importing": "Looking for replays…",
       "importProgress": "Analyzing {{done}} of {{total}}…",
       "importDone": "Imported {{imported}}, skipped {{skipped}}.",
-      "partial": "quit/fail"
+      "partial": "quit/fail",
+      "importNothing": "No replays from the last 30 days in: {{folders}}. Check the folders in Settings.",
+      "emptyFiltered": "Nothing matches these filters."
+    },
+    "filter": {
+      "plays": "Plays",
+      "maps": "Maps",
+      "search": "Search: title, artist, difficulty, mapper…",
+      "period": "Period",
+      "allTime": "All time",
+      "today": "Last 24 h",
+      "days_one": "Last {{count}} day",
+      "days_other": "Last {{count}} days",
+      "mods": "Mods",
+      "anyMods": "Any mods",
+      "noMods": "No mods (NM)",
+      "source": "Client",
+      "anyClient": "stable + lazer",
+      "manual": "opened by hand",
+      "sort": "Sort",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "bestAcc": "Best accuracy",
+      "bestUr": "Lowest UR",
+      "hidePartial": "Hide quits and fails",
+      "clearMap": "Show all maps",
+      "reset": "Clear filters"
+    },
+    "maps": {
+      "attempts_one": "{{count}} attempt",
+      "attempts_other": "{{count}} attempts",
+      "best": "best {{acc}}%",
+      "bestUr": "best UR {{ur}}",
+      "last": "last: {{date}}"
+    },
+    "progress": {
+      "title": "Progress on this map",
+      "show": "Progress on this map",
+      "accuracy": "Accuracy",
+      "entry": "Stream entry",
+      "compare": "last {{n}} vs first {{n}} attempts:",
+      "better": "better",
+      "worse": "worse",
+      "same": "no change",
+      "higherBetter": "higher = better",
+      "lowerBetter": "lower = better",
+      "closerZero": "closer to 0 = better",
+      "needMore": "Play this map at least twice to see a trend.",
+      "hint": "Each point is one attempt (filters above apply, e.g. only NM or only completed). Dashed line = trend. Click a point to open that attempt."
     }
   },
   "toast": {
@@ -177,7 +225,10 @@
     "open": "Open",
     "close": "Close",
     "replayFailed": "Replay not analyzed",
-    "mapNotFound": "Map not found for {{file}}. Open it on the Replays screen to choose the map."
+    "mapNotFound": "Map not found for {{file}}. Open it on the Replays screen to choose the map.",
+    "newReplays_one": "{{count}} new replay analyzed",
+    "newReplays_other": "{{count}} new replays analyzed",
+    "newest": "Newest: {{map}}"
   },
   "settings": {
     "title": "Settings",
@@ -200,7 +251,8 @@
     "folderKind": {
       "data-r": "Completed plays (Data/r)",
       "replays": "Exported replays (F2)",
-      "extra": "Extra folder"
+      "extra": "Extra folder",
+      "lazer": "osu!lazer (file store)"
     },
     "replays": {
       "title": "Replays",
@@ -216,7 +268,9 @@
       "importHint_other": "Analyzes replays from the last 30 days that are not in the history yet. History: {{count}} replays.",
       "importButton": "Import",
       "importProgress": "Analyzing {{done}} of {{total}}…",
-      "importDone": "Done: {{imported}} imported, {{skipped}} skipped, {{failed}} failed."
+      "importDone": "Done: {{imported}} imported, {{skipped}} skipped, {{failed}} failed.",
+      "folderFound_one": "{{name}}: {{count}} replay from the last 30 days",
+      "folderFound_other": "{{name}}: {{count}} replays from the last 30 days"
     },
     "app": {
       "title": "App",
@@ -224,6 +278,13 @@
       "autostartHint": "The app starts in the background after logging in, so no replay is missed.",
       "autostartDev": "Available in the installed version (not in npm run dev).",
       "version": "Version {{version}}"
+    },
+    "lazer": {
+      "folder": "osu!lazer data folder",
+      "notFound": "not found – choose it if you play lazer",
+      "indexing": "Indexing lazer maps… {{maps}} so far",
+      "indexed": "Lazer maps in the index: {{maps}}",
+      "hint": "Lazer keeps maps and replays under hashed file names (files folder). The app recognizes them by their content and also catches failed plays saved by lazer."
     }
   }
 }

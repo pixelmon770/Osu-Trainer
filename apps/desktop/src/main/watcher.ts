@@ -1,18 +1,25 @@
-// Obserwowanie folderów z replayami. Gdy pojawi się nowy plik .osr, czekamy,
-// aż osu! skończy go zapisywać, i analizujemy go w tle – po kolei, jeden na raz.
+// Obserwowanie folderów z replayami. Gdy pojawi się nowy plik, czekamy,
+// aż osu! skończy go zapisywać, i przekazujemy go dalej – po kolei, jeden na raz.
+// Foldery stable: pliki .osr. Magazyn lazera: pliki bez rozszerzenia w podfolderach (rozpoznawane później po nagłówku).
 
 import { watch, type FSWatcher } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import { join } from 'node:path';
 
-type Handler = (file: string) => Promise<void>;
+export interface WatchTarget {
+  path: string;
+  /** magazyn lazera: podfoldery i pliki bez rozszerzeń */
+  lazer: boolean;
+}
+
+type Handler = (file: string, lazer: boolean) => Promise<void>;
 
 const SETTLE_MS = 700;
 
 export class ReplayWatcher {
   private watchers: FSWatcher[] = [];
   private pending = new Map<string, NodeJS.Timeout>();
-  private queue: string[] = [];
+  private queue: { file: string; lazer: boolean }[] = [];
   private running = false;
   /** pliki już obsłużone w tej sesji (ścieżka + rozmiar), żeby nie analizować dwa razy */
   private seen = new Set<string>();
@@ -22,12 +29,16 @@ export class ReplayWatcher {
     this.handler = handler;
   }
 
-  start(folders: string[]): void {
+  start(targets: WatchTarget[]): void {
     this.stop();
-    for (const folder of folders) {
+    for (const target of targets) {
       try {
-        const w = watch(folder, (_event, name) => {
-          if (name && name.toString().toLowerCase().endsWith('.osr')) this.schedule(join(folder, name.toString()));
+        const w = watch(target.path, { recursive: target.lazer }, (_event, name) => {
+          if (!name) return;
+          const rel = name.toString();
+          const base = rel.split(/[\\/]/).pop() ?? '';
+          const wanted = target.lazer ? /^[0-9a-f]{64}$/i.test(base) : base.toLowerCase().endsWith('.osr');
+          if (wanted) this.schedule(join(target.path, rel), target.lazer);
         });
         w.on('error', () => w.close());
         this.watchers.push(w);
@@ -44,20 +55,20 @@ export class ReplayWatcher {
     this.pending.clear();
   }
 
-  private schedule(file: string): void {
+  private schedule(file: string, lazer: boolean): void {
     const old = this.pending.get(file);
     if (old) clearTimeout(old);
     this.pending.set(
       file,
       setTimeout(() => {
         this.pending.delete(file);
-        void this.whenStable(file);
+        void this.whenStable(file, lazer);
       }, SETTLE_MS)
     );
   }
 
   /** Rozmiar pliku musi się przestać zmieniać – osu! może jeszcze pisać. */
-  private async whenStable(file: string): Promise<void> {
+  private async whenStable(file: string, lazer: boolean): Promise<void> {
     let last = -1;
     for (let i = 0; i < 20; i++) {
       const s = await stat(file).catch(() => null);
@@ -66,7 +77,7 @@ export class ReplayWatcher {
         const key = `${file}|${s.size}`;
         if (this.seen.has(key)) return;
         this.seen.add(key);
-        this.queue.push(file);
+        this.queue.push({ file, lazer });
         void this.drain();
         return;
       }
@@ -79,8 +90,8 @@ export class ReplayWatcher {
     if (this.running) return;
     this.running = true;
     while (this.queue.length) {
-      const file = this.queue.shift()!;
-      await this.handler(file).catch(() => undefined);
+      const item = this.queue.shift()!;
+      await this.handler(item.file, item.lazer).catch(() => undefined);
     }
     this.running = false;
   }

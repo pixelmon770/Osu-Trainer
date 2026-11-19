@@ -7,6 +7,10 @@ export interface Toast {
   title: string;
   body: string;
   action?: { label: string; run: () => void };
+  /** powiadomienia z tą samą grupą łączą się w jedno (np. kilka replayów naraz) */
+  group?: string;
+  count?: number;
+  createdAt?: number;
 }
 
 const LIFETIME_MS = 9000;

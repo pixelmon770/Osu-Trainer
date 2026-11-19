@@ -24,7 +24,7 @@ export default function SettingsScreen() {
   const pickFolder = () => window.api.pickFolder({ pickFolder: t('settings.pickFolder') });
 
   async function runImport() {
-    setProgress({ done: 0, total: 0, imported: 0, skipped: 0, failed: 0, finished: false });
+    setProgress({ done: 0, total: 0, imported: 0, skipped: 0, failed: 0, finished: false, folders: [] });
     setProgress(await window.api.importReplays(30, 200));
     setSt(await window.api.getSettings());
   }
@@ -76,6 +76,40 @@ export default function SettingsScreen() {
           </li>
         </ul>
         <p className="muted small">{t('settings.osu.hint')}</p>
+
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.lazer.folder')}</div>
+            <div className="path">{s.lazerFolder ?? t('settings.lazer.notFound')}</div>
+          </div>
+          <div className="row">
+            {s.lazerFolder && (
+              <button type="button" className="btn small ghost" onClick={() => void window.api.openPath(s.lazerFolder!)}>
+                {t('settings.open')}
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn small"
+              onClick={async () => {
+                const p = await pickFolder();
+                if (p) await update({ lazerFolder: p });
+              }}
+            >
+              {t('settings.change')}
+            </button>
+          </div>
+        </div>
+        {st.lazer.found && (
+          <ul className="status-list">
+            <li className="ok">
+              {st.lazer.indexing
+                ? t('settings.lazer.indexing', { maps: f.num(st.lazer.indexedMaps) })
+                : t('settings.lazer.indexed', { maps: f.num(st.lazer.indexedMaps) })}
+            </li>
+          </ul>
+        )}
+        <p className="muted small">{t('settings.lazer.hint')}</p>
       </section>
 
       <section className="card settings-section">
@@ -102,7 +136,9 @@ export default function SettingsScreen() {
                 <Toggle
                   checked={folder.enabled}
                   label={t('settings.replays.watch')}
-                  onChange={(v) => void update(folder.kind === 'data-r' ? { watchDataR: v } : { watchReplays: v })}
+                  onChange={(v) =>
+                    void update(folder.kind === 'data-r' ? { watchDataR: v } : folder.kind === 'lazer' ? { watchLazer: v } : { watchReplays: v })
+                  }
                 />
               )}
             </li>
@@ -149,6 +185,15 @@ export default function SettingsScreen() {
                     ? t('settings.replays.importDone', { imported: progress.imported, skipped: progress.skipped, failed: progress.failed })
                     : t('settings.replays.importProgress', { done: progress.done, total: progress.total })}
                 </span>
+                {progress.finished && progress.folders.length > 0 && (
+                  <ul className="status-list small">
+                    {progress.folders.map((x) => (
+                      <li key={x.path} className={x.found ? 'ok' : 'bad'}>
+                        {t('settings.replays.folderFound', { name: kindLabel(x.kind), count: x.found })}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </div>

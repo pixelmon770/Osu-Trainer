@@ -8,6 +8,7 @@ import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { parseOsuDb } from '@osu-trainer/analyzer';
 import { app } from 'electron';
+import { findLazerMap, lookupLazerMap } from './lazer.ts';
 import { getSettings, songsFolder } from './settings.ts';
 
 type Index = Record<string, string>;
@@ -138,10 +139,20 @@ export async function findMap(md5: string, hint: string | null, replayFile: stri
     }
   }
 
-  await rememberFolder(dirname(replayFile));
-  if (index[md5]) return index[md5]!;
+  const inLazer = await lookupLazerMap(md5);
+  if (inLazer) return inLazer;
 
-  return scanRecentSongs(md5);
+  // pliki z magazynu lazera nie mają sąsiednich map – nie ma sensu przeglądać ich folderu
+  if (!/[\\/]files[\\/][0-9a-f][\\/][0-9a-f]{2}[\\/]/i.test(replayFile)) {
+    await rememberFolder(dirname(replayFile));
+    if (index[md5]) return index[md5]!;
+  }
+
+  const recent = await scanRecentSongs(md5);
+  if (recent) return recent;
+
+  // na końcu pełne przejrzenie magazynu lazera (pierwszy raz może potrwać)
+  return findLazerMap(getSettings().lazerFolder, md5);
 }
 
 /** Domyślny folder do okna wyboru mapy. */
