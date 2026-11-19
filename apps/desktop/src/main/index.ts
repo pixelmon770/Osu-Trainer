@@ -9,8 +9,10 @@ import {
   IPC,
   type AnalyzeResult,
   type DialogLabels,
+  type DrillRecord,
   type ImportProgress,
   type ReplayFilter,
+  type StatsQuery,
   type ReplayResult,
   type Settings,
   type SettingsStatus
@@ -21,6 +23,7 @@ import { analyzeReplayFile } from './replayService.ts';
 import { getSettings, songsFolder, updateSettings, watchedFolders } from './settings.ts';
 import { text } from './texts.ts';
 import { indexLazerStore, indexStoreFile, lazerIndexStatus, recentLazerReplays, sniffFile } from './lazer.ts';
+import { backfillStreamBpm, computeStats } from './stats.ts';
 import { ReplayWatcher } from './watcher.ts';
 
 // Jeden stały folder danych – taki sam w trybie dev i w wersji zainstalowanej.
@@ -139,6 +142,20 @@ ipcMain.handle(IPC.analyzeReplayFile, async (event, file: unknown, mapHint: unkn
 ipcMain.handle(IPC.queryReplays, (_e, filter: ReplayFilter) => history.queryReplays(filter ?? {}));
 ipcMain.handle(IPC.listMaps, (_e, filter: ReplayFilter) => history.listMaps(filter ?? {}));
 ipcMain.handle(IPC.modCombos, () => history.modCombos());
+ipcMain.handle(IPC.stats, (_e, q: StatsQuery) => computeStats(q ?? { sinceDays: 30 }));
+ipcMain.handle(IPC.saveDrill, (_e, r: Omit<DrillRecord, 'id' | 'createdAt'>) => history.saveDrill(r));
+ipcMain.handle(IPC.listDrills, (_e, kind: string, name: string | null, limit: number) =>
+  history.listDrills(String(kind), typeof name === 'string' ? name : null, Number(limit) || 200)
+);
+ipcMain.handle(IPC.pickMapText, async (event, labels: DialogLabels) => {
+  const file = await pickFile(event.sender, {
+    title: labels?.pickMap,
+    defaultPath: defaultSongsFolder(),
+    properties: ['openFile'],
+    filters: [{ name: 'osu! beatmap', extensions: ['osu'] }]
+  });
+  return file ? { file, text: await readFile(file, 'utf8') } : null;
+});
 ipcMain.handle(IPC.getReplay, (_e, id: string) => history.getReplay(String(id)));
 ipcMain.handle(IPC.deleteReplay, (_e, id: string) => history.deleteReplay(String(id)));
 
@@ -259,7 +276,12 @@ ipcMain.handle(IPC.updateSettings, async (_e, patch: Partial<Settings>) => {
     'autoAnalyze',
     'notifications',
     'openAtLogin',
-    'language'
+    'language',
+    'keyK1',
+    'keyK2',
+    'audioOffsetMs',
+    'volume',
+    'drillOd'
   ];
   const clean = Object.fromEntries(Object.entries(patch ?? {}).filter(([k]) => allowed.includes(k as keyof Settings)));
   const s = await updateSettings(clean);
@@ -295,6 +317,7 @@ app.whenReady().then(() => {
   void loadOsuDb(); // wczytaj listę map od razu, żeby pierwszy replay nie czekał
   const lazerFolder = getSettings().lazerFolder;
   if (lazerFolder) void indexLazerStore(lazerFolder); // w tle: MD5 map z magazynu lazera
+  void backfillStreamBpm(); // w tle: BPM streamów dla wpisów ze starszych wersji
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

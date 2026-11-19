@@ -27,7 +27,12 @@ const defaults = (): Settings => ({
   autoAnalyze: true,
   notifications: true,
   openAtLogin: false,
-  language: 'en'
+  language: 'en',
+  keyK1: 'KeyZ',
+  keyK2: 'KeyX',
+  audioOffsetMs: 0,
+  volume: 0.7,
+  drillOd: 8
 });
 
 let current: Settings | null = null;

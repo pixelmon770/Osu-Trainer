@@ -22,6 +22,9 @@ interface Props {
   /** replay do otwarcia (np. z powiadomienia) */
   openId: string | null;
   onOpened: () => void;
+  /** mapa do pokazania postępu (np. ze Statystyk) */
+  openMap?: MapRef | null;
+  onMapOpened?: () => void;
   /** ostatnio dodany replay – odświeża listę */
   latest: ReplaySummary | null;
 }
@@ -34,7 +37,7 @@ function loadFilter(): ReplayFilter & { map?: MapRef | null } {
   }
 }
 
-export default function ReplayScreen({ openId, onOpened, latest }: Props) {
+export default function ReplayScreen({ openId, onOpened, openMap, onMapOpened, latest }: Props) {
   const { t, i18n } = useTranslation();
   const f = makeFormatters(i18n.language);
   const labels = { pickReplay: t('replay.pick'), pickMapForReplay: t('replay.pickMap') };
@@ -48,7 +51,13 @@ export default function ReplayScreen({ openId, onOpened, latest }: Props) {
     hidePartial: saved.hidePartial ?? false,
     sort: saved.sort ?? 'newest'
   });
-  const [map, setMap] = useState<MapRef | null>(saved.map ?? null);
+  const [map, setMap] = useState<MapRef | null>(openMap ?? saved.map ?? null);
+  useEffect(() => {
+    if (openMap) {
+      setMap(openMap);
+      onMapOpened?.();
+    }
+  }, [openMap, onMapOpened]);
   const [view, setView] = useState<'plays' | 'maps'>('plays');
   const [list, setList] = useState<{ items: ReplaySummary[]; total: number } | null>(null);
   const [maps, setMaps] = useState<MapGroup[] | null>(null);

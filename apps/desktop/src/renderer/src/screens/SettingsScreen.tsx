@@ -4,6 +4,7 @@ import type { ImportProgress, Settings, SettingsStatus } from '../../../shared/a
 import Toggle from '../components/Toggle.tsx';
 import { makeFormatters } from '../format.ts';
 import { LANGUAGES, setLanguage, type LanguageCode } from '../i18n.ts';
+import { keyLabel } from '../drill/engine.ts';
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -204,6 +205,48 @@ export default function SettingsScreen() {
       </section>
 
       <section className="card settings-section">
+        <h3>{t('settings.keys.title')}</h3>
+        <p className="muted small">{t('settings.keys.hint')}</p>
+        {(['keyK1', 'keyK2'] as const).map((k) => (
+          <div key={k} className="setting-row">
+            <div className="setting-label">{k === 'keyK1' ? 'K1 (L)' : 'K2 (P)'}</div>
+            <KeyCapture
+              code={s[k]}
+              waitingLabel={t('settings.keys.press')}
+              onCapture={(code) => void update({ [k]: code } as Partial<Settings>)}
+            />
+          </div>
+        ))}
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.keys.volume')}</div>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={s.volume}
+            aria-label={t('settings.keys.volume')}
+            onChange={(e) => void update({ volume: Number(e.target.value) })}
+          />
+        </div>
+        <div className="setting-row">
+          <div>
+            <div className="setting-label">{t('settings.keys.offset')}</div>
+            <div className="muted small">{t('settings.keys.offsetHint')}</div>
+          </div>
+          <input
+            type="number"
+            className="num-input"
+            value={s.audioOffsetMs}
+            step={1}
+            onChange={(e) => void update({ audioOffsetMs: Number(e.target.value) || 0 })}
+          />
+        </div>
+      </section>
+
+      <section className="card settings-section">
         <h3>{t('settings.app.title')}</h3>
         <div className="setting-row">
           <div>
@@ -232,5 +275,26 @@ export default function SettingsScreen() {
         <p className="muted small">{t('settings.app.version', { version })}</p>
       </section>
     </div>
+  );
+}
+
+/** Pole „kliknij i naciśnij klawisz”. */
+function KeyCapture({ code, onCapture, waitingLabel }: { code: string; onCapture: (code: string) => void; waitingLabel: string }) {
+  const [waiting, setWaiting] = useState(false);
+  useEffect(() => {
+    if (!waiting) return;
+    const onKey = (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.code !== 'Escape') onCapture(e.code);
+      setWaiting(false);
+    };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
+  }, [waiting, onCapture]);
+  return (
+    <button type="button" className={`btn small key-capture${waiting ? ' waiting' : ''}`} onClick={() => setWaiting(true)}>
+      {waiting ? waitingLabel : keyLabel(code)}
+    </button>
   );
 }

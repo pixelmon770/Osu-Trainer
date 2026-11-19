@@ -3,8 +3,10 @@
 
 export interface TrendPoint {
   id: string;
-  /** podpis pod osią (data) i w podpowiedzi */
+  /** krótki podpis pod osią (data) */
   label: string;
+  /** dłuższy opis w podpowiedzi (domyślnie = label) */
+  tip?: string;
   value: number;
 }
 
@@ -91,8 +93,8 @@ export default function TrendChart({ title, points, format, selectedId, onSelect
               key={p.id}
               className={`dot as-button${p.id === selectedId ? ' marked' : ''}`}
               style={{ left: `${x(i)}%`, top: `${y(p.value)}%` }}
-              title={`${p.label} · ${format(p.value)}`}
-              aria-label={`${p.label}: ${format(p.value)}`}
+              title={`${p.tip ?? p.label} · ${format(p.value)}`}
+              aria-label={`${p.tip ?? p.label}: ${format(p.value)}`}
               onClick={() => onSelect?.(p.id)}
             />
           ))}
@@ -100,7 +102,11 @@ export default function TrendChart({ title, points, format, selectedId, onSelect
       </div>
       <div className="x-axis">
         {labelIdx.map((i) => (
-          <span key={i} style={{ left: `calc(44px + (100% - 44px) * ${x(i) / 100})` }}>
+          <span
+            key={i}
+            className={i === 0 && last > 0 ? 'edge-start' : i === last && last > 0 ? 'edge-end' : ''}
+            style={{ left: `calc(44px + (100% - 44px) * ${x(i) / 100})` }}
+          >
             {points[i]!.label}
           </span>
         ))}

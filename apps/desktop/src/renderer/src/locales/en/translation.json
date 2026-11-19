@@ -285,6 +285,152 @@
       "indexing": "Indexing lazer maps… {{maps}} so far",
       "indexed": "Lazer maps in the index: {{maps}}",
       "hint": "Lazer keeps maps and replays under hashed file names (files folder). The app recognizes them by their content and also catches failed plays saved by lazer."
+    },
+    "keys": {
+      "title": "Keys & sound",
+      "hint": "Keys used in exercises – set the same ones as in osu!. Click a field and press the key.",
+      "press": "Press a key…",
+      "volume": "Metronome volume",
+      "offset": "Sound latency (ms)",
+      "offsetHint": "Set by calibration on the Rhythm screen; change only if you know why."
     }
+  },
+  "stats": {
+    "title": "Statistics",
+    "subtitle": "Your replay measurements over time. Tiles compare the chosen period with the one before it.",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "previousDays_one": "previous {{count}} day",
+    "previousDays_other": "previous {{count}} days",
+    "vs": "vs {{period}}",
+    "playsLabel": "Plays",
+    "plays_one": "{{count}} play",
+    "plays_other": "{{count}} plays",
+    "playsShort": "Plays",
+    "weekOf": "week of {{date}}",
+    "trendDays": "Day by day",
+    "trendWeeks": "Week by week",
+    "needMoreDays": "Play on at least two different days to see a trend.",
+    "byBpm": "By stream BPM",
+    "byBpmHint": "Maps grouped by the BPM of their streams. Look for the tempo where stream UR, K2−K1 or entry suddenly get worse – that is your current speed limit.",
+    "topMaps": "Most played maps",
+    "accChange": "accuracy {{value}} pp (last vs first attempts)",
+    "urChange": "UR {{value}}",
+    "computingBpm_one": "Calculating stream BPM for {{count}} older play…",
+    "computingBpm_other": "Calculating stream BPM for {{count}} older plays…",
+    "empty": "No plays in this period with these filters."
+  },
+  "drill": {
+    "start": "Start",
+    "stop": "Stop (Esc)",
+    "runningHint": "Tap {{k1}} (L) and {{k2}} (P). Esc stops. The app only listens while this window is focused.",
+    "history": "Your previous results",
+    "noHistory": "No results yet – finish an exercise to start tracking progress.",
+    "historySummary_one": "{{count}} session · best UR {{ur}} at {{bpm}} BPM ({{date}})",
+    "historySummary_other": "{{count}} sessions · best UR {{ur}} at {{bpm}} BPM ({{date}})",
+    "tooShort": "Too short to save in the history (fewer than 20 notes).",
+    "missesExtra": "misses {{misses}} · extra taps {{extra}}",
+    "entryHint": "average error on the first note of each series",
+    "wrongFinger": "Wrong finger",
+    "wrongFingerHint": "note played with the other key than the pattern says",
+    "byPosition": "Average error by position in the series",
+    "tip": {
+      "keyGap": "{{later}} is {{diff}} ms later than the other finger on average.",
+      "drift": "Within a series you fall behind: from {{first}} ms on the first notes to {{last}} ms at the end – lower the tempo a little and keep it even.",
+      "wrongFinger": "{{count}} notes played with the wrong finger – slow down until the pattern is automatic.",
+      "extra": "{{count}} extra taps – check that the key doesn't bounce (rapid trigger, actuation point)."
+    }
+  },
+  "rhythm": {
+    "title": "Rhythm & metronome",
+    "subtitle": "Finger exercises to a metronome: L = {{k1}} (K1), P = {{k2}} (K2), › = accent. Every tap is measured like in a replay.",
+    "duration": "Duration",
+    "click": "Metronome",
+    "clickBeats": "beats (quarter notes)",
+    "clickNotes": "every note",
+    "clickOff": "off",
+    "calibration": {
+      "title": "Sound latency calibration",
+      "hint": "Tap any of your keys exactly on {{beats}} clicks. The average delay is saved and applied to all exercises – do it once per headphones/speakers.",
+      "current": "Current offset",
+      "start": "Calibrate",
+      "reset": "Reset to 0",
+      "done": "Saved: {{value}} ms. Exercises now compensate for it."
+    },
+    "ex": {
+      "single": {
+        "name": "Single stroke",
+        "purpose": "even K2"
+      },
+      "double": {
+        "name": "Double stroke",
+        "purpose": "strengthens the weaker finger"
+      },
+      "paradiddle": {
+        "name": "Paradiddle",
+        "purpose": "switching finger mid-pattern"
+      },
+      "burst5L": {
+        "name": "5-note burst from L",
+        "purpose": "entering bursts on time"
+      },
+      "burst5P": {
+        "name": "5-note burst from P",
+        "purpose": "starting with the weaker finger"
+      },
+      "gallop": {
+        "name": "Triplets (gallop)",
+        "purpose": "short bursts"
+      },
+      "triplet": {
+        "name": "1/3 triplet",
+        "purpose": "switching 1/4 ↔ 1/3"
+      },
+      "shiftAccent": {
+        "name": "Moving accent",
+        "purpose": "accent every 3 notes – independence, staying loose"
+      },
+      "onlyP": {
+        "name": "P only",
+        "purpose": "isolating K2"
+      },
+      "stream16": {
+        "name": "Stream with bar accent",
+        "purpose": "stamina"
+      }
+    }
+  },
+  "trainer": {
+    "title": "Tap trainer",
+    "subtitle": "Notes move to the line – tap {{k1}} (L, blue) and {{k2}} (P, orange). Hit error for each finger is shown below the lane.",
+    "mode": {
+      "ladder": "Burst ladder",
+      "stream": "Stamina stream",
+      "map": "Streams from a map"
+    },
+    "modeHint": {
+      "ladder": "Bursts with a pause between them; the tempo rises every few bursts. Shows the BPM where your entry and evenness break.",
+      "stream": "Continuous 1/4 stream at one tempo – for stamina. Watch whether the error drifts later as you get tired.",
+      "map": "Every stream from the chosen map, in its real rhythm, with shorter breaks. Slow it down to learn, speed it up to overtrain."
+    },
+    "burstLength": "Burst length",
+    "notes_one": "{{count}} note",
+    "notes_other": "{{count}} notes",
+    "notesPlus": "{{count}}+ notes",
+    "startBpm": "Start BPM",
+    "bpmStep": "+BPM",
+    "stepEvery": "every N bursts",
+    "bursts": "Bursts",
+    "startFinger": "Start with",
+    "map": "Map",
+    "pickMap": "Choose a map (.osu)",
+    "rate": "Speed",
+    "minNotes": "Streams from",
+    "plan": "{{notes}} notes · about {{seconds}} s",
+    "noStreams": "This map has no streams with that many notes.",
+    "perBpm": "Result per tempo",
+    "ladderLabel": "Bursts of {{length}}: {{from}}→{{to}} BPM",
+    "streamLabel": "Stream {{bpm}} BPM, {{seconds}} s",
+    "misses": "Misses"
   }
 }

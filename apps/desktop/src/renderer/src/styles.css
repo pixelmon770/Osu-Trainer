@@ -1134,3 +1134,263 @@ select {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ---------- statystyki ---------- */
+.stats-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.stats-filters select {
+  font-size: 0.88rem;
+  padding: 0.4rem 0.6rem;
+}
+.good-text {
+  color: var(--good);
+}
+.warn-text {
+  color: var(--warn);
+}
+.stat-hint.good-text,
+.stat-hint.warn-text {
+  font-weight: 600;
+}
+.bpm-table {
+  display: grid;
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+.bpm-row {
+  display: grid;
+  grid-template-columns: 6rem 4rem minmax(10rem, 2fr) repeat(3, minmax(6rem, 1fr));
+  gap: 0.8rem;
+  align-items: center;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+}
+.bpm-row.head {
+  border-top: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.bpm-bar-cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3rem;
+  gap: 0.6rem;
+  align-items: center;
+}
+.top-maps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: var(--gap);
+}
+.top-map {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+}
+.top-map .btn {
+  justify-self: start;
+  margin-top: 0.3rem;
+}
+.top-map-title {
+  font-weight: 600;
+}
+@media (max-width: 1000px) {
+  .bpm-row {
+    grid-template-columns: 5rem 3rem minmax(8rem, 1fr) repeat(2, 5.5rem);
+  }
+  .bpm-row > :last-child {
+    display: none;
+  }
+}
+
+/* skrajne podpisy osi nie wychodzą poza wykres */
+.x-axis span.edge-start {
+  transform: none;
+}
+.x-axis span.edge-end {
+  transform: translateX(-100%);
+}
+
+/* ---------- ćwiczenia ---------- */
+.drill-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 24rem) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: start;
+}
+.exercise-list {
+  display: grid;
+  gap: 0.5rem;
+}
+.exercise {
+  all: unset;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.35rem;
+  cursor: pointer;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.9rem;
+}
+.exercise:hover:not(:disabled) {
+  background: var(--card-hover);
+}
+.exercise.active {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.exercise:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.exercise:focus-visible {
+  outline: 2px solid var(--accent);
+}
+.exercise-name {
+  font-weight: 600;
+}
+.pattern {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.pchip {
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 0.35rem;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0f1012;
+}
+.pchip.k1 {
+  background: var(--k1);
+}
+.pchip.k2 {
+  background: var(--k2);
+}
+.pchip.any {
+  background: var(--muted);
+}
+.pchip.rest {
+  background: transparent;
+  color: var(--muted);
+  border: 1px dashed var(--border);
+}
+.pchip.accent {
+  box-shadow: 0 0 0 2px var(--text);
+}
+.calibration {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+.drill-main {
+  min-width: 0;
+  display: grid;
+  gap: var(--gap);
+  align-content: start;
+}
+.drill-main h2 {
+  margin: 0.6rem 0 0;
+}
+.drill-controls {
+  display: grid;
+  gap: 0.8rem;
+}
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.1rem;
+  align-items: flex-end;
+}
+.field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.field input[type='number'],
+.num-input {
+  width: 5.5rem;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 0.55rem;
+  padding: 0.4rem 0.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+}
+.stepper {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.lane-card {
+  display: grid;
+  gap: 0.5rem;
+}
+.lane-wrap {
+  display: grid;
+  gap: 0.4rem;
+}
+.lane {
+  width: 100%;
+  height: clamp(90px, 14vh, 150px);
+  background: var(--bg);
+  border-radius: 0.7rem;
+}
+.lane-card.big .lane {
+  height: clamp(120px, 20vh, 220px);
+}
+.lane-meter {
+  width: 100%;
+  height: 56px;
+}
+.drill-results {
+  display: grid;
+  gap: var(--gap);
+}
+.drill-results .insights,
+.drill-results .chart-card {
+  margin-top: 0;
+}
+.drill-history {
+  display: grid;
+  gap: 0.6rem;
+}
+.trainer .drill-controls,
+.trainer .lane-card,
+.trainer .drill-results {
+  margin-bottom: var(--gap);
+}
+.trainer-row {
+  grid-template-columns: 5rem repeat(4, minmax(5rem, 1fr));
+}
+.key-capture {
+  min-width: 7rem;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+.key-capture.waiting {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+input[type='range'] {
+  accent-color: var(--accent);
+  width: 12rem;
+}
+@media (max-width: 1150px) {
+  .drill-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .exercise-list {
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  }
+}

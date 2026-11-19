@@ -9,10 +9,14 @@ import MapAnalysis from './screens/MapAnalysis.tsx';
 import Placeholder from './screens/Placeholder.tsx';
 import ReplayScreen from './screens/ReplayScreen.tsx';
 import SettingsScreen from './screens/SettingsScreen.tsx';
+import StatsScreen, { type OpenMap } from './screens/StatsScreen.tsx';
+import RhythmScreen from './screens/RhythmScreen.tsx';
+import TrainerScreen from './screens/TrainerScreen.tsx';
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenId>('dashboard');
   const [openReplayId, setOpenReplayId] = useState<string | null>(null);
+  const [openMap, setOpenMap] = useState<OpenMap | null>(null);
   const [latest, setLatest] = useState<ReplaySummary | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { t, i18n } = useTranslation();
@@ -83,10 +87,34 @@ export default function App() {
       content = <MapAnalysis />;
       break;
     case 'replays':
-      content = <ReplayScreen openId={openReplayId} onOpened={() => setOpenReplayId(null)} latest={latest} />;
+      content = (
+        <ReplayScreen
+          openId={openReplayId}
+          onOpened={() => setOpenReplayId(null)}
+          openMap={openMap}
+          onMapOpened={() => setOpenMap(null)}
+          latest={latest}
+        />
+      );
+      break;
+    case 'stats':
+      content = (
+        <StatsScreen
+          onOpenMap={(m) => {
+            setOpenMap(m);
+            setScreen('replays');
+          }}
+        />
+      );
       break;
     case 'settings':
       content = <SettingsScreen />;
+      break;
+    case 'rhythm':
+      content = <RhythmScreen />;
+      break;
+    case 'tapTrainer':
+      content = <TrainerScreen />;
       break;
     default:
       content = <Placeholder title={t(`nav.${screen}`)} />;

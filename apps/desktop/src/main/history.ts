@@ -7,9 +7,9 @@ import { gunzipSync, gzipSync } from 'node:zlib';
 import type { ReplayAnalysis } from '@osu-trainer/analyzer';
 import { app } from 'electron';
 import initSqlJs, { type Database } from 'sql.js';
-import type { MapGroup, MapInfo, ReplayFilter, ReplayResult, ReplaySource, ReplaySummary } from '../shared/api.ts';
+import type { DrillRecord, MapGroup, MapInfo, ReplayFilter, ReplayResult, ReplaySource, ReplaySummary } from '../shared/api.ts';
 
-const SCHEMA_VERSION = 3;
+const SCHEMA_VERSION = 5;
 const dbFile = () => join(app.getPath('userData'), 'osu-trainer.sqlite');
 
 let dbPromise: Promise<Database> | null = null;
@@ -65,6 +65,25 @@ function migrate(db: Database): void {
     )`);
     db.run('CREATE INDEX IF NOT EXISTS replays_play ON replays(beatmap_md5, played_at, score)');
   }
+  if (version < 4) {
+    // BPM streamów mapy (NULL = jeszcze nie policzone, 0 = mapa bez streamów, -1 = brak pliku mapy)
+    db.run('ALTER TABLE replays ADD COLUMN stream_bpm REAL');
+  }
+  if (version < 5) {
+    db.run(`
+      CREATE TABLE IF NOT EXISTS drills (
+        id TEXT PRIMARY KEY,
+        created_at TEXT NOT NULL,
+        kind TEXT NOT NULL,
+        name TEXT NOT NULL,
+        label TEXT NOT NULL,
+        bpm REAL, duration_ms INTEGER, notes INTEGER, accuracy REAL, misses INTEGER, extra_taps INTEGER,
+        wrong_finger INTEGER, ur REAL, mean REAL, k1_mean REAL, k2_mean REAL, k1_ur REAL, k2_ur REAL,
+        entry_mean REAL, tap_spread REAL
+      );
+      CREATE INDEX IF NOT EXISTS drills_kind_name ON drills(kind, name, created_at DESC);
+    `);
+  }
   db.run(`PRAGMA user_version = ${SCHEMA_VERSION}`);
 }
 
@@ -106,6 +125,7 @@ export async function saveReplay(r: {
   map: MapInfo;
   analysis: ReplayAnalysis;
   source: ReplaySource;
+  streamBpm: number;
 }): Promise<ReplaySummary> {
   const db = await open();
   const a = r.analysis;
@@ -114,12 +134,12 @@ export async function saveReplay(r: {
       id, file, map_file, beatmap_md5, artist, title, version, creator, map_end_ms,
       played_at, analyzed_at, mods, score, max_combo, accuracy,
       count300, count100, count50, count_miss, ur, mean_error, k1_mean, k2_mean, k1_ur, k2_ur,
-      stream_ur, outside_ur, entry_mean, alternation, tap_spread, partial, analysis, source
+      stream_ur, outside_ur, entry_mean, alternation, tap_spread, partial, analysis, source, stream_bpm
     ) VALUES (
       $id, $file, $map_file, $beatmap_md5, $artist, $title, $version, $creator, $map_end_ms,
       $played_at, $analyzed_at, $mods, $score, $max_combo, $accuracy,
       $c300, $c100, $c50, $miss, $ur, $mean, $k1, $k2, $k1ur, $k2ur,
-      $stream_ur, $outside_ur, $entry, $alt, $spread, $partial, $analysis, $source)`,
+      $stream_ur, $outside_ur, $entry, $alt, $spread, $partial, $analysis, $source, $stream_bpm)`,
     {
       $id: r.id,
       $file: r.replayFile,
@@ -153,7 +173,8 @@ export async function saveReplay(r: {
       $spread: a.streams.tapSpread,
       $partial: a.partial ? 1 : 0,
       $analysis: gzipSync(JSON.stringify(a)),
-      $source: r.source
+      $source: r.source,
+      $stream_bpm: r.streamBpm
     }
   );
   scheduleSave(db);
@@ -161,7 +182,7 @@ export async function saveReplay(r: {
 }
 
 const SUMMARY_COLUMNS = `id, file, beatmap_md5, artist, title, version, played_at, analyzed_at, mods, accuracy, count_miss,
-  max_combo, ur, k1_mean, k2_mean, stream_ur, entry_mean, alternation, tap_spread, partial, source`;
+  max_combo, ur, k1_mean, k2_mean, stream_ur, entry_mean, alternation, tap_spread, partial, source, stream_bpm`;
 
 function toSummary(row: Record<string, unknown>): ReplaySummary {
   return {
@@ -185,7 +206,8 @@ function toSummary(row: Record<string, unknown>): ReplaySummary {
     alternation: (row.alternation as number) ?? 0,
     tapSpread: (row.tap_spread as number) ?? 0,
     partial: row.partial === 1,
-    source: ((row.source as string) || 'stable') as ReplaySource
+    source: ((row.source as string) || 'stable') as ReplaySource,
+    streamBpm: (row.stream_bpm as number | null) ?? null
   };
 }
 
@@ -329,6 +351,88 @@ export async function deleteReplay(id: string): Promise<void> {
   const db = await open();
   db.run('DELETE FROM replays WHERE id = $id', { $id: id });
   scheduleSave(db);
+}
+
+/** Wpisy bez policzonego BPM streamów (starsze wersje programu). */
+export async function missingStreamBpm(limit = 200): Promise<{ id: string; mapFile: string }[]> {
+  const db = await open();
+  return rows(db, 'SELECT id, map_file FROM replays WHERE stream_bpm IS NULL LIMIT $limit', { $limit: limit }).map((r) => ({
+    id: r.id as string,
+    mapFile: r.map_file as string
+  }));
+}
+
+export async function setStreamBpm(ids: string[], bpm: number): Promise<void> {
+  const db = await open();
+  for (const id of ids) db.run('UPDATE replays SET stream_bpm = $bpm WHERE id = $id', { $bpm: bpm, $id: id });
+  scheduleSave(db);
+}
+
+// ---------- ćwiczenia ----------
+
+export async function saveDrill(r: Omit<DrillRecord, 'id' | 'createdAt'>): Promise<DrillRecord> {
+  const db = await open();
+  const rec: DrillRecord = { ...r, id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`, createdAt: new Date().toISOString() };
+  db.run(
+    `INSERT INTO drills (id, created_at, kind, name, label, bpm, duration_ms, notes, accuracy, misses, extra_taps,
+       wrong_finger, ur, mean, k1_mean, k2_mean, k1_ur, k2_ur, entry_mean, tap_spread)
+     VALUES ($id, $at, $kind, $name, $label, $bpm, $dur, $notes, $acc, $miss, $extra, $wrong, $ur, $mean,
+       $k1, $k2, $k1ur, $k2ur, $entry, $spread)`,
+    {
+      $id: rec.id,
+      $at: rec.createdAt,
+      $kind: rec.kind,
+      $name: rec.name,
+      $label: rec.label,
+      $bpm: rec.bpm,
+      $dur: rec.durationMs,
+      $notes: rec.notes,
+      $acc: rec.accuracy,
+      $miss: rec.misses,
+      $extra: rec.extraTaps,
+      $wrong: rec.wrongFinger,
+      $ur: rec.ur,
+      $mean: rec.mean,
+      $k1: rec.k1Mean,
+      $k2: rec.k2Mean,
+      $k1ur: rec.k1Ur,
+      $k2ur: rec.k2Ur,
+      $entry: rec.entryMean,
+      $spread: rec.tapSpread
+    }
+  );
+  scheduleSave(db);
+  return rec;
+}
+
+export async function listDrills(kind: string, name: string | null, limit: number): Promise<DrillRecord[]> {
+  const db = await open();
+  const params: Record<string, string | number> = { $kind: kind, $limit: Math.max(1, Math.min(limit, 2000)) };
+  if (name) params.$name = name;
+  return rows(db, `SELECT * FROM drills WHERE kind = $kind ${name ? 'AND name = $name' : ''} ORDER BY created_at DESC LIMIT $limit`, params).map(
+    (r) => ({
+      id: r.id as string,
+      createdAt: r.created_at as string,
+      kind: r.kind as DrillRecord['kind'],
+      name: r.name as string,
+      label: r.label as string,
+      bpm: r.bpm as number,
+      durationMs: r.duration_ms as number,
+      notes: r.notes as number,
+      accuracy: r.accuracy as number,
+      misses: r.misses as number,
+      extraTaps: r.extra_taps as number,
+      wrongFinger: r.wrong_finger as number,
+      ur: r.ur as number,
+      mean: r.mean as number,
+      k1Mean: r.k1_mean as number,
+      k2Mean: r.k2_mean as number,
+      k1Ur: r.k1_ur as number,
+      k2Ur: r.k2_ur as number,
+      entryMean: r.entry_mean as number,
+      tapSpread: r.tap_spread as number
+    })
+  );
 }
 
 export async function countReplays(): Promise<number> {

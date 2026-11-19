@@ -53,6 +53,8 @@ export interface ReplaySummary {
   partial: boolean;
   /** z którego klienta pochodzi replay */
   source: ReplaySource;
+  /** BPM streamów mapy (0 = bez streamów, null = nie policzono) */
+  streamBpm: number | null;
 }
 
 export type ReplaySource = 'stable' | 'lazer' | 'file';
@@ -85,6 +87,54 @@ export interface MapGroup {
   bestUr: number;
 }
 
+export interface StatsQuery {
+  /** ostatnie N dni; null = cała historia */
+  sinceDays: number | null;
+  mods?: string | null;
+  source?: 'all' | ReplaySource;
+  hidePartial?: boolean;
+}
+
+/** Średnie z prób (null = brak prób, w których miara ma sens, np. streamów). */
+export interface StatsTotals {
+  plays: number;
+  accuracy: number;
+  ur: number;
+  /** K2 − K1 w ms (dodatnie = K2 później) */
+  k2k1: number;
+  streamUr: number | null;
+  /** wejście w stream: średni błąd pierwszej nuty streamu */
+  entry: number | null;
+  misses: number;
+}
+
+export interface StatsBucket extends StatsTotals {
+  /** dzień (RRRR-MM-DD) albo poniedziałek tygodnia */
+  key: string;
+}
+
+export interface StatsResult {
+  period: StatsTotals;
+  /** poprzedni okres tej samej długości (null przy „cały czas” albo braku gier) */
+  previous: StatsTotals | null;
+  granularity: 'day' | 'week';
+  buckets: StatsBucket[];
+  byBpm: (StatsTotals & { range: string })[];
+  topMaps: {
+    beatmapMd5: string;
+    title: string;
+    version: string;
+    artist: string;
+    attempts: number;
+    bestAccuracy: number;
+    /** średnia z ostatnich prób minus średnia z pierwszych */
+    accuracyChange: number;
+    urChange: number;
+  }[];
+  /** próby, dla których jeszcze liczy się BPM streamów */
+  missingBpm: number;
+}
+
 /** Teksty okien systemowych – w języku wybranym w programie. */
 export interface DialogLabels {
   pickMap?: string;
@@ -113,6 +163,41 @@ export interface Settings {
   /** uruchamiaj program razem z Windows (tylko wersja zainstalowana) */
   openAtLogin: boolean;
   language: string;
+  /** klawisze w ćwiczeniach (KeyboardEvent.code), np. KeyZ / KeyX */
+  keyK1: string;
+  keyK2: string;
+  /** opóźnienie dźwięku z kalibracji (ms): o tyle przesuwamy tapnięcia */
+  audioOffsetMs: number;
+  /** głośność metronomu 0–1 */
+  volume: number;
+  /** OD ćwiczeń: okna 300/100/50 */
+  drillOd: number;
+}
+
+export interface DrillRecord {
+  id: string;
+  createdAt: string;
+  /** rhythm = Rytm i metronom, trainer = Trener kliknięć */
+  kind: 'rhythm' | 'trainer';
+  /** ćwiczenie / tryb, np. single-stroke, burst-ladder, map:<md5> */
+  name: string;
+  /** opis do listy, np. nazwa mapy */
+  label: string;
+  bpm: number;
+  durationMs: number;
+  notes: number;
+  accuracy: number;
+  misses: number;
+  extraTaps: number;
+  wrongFinger: number;
+  ur: number;
+  mean: number;
+  k1Mean: number;
+  k2Mean: number;
+  k1Ur: number;
+  k2Ur: number;
+  entryMean: number;
+  tapSpread: number;
 }
 
 export interface WatchedFolder {
@@ -157,6 +242,14 @@ export interface TrainerApi {
   listMaps(filter: ReplayFilter): Promise<MapGroup[]>;
   /** Zestawy modów występujące w historii (do filtra). */
   modCombos(): Promise<string[]>;
+  /** Statystyki z historii replayów. */
+  stats(q: StatsQuery): Promise<StatsResult>;
+  /** Zapis wyniku ćwiczenia. */
+  saveDrill(r: Omit<DrillRecord, 'id' | 'createdAt'>): Promise<DrillRecord>;
+  /** Wyniki ćwiczeń (najnowsze pierwsze); name = tylko jedno ćwiczenie. */
+  listDrills(kind: DrillRecord['kind'], name?: string | null, limit?: number): Promise<DrillRecord[]>;
+  /** Wczytuje mapę .osu (okno wyboru) i zwraca jej tekst – dla trybu „streamy z mapy”. */
+  pickMapText(labels: DialogLabels): Promise<{ file: string; text: string } | null>;
   getReplay(id: string): Promise<ReplayResult>;
   deleteReplay(id: string): Promise<void>;
   /** Analizuje replaye z obserwowanych folderów, których jeszcze nie ma w historii. */
@@ -184,6 +277,10 @@ export const IPC = {
   queryReplays: 'history:query',
   listMaps: 'history:maps',
   modCombos: 'history:mods',
+  stats: 'history:stats',
+  saveDrill: 'drills:save',
+  listDrills: 'drills:list',
+  pickMapText: 'map:pick-text',
   getReplay: 'history:get',
   deleteReplay: 'history:delete',
   importReplays: 'history:import',

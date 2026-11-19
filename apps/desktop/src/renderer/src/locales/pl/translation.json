@@ -303,6 +303,164 @@
       "indexing": "Indeksuję mapy lazera… na razie {{maps}}",
       "indexed": "Mapy lazera w indeksie: {{maps}}",
       "hint": "Lazer trzyma mapy i replaye pod nazwami-skrótami (folder files). Program rozpoznaje je po zawartości i wyłapuje też faile zapisane przez lazera."
+    },
+    "keys": {
+      "title": "Klawisze i dźwięk",
+      "hint": "Klawisze w ćwiczeniach – ustaw te same co w osu!. Kliknij pole i naciśnij klawisz.",
+      "press": "Naciśnij klawisz…",
+      "volume": "Głośność metronomu",
+      "offset": "Opóźnienie dźwięku (ms)",
+      "offsetHint": "Ustawiane kalibracją na ekranie Rytm; zmieniaj ręcznie tylko, jeśli wiesz po co."
     }
+  },
+  "stats": {
+    "title": "Statystyki",
+    "subtitle": "Twoje pomiary z replayów w czasie. Kafelki porównują wybrany okres z poprzednim.",
+    "days_one": "{{count}} dzień",
+    "days_few": "{{count}} dni",
+    "days_many": "{{count}} dni",
+    "days_other": "{{count}} dni",
+    "previousDays_one": "poprzedni {{count}} dzień",
+    "previousDays_few": "poprzednie {{count}} dni",
+    "previousDays_many": "poprzednie {{count}} dni",
+    "previousDays_other": "poprzednie {{count}} dni",
+    "vs": "wobec: {{period}}",
+    "playsLabel": "Gry",
+    "plays_one": "{{count}} gra",
+    "plays_few": "{{count}} gry",
+    "plays_many": "{{count}} gier",
+    "plays_other": "{{count}} gry",
+    "playsShort": "Gry",
+    "weekOf": "tydzień od {{date}}",
+    "trendDays": "Dzień po dniu",
+    "trendWeeks": "Tydzień po tygodniu",
+    "needMoreDays": "Zagraj w co najmniej dwa różne dni, żeby zobaczyć trend.",
+    "byBpm": "Według BPM streamów",
+    "byBpmHint": "Mapy pogrupowane według BPM ich streamów. Szukaj tempa, od którego UR w streamach, K2−K1 albo wejście nagle się pogarszają – to Twoja obecna granica szybkości.",
+    "topMaps": "Najczęściej grane mapy",
+    "accChange": "celność {{value}} pp (ostatnie wobec pierwszych prób)",
+    "urChange": "UR {{value}}",
+    "computingBpm_one": "Liczę BPM streamów dla {{count}} starszej gry…",
+    "computingBpm_few": "Liczę BPM streamów dla {{count}} starszych gier…",
+    "computingBpm_many": "Liczę BPM streamów dla {{count}} starszych gier…",
+    "computingBpm_other": "Liczę BPM streamów dla {{count}} starszej gry…",
+    "empty": "Brak gier w tym okresie przy tych filtrach."
+  },
+  "drill": {
+    "start": "Start",
+    "stop": "Stop (Esc)",
+    "runningHint": "Tapuj {{k1}} (L) i {{k2}} (P). Esc przerywa. Program słucha klawiszy tylko wtedy, gdy to okno jest aktywne.",
+    "history": "Twoje wcześniejsze wyniki",
+    "noHistory": "Nie ma jeszcze wyników – dokończ ćwiczenie, żeby zacząć śledzić postęp.",
+    "historySummary_one": "{{count}} sesja · najlepszy UR {{ur}} przy {{bpm}} BPM ({{date}})",
+    "historySummary_few": "{{count}} sesje · najlepszy UR {{ur}} przy {{bpm}} BPM ({{date}})",
+    "historySummary_many": "{{count}} sesji · najlepszy UR {{ur}} przy {{bpm}} BPM ({{date}})",
+    "historySummary_other": "{{count}} sesji · najlepszy UR {{ur}} przy {{bpm}} BPM ({{date}})",
+    "tooShort": "Za krótko, żeby zapisać w historii (mniej niż 20 nut).",
+    "missesExtra": "missy {{misses}} · nadmiarowe tapnięcia {{extra}}",
+    "entryHint": "średni błąd na pierwszej nucie każdej serii",
+    "wrongFinger": "Zły palec",
+    "wrongFingerHint": "nuta zagrana innym klawiszem, niż mówi wzór",
+    "byPosition": "Średni błąd według pozycji w serii",
+    "tip": {
+      "keyGap": "{{later}} jest średnio o {{diff}} ms później niż drugi palec.",
+      "drift": "W trakcie serii zostajesz w tyle: od {{first}} ms na pierwszych nutach do {{last}} ms na końcu – zwolnij trochę i trzymaj równo.",
+      "wrongFinger": "{{count}} nut zagranych złym palcem – zwolnij, aż wzór wejdzie w nawyk.",
+      "extra": "{{count}} nadmiarowych tapnięć – sprawdź, czy klawisz nie „odbija” (rapid trigger, punkt zadziałania)."
+    }
+  },
+  "rhythm": {
+    "title": "Rytm i metronom",
+    "subtitle": "Ćwiczenia palców do metronomu: L = {{k1}} (K1), P = {{k2}} (K2), › = akcent. Każde tapnięcie jest mierzone jak w replayu.",
+    "duration": "Czas",
+    "click": "Metronom",
+    "clickBeats": "uderzenia (ćwierćnuty)",
+    "clickNotes": "każda nuta",
+    "clickOff": "wyłączony",
+    "calibration": {
+      "title": "Kalibracja opóźnienia dźwięku",
+      "hint": "Tapnij dowolnym ze swoich klawiszy dokładnie w {{beats}} kliknięć. Średnie opóźnienie zapisze się i będzie uwzględniane we wszystkich ćwiczeniach – zrób to raz dla danych słuchawek/głośników.",
+      "current": "Obecne przesunięcie",
+      "start": "Kalibruj",
+      "reset": "Wyzeruj",
+      "done": "Zapisano: {{value}} ms. Ćwiczenia już to uwzględniają."
+    },
+    "ex": {
+      "single": {
+        "name": "Single stroke",
+        "purpose": "równy K2"
+      },
+      "double": {
+        "name": "Double stroke",
+        "purpose": "wzmocnienie słabszego palca"
+      },
+      "paradiddle": {
+        "name": "Paradiddle",
+        "purpose": "zmiana palca w środku wzoru"
+      },
+      "burst5L": {
+        "name": "Burst 5 od L",
+        "purpose": "wejście w burst na czas"
+      },
+      "burst5P": {
+        "name": "Burst 5 od P",
+        "purpose": "start ze słabszego palca"
+      },
+      "gallop": {
+        "name": "Triplety (galop)",
+        "purpose": "krótkie serie"
+      },
+      "triplet": {
+        "name": "Triola 1/3",
+        "purpose": "przejścia 1/4 ↔ 1/3"
+      },
+      "shiftAccent": {
+        "name": "Przesuwany akcent",
+        "purpose": "akcent co 3 nuty – niezależność, luz"
+      },
+      "onlyP": {
+        "name": "Samo P",
+        "purpose": "izolacja K2"
+      },
+      "stream16": {
+        "name": "Stream z akcentem na takt",
+        "purpose": "wytrzymałość"
+      }
+    }
+  },
+  "trainer": {
+    "title": "Trener kliknięć",
+    "subtitle": "Nuty jadą do linii – tapuj {{k1}} (L, niebieskie) i {{k2}} (P, pomarańczowe). Pod torem widać hit error osobno dla każdego palca.",
+    "mode": {
+      "ladder": "Drabinka burstów",
+      "stream": "Stream na wytrzymałość",
+      "map": "Streamy z mapy"
+    },
+    "modeHint": {
+      "ladder": "Bursty z przerwą między nimi; co kilka burstów tempo rośnie. Pokazuje BPM, przy którym sypie się wejście i równość.",
+      "stream": "Ciągły stream 1/4 w jednym tempie – na wytrzymałość. Patrz, czy błąd ucieka w „za późno”, gdy się męczysz.",
+      "map": "Wszystkie streamy z wybranej mapy, w jej prawdziwym rytmie, z krótszymi przerwami. Zwolnij, żeby się nauczyć, przyspiesz, żeby przetrenować."
+    },
+    "burstLength": "Długość burstu",
+    "notes_one": "{{count}} nuta",
+    "notes_few": "{{count}} nuty",
+    "notes_many": "{{count}} nut",
+    "notes_other": "{{count}} nuty",
+    "notesPlus": "od {{count}} nut",
+    "startBpm": "BPM na start",
+    "bpmStep": "+BPM",
+    "stepEvery": "co ile burstów",
+    "bursts": "Burstów",
+    "startFinger": "Zaczynaj od",
+    "map": "Mapa",
+    "pickMap": "Wybierz mapę (.osu)",
+    "rate": "Tempo",
+    "minNotes": "Streamy",
+    "plan": "{{notes}} nut · około {{seconds}} s",
+    "noStreams": "Ta mapa nie ma streamów o takiej długości.",
+    "perBpm": "Wynik dla każdego tempa",
+    "ladderLabel": "Bursty po {{length}}: {{from}}→{{to}} BPM",
+    "streamLabel": "Stream {{bpm}} BPM, {{seconds}} s",
+    "misses": "Missy"
   }
 }

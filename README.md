@@ -4,7 +4,7 @@ Program na komputer dla graczy osu!: analiza map i replayów, statystyki, roadma
 trenery kliknięć i aimu oraz połączenie z AI (Claude, ChatGPT i inne przez MCP).
 Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 
-**Stan:** działają trzy ekrany:
+**Stan:** działa sześć ekranów:
 - **Analiza mapy** – streamy, bloki streamów, skoki na 1/2, czytanie;
 - **Replaye i analizy** – każde kliknięcie z replaya .osr przypisane do nuty (okna oceny, notelock,
   stosy nut, mody HR/EZ): UR, hit error osobno dla K1/K2, błąd według pozycji w streamie,
@@ -13,8 +13,16 @@ Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
   historię można przeszukiwać i filtrować (okres, mody, stable/lazer, bez przerwanych, sortowanie),
   przełączyć na widok map, a dla wybranej mapy zobaczyć postęp próba po próbie
   (celność, UR, K2−K1 z linią trendu i porównaniem pierwszych i ostatnich prób);
+- **Statystyki** – pomiary z replayów w czasie: celność, UR, K2−K1, wejście w stream i UR w streamach
+  z porównaniem do poprzedniego okresu, trend dzień po dniu (albo tydzień po tygodniu),
+  zestawienie według BPM streamów i najczęściej grane mapy z postępem;
+- **Rytm i metronom** – 10 ćwiczeń palców (single/double stroke, paradiddle, bursty od L i od P, samo P…)
+  do metronomu w Web Audio, z oceną każdego tapnięcia (K1/K2, złe palce, wejście, rozrzut),
+  kalibracją opóźnienia dźwięku i historią wyników;
+- **Trener kliknięć** – tor z nutami i hit error K1/K2 na żywo; tryby: drabinka burstów z rosnącym tempem
+  (wynik dla każdego BPM), stream na wytrzymałość, streamy wycięte z dowolnej mapy w wybranym tempie;
 - **Ustawienia** – folder osu!, obserwowane foldery z replayami, import ostatnich replayów,
-  powiadomienia, autostart, język.
+  powiadomienia, autostart, język, klawisze K1/K2, głośność i opóźnienie dźwięku.
 
 Program ma dwa języki (PL/EN), a układ dopasowuje się do rozmiaru okna.
 

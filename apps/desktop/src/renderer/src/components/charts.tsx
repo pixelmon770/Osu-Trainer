@@ -1,7 +1,7 @@
 // Proste wykresy w HTML/SVG, rozciągają się na szerokość karty.
 // Kolory serii K1/K2 sprawdzone pod kątem daltonizmu na ciemnym tle (#5b8def / #d07a3c).
 
-import type { NoteResult, Segment } from '@osu-trainer/analyzer';
+import type { Segment } from '@osu-trainer/analyzer';
 import { useTranslation } from 'react-i18next';
 import type { Formatters } from '../format.ts';
 import { formatTime } from '../format.ts';
@@ -13,7 +13,8 @@ export function HitErrorChart({
   windows,
   f
 }: {
-  notes: NoteResult[];
+  /** wystarczy błąd w ms i klawisz (replay: NoteResult, ćwiczenie: errorMs + tapFinger) */
+  notes: { errorMs: number | null; key: string | null }[];
   windows: { great: number; ok: number; meh: number };
   f: Formatters;
 }) {

@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { analyzeReplay, parseBeatmap, parseReplay, ReplayParseError } from '@osu-trainer/analyzer';
+import { analyzeBeatmap, analyzeReplay, parseBeatmap, parseReplay, ReplayParseError } from '@osu-trainer/analyzer';
 import { isAbsolute, relative } from 'node:path';
 import type { ReplayResult, ReplaySource, ReplaySummary } from '../shared/api.ts';
 import { getSettings } from './settings.ts';
@@ -73,7 +73,8 @@ export async function analyzeReplayFile(
     };
     const analysis = analyzeReplay(beatmap, replay);
     const source = sourceOf(replayFile, replay.gameVersion);
-    const summary = await saveReplay({ id, replayFile, mapFile, beatmapMd5: replay.beatmapMd5, map, analysis, source });
+    const streamBpm = Math.round(analyzeBeatmap(beatmap).streams.bpm);
+    const summary = await saveReplay({ id, replayFile, mapFile, beatmapMd5: replay.beatmapMd5, map, analysis, source, streamBpm });
     return { result: { ok: true, id, replayFile, mapFile, beatmapMd5: replay.beatmapMd5, map, analysis }, summary };
   } catch (e) {
     const message = (e as Error).message;
