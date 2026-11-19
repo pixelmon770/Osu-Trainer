@@ -7,6 +7,7 @@ import Lane from '../drill/Lane.tsx';
 import { useDrill } from '../drill/useDrill.ts';
 import { makeFormatters } from '../format.ts';
 import { useSettings } from './RhythmScreen.tsx';
+import type { Recommendation } from '../../../shared/api.ts';
 
 type Mode = 'ladder' | 'stream' | 'map';
 const STATE_KEY = 'osu-trainer.trainer';
@@ -45,7 +46,18 @@ function Num({ label, value, onChange, min, max, step = 1, disabled }: { label: 
   );
 }
 
-export default function TrainerScreen() {
+export default function TrainerScreen({
+  preset,
+  onPresetUsed,
+  mapMd5,
+  onMapUsed
+}: {
+  preset?: Recommendation | null;
+  onPresetUsed?: () => void;
+  /** mapa z Biblioteki map – od razu tryb „streamy z mapy” */
+  mapMd5?: string | null;
+  onMapUsed?: () => void;
+}) {
   const { t, i18n } = useTranslation();
   const f = makeFormatters(i18n.language);
   const { settings, update } = useSettings();
@@ -53,6 +65,27 @@ export default function TrainerScreen() {
   const [st, setSt] = useState<State>(loadState);
   const [map, setMap] = useState<{ file: string; beatmap: Beatmap } | null>(null);
   const running = drill.running;
+
+  // ustawienia z podpowiedzi na Pulpicie
+  useEffect(() => {
+    if (!preset?.mode) return;
+    setSt((s) =>
+      preset.mode === 'ladder'
+        ? { ...s, mode: 'ladder', ladder: { ...s.ladder, startBpm: preset.bpm, length: preset.length ?? s.ladder.length } }
+        : { ...s, mode: 'stream', stream: { bpm: preset.bpm, seconds: preset.seconds ?? s.stream.seconds } }
+    );
+    onPresetUsed?.();
+  }, [preset, onPresetUsed]);
+
+  useEffect(() => {
+    if (!mapMd5) return;
+    onMapUsed?.();
+    void window.api.libraryMapText(mapMd5).then((r) => {
+      if (!r) return;
+      setMap({ file: r.file, beatmap: parseBeatmap(r.text) });
+      setSt((s) => ({ ...s, mode: 'map' }));
+    });
+  }, [mapMd5, onMapUsed]);
 
   useEffect(() => {
     try {

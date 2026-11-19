@@ -52,6 +52,8 @@ interface DbCache {
   path: string;
   mtimeMs: number;
   byMd5: Map<string, { folder: string; file: string }>;
+  /** mapy osu!standard (dla Biblioteki map) */
+  standard: { md5: string; folder: string; file: string; stars: number; beatmapId: number; setId: number }[];
   maps: number;
   player: string;
   error: string | null;
@@ -73,10 +75,17 @@ export async function loadOsuDb(): Promise<DbCache | null> {
   try {
     const db = parseOsuDb(new Uint8Array(await readFile(path)));
     const byMd5 = new Map<string, { folder: string; file: string }>();
-    for (const b of db.beatmaps) if (b.md5) byMd5.set(b.md5, { folder: b.folderName, file: b.osuFileName });
-    dbCache = { path, mtimeMs, byMd5, maps: db.beatmaps.length, player: db.player, error: null };
+    const standard: DbCache['standard'] = [];
+    for (const b of db.beatmaps) {
+      if (!b.md5) continue;
+      byMd5.set(b.md5, { folder: b.folderName, file: b.osuFileName });
+      if (b.mode === 0) {
+        standard.push({ md5: b.md5, folder: b.folderName, file: b.osuFileName, stars: b.stars, beatmapId: b.beatmapId, setId: b.beatmapSetId });
+      }
+    }
+    dbCache = { path, mtimeMs, byMd5, standard, maps: db.beatmaps.length, player: db.player, error: null };
   } catch (e) {
-    dbCache = { path, mtimeMs, byMd5: new Map(), maps: 0, player: '', error: (e as Error).message };
+    dbCache = { path, mtimeMs, byMd5: new Map(), standard: [], maps: 0, player: '', error: (e as Error).message };
   }
   return dbCache;
 }

@@ -1,16 +1,18 @@
 // Proces główny Electrona: okno programu, pliki, historia replayów i obserwowanie folderów.
 
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import { analyzeMapText } from '@osu-trainer/analyzer';
-import { app, BrowserWindow, dialog, ipcMain, Menu, Notification, shell, type OpenDialogOptions } from 'electron';
+import { app, BrowserWindow, clipboard, dialog, ipcMain, Menu, Notification, shell, type OpenDialogOptions } from 'electron';
 import {
   IPC,
   type AnalyzeResult,
+  type AiExportOptions,
   type DialogLabels,
   type DrillRecord,
   type ImportProgress,
+  type LibraryQuery,
   type ReplayFilter,
   type StatsQuery,
   type ReplayResult,
@@ -23,7 +25,19 @@ import { analyzeReplayFile } from './replayService.ts';
 import { getSettings, songsFolder, updateSettings, watchedFolders } from './settings.ts';
 import { text } from './texts.ts';
 import { indexLazerStore, indexStoreFile, lazerIndexStatus, recentLazerReplays, sniffFile } from './lazer.ts';
+import { dashboard, listSessions } from './sessions.ts';
+import { aiExport, installMcp, mcpInfo, uninstallMcp } from './ai.ts';
+import { goalsProgress } from './goals.ts';
+import { loadPlayback } from './playback.ts';
 import { backfillStreamBpm, computeStats } from './stats.ts';
+import {
+  indexLibrary,
+  libraryMapPath,
+  libraryStatus,
+  mapLadder,
+  playerProfile,
+  queryLibrary
+} from './library.ts';
 import { ReplayWatcher } from './watcher.ts';
 
 // Jeden stały folder danych – taki sam w trybie dev i w wersji zainstalowanej.
@@ -143,9 +157,34 @@ ipcMain.handle(IPC.queryReplays, (_e, filter: ReplayFilter) => history.queryRepl
 ipcMain.handle(IPC.listMaps, (_e, filter: ReplayFilter) => history.listMaps(filter ?? {}));
 ipcMain.handle(IPC.modCombos, () => history.modCombos());
 ipcMain.handle(IPC.stats, (_e, q: StatsQuery) => computeStats(q ?? { sinceDays: 30 }));
+ipcMain.handle(IPC.dashboard, () => dashboard());
+ipcMain.handle(IPC.goalsProgress, () => goalsProgress());
+ipcMain.handle(IPC.aiExport, (_e, o: AiExportOptions) =>
+  aiExport({ days: Number(o?.days) || 30, replays: Math.min(100, Number(o?.replays) || 15), details: Math.min(10, Number(o?.details) || 0) })
+);
+ipcMain.handle(IPC.mcpInfo, () => mcpInfo());
+ipcMain.handle(IPC.installMcp, () => installMcp());
+ipcMain.handle(IPC.uninstallMcp, () => uninstallMcp());
+ipcMain.handle(IPC.copyText, (_e, text: unknown) => {
+  if (typeof text === 'string') clipboard.writeText(text);
+});
+ipcMain.handle(IPC.saveText, async (event, text: unknown, name: unknown) => {
+  if (typeof text !== 'string') return null;
+  const win = BrowserWindow.fromWebContents(event.sender);
+  const options = {
+    defaultPath: join(app.getPath('documents'), typeof name === 'string' ? name : 'osu-trener.md'),
+    filters: [{ name: 'Markdown', extensions: ['md'] }]
+  };
+  const r = win ? await dialog.showSaveDialog(win, options) : await dialog.showSaveDialog(options);
+  if (r.canceled || !r.filePath) return null;
+  await writeFile(r.filePath, text, 'utf8');
+  return r.filePath;
+});
+ipcMain.handle(IPC.playback, (_e, id: string) => loadPlayback(String(id)));
+ipcMain.handle(IPC.sessions, (_e, sinceDays: number | null) => listSessions(typeof sinceDays === 'number' ? sinceDays : null));
 ipcMain.handle(IPC.saveDrill, (_e, r: Omit<DrillRecord, 'id' | 'createdAt'>) => history.saveDrill(r));
 ipcMain.handle(IPC.listDrills, (_e, kind: string, name: string | null, limit: number) =>
-  history.listDrills(String(kind), typeof name === 'string' ? name : null, Number(limit) || 200)
+  history.listDrills(typeof kind === 'string' ? kind : null, typeof name === 'string' ? name : null, Number(limit) || 200)
 );
 ipcMain.handle(IPC.pickMapText, async (event, labels: DialogLabels) => {
   const file = await pickFile(event.sender, {
@@ -281,14 +320,40 @@ ipcMain.handle(IPC.updateSettings, async (_e, patch: Partial<Settings>) => {
     'keyK2',
     'audioOffsetMs',
     'volume',
-    'drillOd'
+    'drillOd',
+    'roadmap',
+    'goals',
+    'todos'
   ];
   const clean = Object.fromEntries(Object.entries(patch ?? {}).filter(([k]) => allowed.includes(k as keyof Settings)));
   const s = await updateSettings(clean);
   if ('openAtLogin' in clean && app.isPackaged) app.setLoginItemSettings({ openAtLogin: s.openAtLogin });
   if (['osuFolder', 'watchDataR', 'watchReplays', 'lazerFolder', 'watchLazer', 'extraFolders'].some((k) => k in clean)) restartWatcher();
-  if ('lazerFolder' in clean && s.lazerFolder) void indexLazerStore(s.lazerFolder);
+  if ('lazerFolder' in clean && s.lazerFolder) void indexLazerStore(s.lazerFolder).then(() => indexLibrary());
+  if ('osuFolder' in clean) void indexLibrary();
   return status();
+});
+
+// ---------- Biblioteka map ----------
+
+ipcMain.handle(IPC.queryLibrary, (_e, q: LibraryQuery) => queryLibrary(q ?? {}));
+ipcMain.handle(IPC.libraryStatus, () => libraryStatus());
+ipcMain.handle(IPC.reindexLibrary, async (_e, force: unknown) => {
+  await loadOsuDb();
+  void indexLibrary(force === true);
+});
+ipcMain.handle(IPC.playerProfile, () => playerProfile());
+ipcMain.handle(IPC.mapLadder, (_e, md5: unknown, steps: unknown) =>
+  typeof md5 === 'string' ? mapLadder(md5, typeof steps === 'number' ? steps : 4) : { target: null, basis: 'general', steps: [] }
+);
+ipcMain.handle(IPC.libraryMapText, async (_e, md5: unknown) => {
+  if (typeof md5 !== 'string') return null;
+  const file = await libraryMapPath(md5); // tylko pliki z biblioteki, nie dowolne ścieżki
+  return file ? { file, text: await readFile(file, 'utf8') } : null;
+});
+ipcMain.handle(IPC.analyzeLibraryMap, async (_e, md5: unknown) => {
+  const file = typeof md5 === 'string' ? await libraryMapPath(md5) : null;
+  return file ? analyzeMapFile(file) : ({ ok: false, error: 'not-found' } satisfies AnalyzeResult);
 });
 
 ipcMain.handle(IPC.pickFolder, async (event, labels: DialogLabels) => {
@@ -316,8 +381,9 @@ app.whenReady().then(() => {
   restartWatcher();
   void loadOsuDb(); // wczytaj listę map od razu, żeby pierwszy replay nie czekał
   const lazerFolder = getSettings().lazerFolder;
-  if (lazerFolder) void indexLazerStore(lazerFolder); // w tle: MD5 map z magazynu lazera
   void backfillStreamBpm(); // w tle: BPM streamów dla wpisów ze starszych wersji
+  // w tle: MD5 map z magazynu lazera, potem Biblioteka map (analizuje tylko nowe mapy)
+  void (lazerFolder ? indexLazerStore(lazerFolder) : Promise.resolve()).then(() => loadOsuDb()).then(() => indexLibrary());
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });

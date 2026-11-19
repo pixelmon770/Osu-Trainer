@@ -10,3 +10,5 @@ export * from './stacking.ts';
 export * from './replayAnalysis.ts';
 export * from './osuDb.ts';
 export * from './drill.ts';
+export * from './sliderPath.ts';
+export * from './aimDrill.ts';

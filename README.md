@@ -4,27 +4,27 @@ Program na komputer dla graczy osu!: analiza map i replayów, statystyki, roadma
 trenery kliknięć i aimu oraz połączenie z AI (Claude, ChatGPT i inne przez MCP).
 Pełny opis: [`docs/SPEC.md`](docs/SPEC.md).
 
-**Stan:** działa sześć ekranów:
-- **Analiza mapy** – streamy, bloki streamów, skoki na 1/2, czytanie;
-- **Replaye i analizy** – każde kliknięcie z replaya .osr przypisane do nuty (okna oceny, notelock,
-  stosy nut, mody HR/EZ): UR, hit error osobno dla K1/K2, błąd według pozycji w streamie,
-  wejście w bursty, naprzemienność, aim, rodzaje missów, celność w czasie i automatyczne wnioski;
-  nowe replaye z osu! analizują się same i trafiają do historii (lokalna baza SQLite);
-  historię można przeszukiwać i filtrować (okres, mody, stable/lazer, bez przerwanych, sortowanie),
-  przełączyć na widok map, a dla wybranej mapy zobaczyć postęp próba po próbie
-  (celność, UR, K2−K1 z linią trendu i porównaniem pierwszych i ostatnich prób);
-- **Statystyki** – pomiary z replayów w czasie: celność, UR, K2−K1, wejście w stream i UR w streamach
-  z porównaniem do poprzedniego okresu, trend dzień po dniu (albo tydzień po tygodniu),
-  zestawienie według BPM streamów i najczęściej grane mapy z postępem;
-- **Rytm i metronom** – 10 ćwiczeń palców (single/double stroke, paradiddle, bursty od L i od P, samo P…)
-  do metronomu w Web Audio, z oceną każdego tapnięcia (K1/K2, złe palce, wejście, rozrzut),
-  kalibracją opóźnienia dźwięku i historią wyników;
-- **Trener kliknięć** – tor z nutami i hit error K1/K2 na żywo; tryby: drabinka burstów z rosnącym tempem
-  (wynik dla każdego BPM), stream na wytrzymałość, streamy wycięte z dowolnej mapy w wybranym tempie;
-- **Ustawienia** – folder osu!, obserwowane foldery z replayami, import ostatnich replayów,
-  powiadomienia, autostart, język, klawisze K1/K2, głośność i opóźnienie dźwięku.
+**Stan:** działają wszystkie ekrany z SPEC (wersja 0.9):
 
-Program ma dwa języki (PL/EN), a układ dopasowuje się do rozmiaru okna.
+| Ekran | Co robi |
+|---|---|
+| **Pulpit** | dziś i ostatnie 7 dni (z porównaniem), seria dni, zadania na dziś, cele, „co dziś trenować” z gotowymi ustawieniami ćwiczeń, ostatnie gry, ostatnia sesja |
+| **Statystyki** | celność, UR, K2−K1, wejście w stream, UR w streamach – z porównaniem do poprzedniego okresu, trend dzień po dniu, zestawienie według BPM streamów, najczęściej grane mapy |
+| **Roadmapa umiejętności** | 35 umiejętności i 51 połączeń z opisami, Twoja ocena każdej umiejętności, część oceniana automatycznie z replayów |
+| **Replaye i analizy** | każde kliknięcie przypisane do nuty (okna oceny, notelock, stosy, HR/EZ), wnioski, wykresy; historia z wyszukiwaniem, filtrami, widokiem map i postępem na mapie; nowe gry ze stable i lazera wpadają same |
+| **Analizator klatek** | replay na planszy klatka po klatce: kółka zbliżania, slidery, ślad kursora, klawisze, oceny; skok do missów, tempo 0,05–1× |
+| **Trener kliknięć** | tor z nutami i hit error K1/K2: drabinka burstów, stream na wytrzymałość, streamy z mapy |
+| **Skoki – trener aimu** | skoki jak w osu! (tam i z powrotem, wielokąty, losowe z wyborem kątów), mysz/tablet + klawisze; timing, odległość od środka, przestrzał/niedolot, wykres miejsc kliknięć |
+| **Rytm i metronom** | 10 ćwiczeń palców z SPEC, kalibracja opóźnienia dźwięku, historia |
+| **Analiza mapy** | streamy, bloki, skoki, czytanie |
+| **Biblioteka map** | Twoje mapy z osu!stable i lazera przeanalizowane w tle; filtry (gwiazdki, BPM, streamy, bloki, skoki, AR/OD/CS, nakładanie), „dobierz do celu” z Twojego poziomu, drabinka do mapy-celu |
+| **Sesje i postęp** | gry i ćwiczenia w sesjach, rozgrzewka, zmęczenie pod koniec sesji |
+| **Plan i to-do** / **Cele** | zadania powtarzane w dni tygodnia, cele liczone same z danych |
+| **Połączenie z AI** | eksport dla AI (Markdown), lokalny serwer MCP dla Claude Desktop (dodawany jednym przyciskiem) |
+| **Ustawienia** | foldery osu!stable i lazera, obserwowane foldery, import, powiadomienia, autostart, klawisze, dźwięk, język |
+
+Brakuje jeszcze konta online (osu! OAuth, Firebase) i bazy map spoza Twojego komputera – Biblioteka map działa na mapach, które masz pobrane.
+Błąd na jednym ekranie nie wyłącza programu – pokazuje opis i przycisk powrotu.
 
 ## Struktura
 
@@ -59,7 +59,7 @@ docs/                  specyfikacja, roadmapa, dane referencyjne, projekt ekran�
 | Komenda | Co robi |
 |---|---|
 | `npm run dev` | uruchamia program |
-| `npm test` | testy analizatora |
+| `npm test` | testy analizatora i sprawdzenie tłumaczeń |
 | `npm run typecheck` | sprawdza typy TypeScript w całym repo |
 | `npm run analyze -- "ścieżka\do\mapy.osu"` | analiza mapy w terminalu (działa też z folderem) |
 | `npm run build` | buduje program do `apps/desktop/out` |
@@ -111,9 +111,21 @@ zgadzają się z licznikami zapisanymi przez osu!.
 
 ## Języki
 
-Angielski jest językiem bazowym, polski drugim. Kolejne języki według `docs/SPEC.md`, sekcja 16:
-nowy folder w `apps/desktop/src/renderer/src/locales/<kod>/translation.json` (skopiuj angielski
-i przetłumacz wartości, nie klucze) i wpis w `LANGUAGES` w `src/renderer/src/i18n.ts`.
+Interfejs: English, Polski, Deutsch, Español, Français, Português (Brasil), Русский.
+Angielski jest wzorcem i zapasem (brakujący tekst pokaże się po angielsku). Opisy umiejętności
+na Roadmapie są na razie tylko po polsku.
+
+Nowy język (`docs/SPEC.md`, sekcja 16): folder `apps/desktop/src/renderer/src/locales/<kod>/translation.json`
+(skopiuj angielski, tłumacz wartości, nie klucze), wpis w `LANGUAGES` i `resources` w `src/renderer/src/i18n.ts`,
+teksty powiadomień w `src/main/texts.ts` i wstęp eksportu w `src/main/ai.ts`.
+`npm test` sprawdza każdy język: brakujące teksty, zmienne `{{...}}` i formy liczby mnogiej
+(np. polski i rosyjski potrzebują `_one`, `_few`, `_many`, `_other`).
+
+## Claude Desktop (MCP)
+
+W programie: **Połączenie z AI → Dodaj do Claude Desktop**, potem zamknij i otwórz Claude Desktop.
+Serwer (`apps/desktop/mcp/server.mjs`) uruchamia się przez Electron jako Node, tylko czyta bazę historii
+i działa wyłącznie lokalnie. Ręczna konfiguracja i lista narzędzi są na tym samym ekranie.
 
 ## Praca z nowym czatem AI
 

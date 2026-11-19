@@ -4,6 +4,7 @@ import { makeFormatters } from './format.ts';
 import type { ReplaySummary } from '../../shared/api.ts';
 import Sidebar, { type ScreenId } from './components/Sidebar.tsx';
 import Toasts, { type Toast } from './components/Toasts.tsx';
+import ErrorBoundary from './components/ErrorBoundary.tsx';
 import Dashboard from './screens/Dashboard.tsx';
 import MapAnalysis from './screens/MapAnalysis.tsx';
 import Placeholder from './screens/Placeholder.tsx';
@@ -12,11 +13,27 @@ import SettingsScreen from './screens/SettingsScreen.tsx';
 import StatsScreen, { type OpenMap } from './screens/StatsScreen.tsx';
 import RhythmScreen from './screens/RhythmScreen.tsx';
 import TrainerScreen from './screens/TrainerScreen.tsx';
+import SessionsScreen from './screens/SessionsScreen.tsx';
+import FrameAnalyzerScreen from './screens/FrameAnalyzerScreen.tsx';
+import AiScreen from './screens/AiScreen.tsx';
+import RoadmapScreen from './screens/RoadmapScreen.tsx';
+import GoalsScreen from './screens/GoalsScreen.tsx';
+import PlanScreen from './screens/PlanScreen.tsx';
+import AimScreen from './screens/AimScreen.tsx';
+import LibraryScreen from './screens/LibraryScreen.tsx';
+import type { Recommendation } from '../../shared/api.ts';
 
 export default function App() {
   const [screen, setScreen] = useState<ScreenId>('dashboard');
   const [openReplayId, setOpenReplayId] = useState<string | null>(null);
   const [openMap, setOpenMap] = useState<OpenMap | null>(null);
+  const [preset, setPreset] = useState<Recommendation | null>(null);
+  const [frameId, setFrameId] = useState<string | null>(null);
+  const [libraryMap, setLibraryMap] = useState<{ md5: string; to: 'analysis' | 'trainer' } | null>(null);
+  const openReplay = (id: string) => {
+    setOpenReplayId(id);
+    setScreen('replays');
+  };
   const [latest, setLatest] = useState<ReplaySummary | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const { t, i18n } = useTranslation();
@@ -81,10 +98,39 @@ export default function App() {
   let content;
   switch (screen) {
     case 'dashboard':
-      content = <Dashboard onOpen={setScreen} />;
+      content = (
+        <Dashboard
+          onOpen={setScreen}
+          onOpenReplay={openReplay}
+          onStartRecommendation={(r) => {
+            setPreset(r);
+            setScreen(r.screen === 'rhythm' ? 'rhythm' : 'tapTrainer');
+          }}
+        />
+      );
       break;
     case 'mapAnalysis':
-      content = <MapAnalysis />;
+      content = (
+        <MapAnalysis md5={libraryMap?.to === 'analysis' ? libraryMap.md5 : null} onUsed={() => setLibraryMap(null)} />
+      );
+      break;
+    case 'mapLibrary':
+      content = (
+        <LibraryScreen
+          onAnalyze={(md5) => {
+            setLibraryMap({ md5, to: 'analysis' });
+            setScreen('mapAnalysis');
+          }}
+          onTrain={(md5) => {
+            setLibraryMap({ md5, to: 'trainer' });
+            setScreen('tapTrainer');
+          }}
+          onOpenPlays={(m) => {
+            setOpenMap(m);
+            setScreen('replays');
+          }}
+        />
+      );
       break;
     case 'replays':
       content = (
@@ -94,6 +140,10 @@ export default function App() {
           openMap={openMap}
           onMapOpened={() => setOpenMap(null)}
           latest={latest}
+          onOpenFrames={(id) => {
+            setFrameId(id);
+            setScreen('frameAnalyzer');
+          }}
         />
       );
       break;
@@ -111,20 +161,55 @@ export default function App() {
       content = <SettingsScreen />;
       break;
     case 'rhythm':
-      content = <RhythmScreen />;
+      content = <RhythmScreen preset={preset?.screen === 'rhythm' ? preset : null} onPresetUsed={() => setPreset(null)} />;
       break;
     case 'tapTrainer':
-      content = <TrainerScreen />;
+      content = (
+        <TrainerScreen
+          preset={preset?.screen === 'trainer' ? preset : null}
+          onPresetUsed={() => setPreset(null)}
+          mapMd5={libraryMap?.to === 'trainer' ? libraryMap.md5 : null}
+          onMapUsed={() => setLibraryMap(null)}
+        />
+      );
+      break;
+    case 'frameAnalyzer':
+      content = <FrameAnalyzerScreen openId={frameId} onOpened={() => setFrameId(null)} />;
+      break;
+    case 'aimTrainer':
+      content = <AimScreen />;
+      break;
+    case 'goals':
+      content = <GoalsScreen />;
+      break;
+    case 'plan':
+      content = (
+        <PlanScreen
+          onStartRecommendation={(r) => {
+            setPreset(r);
+            setScreen(r.screen === 'rhythm' ? 'rhythm' : 'tapTrainer');
+          }}
+        />
+      );
+      break;
+    case 'roadmap':
+      content = <RoadmapScreen />;
+      break;
+    case 'ai':
+      content = <AiScreen />;
+      break;
+    case 'sessions':
+      content = <SessionsScreen onOpenReplay={openReplay} />;
       break;
     default:
-      content = <Placeholder title={t(`nav.${screen}`)} />;
+      content = <Placeholder title={t('common.comingSoon')} />;
   }
 
   return (
     <div className="app">
       <Sidebar current={screen} onSelect={setScreen} />
       <main className="content" key={screen}>
-        {content}
+        <ErrorBoundary onHome={() => setScreen('dashboard')}>{content}</ErrorBoundary>
       </main>
       <Toasts toasts={toasts} onClose={(id) => setToasts((list) => list.filter((x) => x.id !== id))} />
     </div>

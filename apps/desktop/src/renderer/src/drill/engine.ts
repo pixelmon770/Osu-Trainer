@@ -158,6 +158,15 @@ export class DrillSession {
     this.opts.onTap?.(tap);
   }
 
+  /** Tapnięcie spoza klawiatury (przycisk myszy / pióra); perfMs = event.timeStamp. */
+  externalTap(finger: Finger, perfMs: number): DrillTap | null {
+    if (this.stopped) return null;
+    const tap = { time: this.toDrillMs(perfMs), finger };
+    this.taps.push(tap);
+    this.opts.onTap?.(tap);
+    return tap;
+  }
+
   stop(finished: boolean): void {
     if (this.stopped) return;
     this.stopped = true;

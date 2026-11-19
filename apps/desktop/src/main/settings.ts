@@ -32,7 +32,10 @@ const defaults = (): Settings => ({
   keyK2: 'KeyX',
   audioOffsetMs: 0,
   volume: 0.7,
-  drillOd: 8
+  drillOd: 8,
+  roadmap: {},
+  goals: [],
+  todos: []
 });
 
 let current: Settings | null = null;

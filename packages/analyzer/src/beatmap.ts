@@ -1,6 +1,8 @@
 // Parser plików .osu (osu!standard). Czyta tylko to, czego potrzebuje analiza:
 // metadane, trudność, punkty czasowe i obiekty.
 
+import { sliderPath, type CurveType, type Point } from './sliderPath.ts';
+
 export type HitObjectKind = 'circle' | 'slider' | 'spinner';
 
 export interface HitObject {
@@ -19,6 +21,9 @@ export interface HitObject {
   slides: number;
   /** długość ścieżki slidera w osu!pikselach */
   pixelLength: number;
+  /** slider: rodzaj krzywej i punkty kontrolne (z punktem startu) */
+  curveType?: CurveType;
+  curvePoints?: Point[];
 }
 
 export interface TimingPoint {
@@ -188,14 +193,22 @@ function parseHitObject(line: string): HitObject | null {
     let endY = y;
     const slides = Math.max(1, Number(p[6] ?? 1) || 1);
     const pixelLength = Math.max(0, Number(p[7] ?? 0) || 0);
-    const points = (p[5] ?? '').split('|').slice(1).map((s) => s.split(':').map(Number));
-    const last = points[points.length - 1];
-    if (last && last.length >= 2 && slides % 2 === 1) {
-      endX = last[0]!;
-      endY = last[1]!;
+    const parts = (p[5] ?? '').split('|');
+    const curveType = (['B', 'P', 'L', 'C'].includes(parts[0] ?? '') ? parts[0] : 'B') as CurveType;
+    const points: Point[] = [{ x, y }];
+    for (const s of parts.slice(1)) {
+      const [px, py] = s.split(':').map(Number);
+      if (Number.isFinite(px) && Number.isFinite(py)) points.push({ x: px!, y: py! });
+    }
+    // koniec slidera = koniec ścieżki (przy nieparzystej liczbie przejść)
+    if (points.length >= 2 && slides % 2 === 1) {
+      const path = sliderPath(curveType, points, pixelLength);
+      const end = path[path.length - 1]!;
+      endX = end.x;
+      endY = end.y;
     }
     // endTime liczymy po wczytaniu punktów czasowych (potrzebna prędkość slidera)
-    return { ...base, endX, endY, kind: 'slider', slides, pixelLength };
+    return { ...base, endX, endY, kind: 'slider', slides, pixelLength, curveType, curvePoints: points };
   }
 
   return { ...base, kind: 'circle' };

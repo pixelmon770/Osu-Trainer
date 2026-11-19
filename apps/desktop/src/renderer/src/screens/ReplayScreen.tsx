@@ -25,6 +25,8 @@ interface Props {
   /** mapa do pokazania postępu (np. ze Statystyk) */
   openMap?: MapRef | null;
   onMapOpened?: () => void;
+  /** otwiera replay w Analizatorze klatek */
+  onOpenFrames?: (id: string) => void;
   /** ostatnio dodany replay – odświeża listę */
   latest: ReplaySummary | null;
 }
@@ -37,7 +39,7 @@ function loadFilter(): ReplayFilter & { map?: MapRef | null } {
   }
 }
 
-export default function ReplayScreen({ openId, onOpened, openMap, onMapOpened, latest }: Props) {
+export default function ReplayScreen({ openId, onOpened, openMap, onMapOpened, latest, onOpenFrames }: Props) {
   const { t, i18n } = useTranslation();
   const f = makeFormatters(i18n.language);
   const labels = { pickReplay: t('replay.pick'), pickMapForReplay: t('replay.pickMap') };
@@ -216,6 +218,7 @@ export default function ReplayScreen({ openId, onOpened, openMap, onMapOpened, l
               f={f}
               onOpenInOsu={() => void window.api.openPath(result.replayFile)}
               onDelete={() => void remove(result.id)}
+              onOpenFrames={onOpenFrames ? () => onOpenFrames(result.id) : undefined}
               onShowProgress={
                 map?.beatmapMd5 === result.beatmapMd5
                   ? undefined
@@ -536,7 +539,8 @@ function Report({
   f,
   onOpenInOsu,
   onDelete,
-  onShowProgress
+  onShowProgress,
+  onOpenFrames
 }: {
   a: ReplayAnalysis;
   map: MapInfo;
@@ -544,6 +548,7 @@ function Report({
   onOpenInOsu: () => void;
   onDelete: () => void;
   onShowProgress?: () => void;
+  onOpenFrames?: () => void;
 }) {
   const { t } = useTranslation();
   const insights = buildInsights(a, map.endMs, t, f);
@@ -643,6 +648,11 @@ function Report({
         <TimelineChart segments={a.timeline} fatigueAt={a.fatigueAt} f={f} />
       </div>
       <div className="row footnote">
+        {onOpenFrames && (
+          <button type="button" className="btn small primary" onClick={onOpenFrames}>
+            {t('frame.openHere')}
+          </button>
+        )}
         <button type="button" className="btn small" onClick={onOpenInOsu}>
           {t('replay.openInOsu')}
         </button>

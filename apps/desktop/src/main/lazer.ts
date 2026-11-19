@@ -147,6 +147,11 @@ export function indexLazerStore(folder: string): Promise<void> {
   return indexing;
 }
 
+/** Wszystkie mapy z indeksu lazera: MD5 → ścieżka w magazynie. */
+export async function lazerMaps(): Promise<Record<string, string>> {
+  return { ...(await loadIndex()).maps };
+}
+
 /** Szybkie sprawdzenie indeksu bez skanowania magazynu. */
 export async function lookupLazerMap(md5: string): Promise<string | null> {
   const hit = (await loadIndex()).maps[md5];

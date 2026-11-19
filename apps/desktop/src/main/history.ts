@@ -9,7 +9,7 @@ import { app } from 'electron';
 import initSqlJs, { type Database } from 'sql.js';
 import type { DrillRecord, MapGroup, MapInfo, ReplayFilter, ReplayResult, ReplaySource, ReplaySummary } from '../shared/api.ts';
 
-const SCHEMA_VERSION = 5;
+const SCHEMA_VERSION = 7;
 const dbFile = () => join(app.getPath('userData'), 'osu-trainer.sqlite');
 
 let dbPromise: Promise<Database> | null = null;
@@ -83,6 +83,29 @@ function migrate(db: Database): void {
       );
       CREATE INDEX IF NOT EXISTS drills_kind_name ON drills(kind, name, created_at DESC);
     `);
+  }
+  if (version < 6) {
+    db.run('ALTER TABLE drills ADD COLUMN aim_distance REAL');
+    db.run('ALTER TABLE drills ADD COLUMN aim_overshoot REAL');
+    db.run('ALTER TABLE drills ADD COLUMN hit_rate REAL');
+  }
+  if (version < 7) {
+    // Biblioteka map: wynik analizy każdej lokalnej mapy (liczony raz, potem tylko nowe mapy)
+    db.run(`
+      CREATE TABLE IF NOT EXISTS maps (
+        md5 TEXT PRIMARY KEY,
+        path TEXT NOT NULL,
+        source TEXT NOT NULL,
+        algo INTEGER NOT NULL,
+        title TEXT, artist TEXT, version TEXT, creator TEXT,
+        beatmap_id INTEGER, set_id INTEGER,
+        stars REAL, bpm REAL, length_ms INTEGER,
+        ar REAL, od REAL, cs REAL, objects INTEGER,
+        stream_bpm REAL, stream_pct REAL, longest_stream INTEGER, longest_block_ms INTEGER, stream_spacing REAL,
+        jumps_per_min REAL, jump_distance REAL, overlap_pct REAL,
+        error TEXT,
+        indexed_at TEXT NOT NULL
+      )`);
   }
   db.run(`PRAGMA user_version = ${SCHEMA_VERSION}`);
 }
@@ -375,9 +398,9 @@ export async function saveDrill(r: Omit<DrillRecord, 'id' | 'createdAt'>): Promi
   const rec: DrillRecord = { ...r, id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`, createdAt: new Date().toISOString() };
   db.run(
     `INSERT INTO drills (id, created_at, kind, name, label, bpm, duration_ms, notes, accuracy, misses, extra_taps,
-       wrong_finger, ur, mean, k1_mean, k2_mean, k1_ur, k2_ur, entry_mean, tap_spread)
+       wrong_finger, ur, mean, k1_mean, k2_mean, k1_ur, k2_ur, entry_mean, tap_spread, aim_distance, aim_overshoot, hit_rate)
      VALUES ($id, $at, $kind, $name, $label, $bpm, $dur, $notes, $acc, $miss, $extra, $wrong, $ur, $mean,
-       $k1, $k2, $k1ur, $k2ur, $entry, $spread)`,
+       $k1, $k2, $k1ur, $k2ur, $entry, $spread, $aimd, $aimo, $hit)`,
     {
       $id: rec.id,
       $at: rec.createdAt,
@@ -398,18 +421,33 @@ export async function saveDrill(r: Omit<DrillRecord, 'id' | 'createdAt'>): Promi
       $k1ur: rec.k1Ur,
       $k2ur: rec.k2Ur,
       $entry: rec.entryMean,
-      $spread: rec.tapSpread
+      $spread: rec.tapSpread,
+      $aimd: rec.aimDistance ?? null,
+      $aimo: rec.aimOvershoot ?? null,
+      $hit: rec.hitRate ?? null
     }
   );
   scheduleSave(db);
   return rec;
 }
 
-export async function listDrills(kind: string, name: string | null, limit: number): Promise<DrillRecord[]> {
+export async function listDrills(kind: string | null, name: string | null, limit: number, sinceIso?: string): Promise<DrillRecord[]> {
   const db = await open();
-  const params: Record<string, string | number> = { $kind: kind, $limit: Math.max(1, Math.min(limit, 2000)) };
-  if (name) params.$name = name;
-  return rows(db, `SELECT * FROM drills WHERE kind = $kind ${name ? 'AND name = $name' : ''} ORDER BY created_at DESC LIMIT $limit`, params).map(
+  const params: Record<string, string | number> = { $limit: Math.max(1, Math.min(limit, 5000)) };
+  const where: string[] = [];
+  if (kind) {
+    where.push('kind = $kind');
+    params.$kind = kind;
+  }
+  if (name) {
+    where.push('name = $name');
+    params.$name = name;
+  }
+  if (sinceIso) {
+    where.push('created_at >= $since');
+    params.$since = sinceIso;
+  }
+  return rows(db, `SELECT * FROM drills ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY created_at DESC LIMIT $limit`, params).map(
     (r) => ({
       id: r.id as string,
       createdAt: r.created_at as string,
@@ -430,7 +468,10 @@ export async function listDrills(kind: string, name: string | null, limit: numbe
       k1Ur: r.k1_ur as number,
       k2Ur: r.k2_ur as number,
       entryMean: r.entry_mean as number,
-      tapSpread: r.tap_spread as number
+      tapSpread: r.tap_spread as number,
+      aimDistance: (r.aim_distance as number | null) ?? null,
+      aimOvershoot: (r.aim_overshoot as number | null) ?? null,
+      hitRate: (r.hit_rate as number | null) ?? null
     })
   );
 }
@@ -438,4 +479,37 @@ export async function listDrills(kind: string, name: string | null, limit: numbe
 export async function countReplays(): Promise<number> {
   const db = await open();
   return (db.exec('SELECT COUNT(*) FROM replays')[0]?.values[0]?.[0] as number) ?? 0;
+}
+
+// ---------- dostęp dla innych modułów (Biblioteka map) ----------
+
+export type Params = Record<string, string | number | null>;
+
+/** Zapytanie SELECT na wspólnej bazie. */
+export async function select(sql: string, params: Params = {}): Promise<Record<string, unknown>[]> {
+  const db = await open();
+  const stmt = db.prepare(sql);
+  stmt.bind(params as Record<string, string | number>);
+  const out: Record<string, unknown>[] = [];
+  while (stmt.step()) out.push(stmt.getAsObject());
+  stmt.free();
+  return out;
+}
+
+/** Kilka zapisów naraz w jednej transakcji; plik bazy zapisze się chwilę później. */
+export async function writeMany(sql: string, list: Params[]): Promise<void> {
+  if (!list.length) return;
+  const db = await open();
+  const stmt = db.prepare(sql);
+  db.run('BEGIN');
+  try {
+    for (const p of list) stmt.run(p as Record<string, string | number>);
+    db.run('COMMIT');
+  } catch (e) {
+    db.run('ROLLBACK');
+    throw e;
+  } finally {
+    stmt.free();
+  }
+  scheduleSave(db);
 }

@@ -1,7 +1,7 @@
 import { parsePattern, patternNotes } from '@osu-trainer/analyzer';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Settings } from '../../../shared/api.ts';
+import type { Recommendation, Settings } from '../../../shared/api.ts';
 import { DrillHistory, DrillResults } from '../drill/DrillResults.tsx';
 import { keyLabel, type ClickMode } from '../drill/engine.ts';
 import Lane from '../drill/Lane.tsx';
@@ -42,7 +42,7 @@ export function PatternChips({ pattern, active }: { pattern: string; active?: nu
   );
 }
 
-export default function RhythmScreen() {
+export default function RhythmScreen({ preset, onPresetUsed }: { preset?: Recommendation | null; onPresetUsed?: () => void }) {
   const { t, i18n } = useTranslation();
   const f = makeFormatters(i18n.language);
   const { settings, update } = useSettings();
@@ -52,6 +52,13 @@ export default function RhythmScreen() {
   const ex = EXERCISES.find((e) => e.id === st.id) ?? EXERCISES[0]!;
   const bpm = st.bpm[ex.id] ?? Math.round((ex.minBpm + ex.maxBpm) / 2);
   const [calibrated, setCalibrated] = useState<number | null>(null);
+
+  // ustawienia z podpowiedzi na Pulpicie
+  useEffect(() => {
+    if (!preset?.exercise) return;
+    setSt((s) => ({ ...s, id: preset.exercise!, bpm: { ...s.bpm, [preset.exercise!]: preset.bpm } }));
+    onPresetUsed?.();
+  }, [preset, onPresetUsed]);
 
   useEffect(() => {
     try {

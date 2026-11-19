@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm run dev -w @osu-trainer/desktop",
     "build": "npm run build -w @osu-trainer/desktop",
-    "test": "npm test -w @osu-trainer/analyzer",
+    "test": "npm test -w @osu-trainer/analyzer && node apps/desktop/scripts/check-locales.mjs",
     "analyze": "npm run analyze -w @osu-trainer/analyzer --",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },

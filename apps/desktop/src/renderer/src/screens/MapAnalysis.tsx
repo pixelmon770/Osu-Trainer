@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { AnalyzeResult, MapAnalysis as Analysis } from '../../../shared/api.ts';
 import Stat from '../components/Stat.tsx';
 import { formatTime, makeFormatters } from '../format.ts';
 import { useFileDrop } from '../hooks/useFileDrop.ts';
 
-export default function MapAnalysis() {
+/** md5 – mapa z Biblioteki map do przeanalizowania od razu po wejściu. */
+export default function MapAnalysis({ md5, onUsed }: { md5?: string | null; onUsed?: () => void }) {
   const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<AnalyzeResult>(null);
@@ -20,6 +21,12 @@ export default function MapAnalysis() {
       setBusy(false);
     }
   }
+
+  useEffect(() => {
+    if (!md5) return;
+    onUsed?.();
+    void run(() => window.api.analyzeLibraryMap(md5));
+  }, [md5, onUsed]);
 
   const dragging = useFileDrop((paths) => {
     const file = paths.find((p) => p.toLowerCase().endsWith('.osu')) ?? paths[0]!;

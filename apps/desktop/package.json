@@ -1,8 +1,8 @@
 {
   "name": "@osu-trainer/desktop",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "private": true,
-  "description": "osu! Trener – aplikacja na komputer",
+  "description": "osu! Trener \u2013 aplikacja na komputer",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -41,7 +41,8 @@
       "output": "release"
     },
     "files": [
-      "out/**"
+      "out/**",
+      "mcp/**"
     ],
     "win": {
       "target": "nsis"
@@ -49,6 +50,10 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "asarUnpack": [
+      "mcp/**",
+      "node_modules/sql.js/**"
+    ]
   }
 }
